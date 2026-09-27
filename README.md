@@ -132,14 +132,6 @@ The matrix-element quarks provide a first view of the characteristic VBS topolog
 
 ![Parton-level mqq vs rapidity separation](analysis/mqq_vs_delta_y.png)
 
-### W-Boson Kinematics
-
-The original stable-W sample was used as a generator-level study of the hard scattering.
-
-![W transverse momentum](analysis/w_pt.png)
-
-![W rapidity](analysis/w_rapidity.png)
-
 ### Leptonic Final State
 
 After introducing leptonic W decays, the analysis was extended to experimentally motivated final-state quantities.
