@@ -10,9 +10,9 @@
 
 The project begins with the Standard Model process
 
-\[
+$$
 pp \rightarrow W^+W^+jj
-\]
+$$
 
 and builds a computational workflow from matrix-element event generation to particle-level collider analysis.
 
@@ -46,16 +46,16 @@ Same-sign W-boson scattering is an important vector-boson-scattering (VBS) proce
 
 A characteristic electroweak topology contains two energetic forward jets with a large rapidity separation and large dijet invariant mass:
 
-\[
-pp \rightarrow W^+W^+jj.
-\]
+$$
+pp \rightarrow W^+W^+jj
+$$
 
 For leptonic W-boson decays, the final-state signature considered here is
 
-\[
+$$
 pp \rightarrow \ell^+\nu\,\ell^+\nu\,jj,
-\qquad \ell = e,\mu.
-\]
+\qquad \ell = e,\mu
+$$
 
 Experimentally, this corresponds approximately to:
 
@@ -100,25 +100,25 @@ A standalone C++ analysis has been developed to read MadGraph LHE events and rec
 
 Implemented quantities include:
 
-- transverse momentum \(p_T\)
-- rapidity \(y\)
+- transverse momentum $p_T$
+- rapidity $y$
 - invariant masses
 - rapidity separation
-- dilepton invariant mass \(m_{\ell\ell}\)
-- dilepton angular separation \(\Delta R_{\ell\ell}\)
+- dilepton invariant mass $m_{\ell\ell}$
+- dilepton angular separation $\Delta R_{\ell\ell}$
 - truth-level missing transverse momentum from neutrinos
 
 For the original parton-level VBS study, the outgoing matrix-element quarks were used to explore
 
-\[
+$$
 \Delta y_{qq}
-\]
+$$
 
 and
 
-\[
-m_{qq}.
-\]
+$$
+m_{qq}
+$$
 
 These quantities are useful for understanding the VBS topology but are **not equivalent to experimentally reconstructed jets**.
 
@@ -190,22 +190,22 @@ The current Pythia setup has produced a successful showered event sample. Enviro
 
 The next stage is jet reconstruction with **FastJet**.
 
-Stable final-state particles from the Pythia-generated HepMC events will be clustered using the anti-\(k_T\) algorithm.
+Stable final-state particles from the Pythia-generated HepMC events will be clustered using the anti-$k_T$ algorithm.
 
 The initial target is
 
-\[
-\text{anti-}k_T,\qquad R=0.4.
-\]
+$$
+\text{anti-}k_T,\qquad R=0.4
+$$
 
 This will allow the parton-level quantities currently constructed from outgoing MadGraph quarks to be replaced by particle-level jet observables:
 
-\[
+$$
 p_T^j,\qquad
 \eta_j,\qquad
 \Delta\eta_{jj},\qquad
-m_{jj}.
-\]
+m_{jj}
+$$
 
 A central validation study will therefore follow the evolution:
 
@@ -257,15 +257,15 @@ The primary model of interest is the **Georgi–Machacek (GM) model**, which ext
 
 Of particular interest is the custodial-fiveplet doubly charged scalar
 
-\[
-H_5^{++},
-\]
+$$
+H_5^{++}
+$$
 
 which can couple directly to
 
-\[
-W^+W^+.
-\]
+$$
+W^+W^+
+$$
 
 This makes same-sign W-boson scattering a natural collider channel for investigating the extended scalar sector.
 
@@ -335,7 +335,7 @@ Planned additions include:
 
 The project is developed around the workflow
 
-\[
+$$
 \boxed{
 \text{Physical principle}
 \rightarrow
@@ -349,7 +349,7 @@ The project is developed around the workflow
 \rightarrow
 \text{physical interpretation}
 }
-\]
+$$
 
 The emphasis is not only on producing Monte Carlo events, but on understanding how theoretical quantities become experimentally meaningful collider observables.
 
