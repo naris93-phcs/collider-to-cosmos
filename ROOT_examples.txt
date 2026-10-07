@@ -1,0 +1,414 @@
+============================================================
+ROOT QUICK REFERENCE — Collider to Cosmos
+============================================================
+
+Personal cheat sheet for inspecting the current particle-level
+ROOT output produced by analysis/particle_level.cpp.
+
+
+============================================================
+BASIC ROOT COMMANDS
+============================================================
+
+1. OPEN THE ROOT FILE
+------------------------------------------------------------
+
+From the analysis directory:
+
+root -l particle_level.root
+
+-l = start ROOT without the startup splash.
+
+
+2. EXIT ROOT
+------------------------------------------------------------
+
+.q
+
+
+3. LIST STORED OBJECTS
+------------------------------------------------------------
+
+.ls
+
+Useful for checking the available histogram names.
+
+
+============================================================
+CURRENT PARTICLE-LEVEL HISTOGRAMS
+============================================================
+
+JET OBSERVABLES
+------------------------------------------------------------
+
+h_njets->Draw();
+
+    Reconstructed anti-kT R=0.4 jet multiplicity.
+
+
+h_jet1_pt->Draw();
+
+    Leading jet pT.
+
+
+h_jet2_pt->Draw();
+
+    Subleading jet pT.
+
+
+h_jet1_eta->Draw();
+
+    Leading jet pseudorapidity.
+
+
+h_jet2_eta->Draw();
+
+    Subleading jet pseudorapidity.
+
+
+h_mjj->Draw();
+
+    Dijet invariant mass:
+
+    m_jj^2 = (p_j1 + p_j2)^2
+
+
+h_deta_jj->Draw();
+
+    Pseudorapidity separation:
+
+    |Delta eta_jj| = |eta_j1 - eta_j2|
+
+
+h_dy_jj->Draw();
+
+    Rapidity separation:
+
+    |Delta y_jj| = |y_j1 - y_j2|
+
+
+LEPTON / MET OBSERVABLES
+------------------------------------------------------------
+
+h_lepton1_pt->Draw();
+
+    Leading dressed-lepton pT.
+
+
+h_lepton2_pt->Draw();
+
+    Subleading dressed-lepton pT.
+
+
+h_mll->Draw();
+
+    Dilepton invariant mass:
+
+    m_ll^2 = (p_l1 + p_l2)^2
+
+
+h_met->Draw();
+
+    Particle-level missing transverse momentum.
+
+
+============================================================
+USEFUL DISPLAY COMMANDS
+============================================================
+
+4. LOGARITHMIC Y AXIS
+------------------------------------------------------------
+
+gPad->SetLogy();
+
+h_mjj->Draw();
+
+
+5. RETURN TO LINEAR Y AXIS
+------------------------------------------------------------
+
+gPad->SetLogy(0);
+
+h_mjj->Draw();
+
+
+6. SHOW STATISTICS BOX
+------------------------------------------------------------
+
+gStyle->SetOptStat(1111);
+
+h_mjj->Draw();
+
+
+7. HIDE STATISTICS BOX
+------------------------------------------------------------
+
+gStyle->SetOptStat(0);
+
+h_mjj->Draw();
+
+
+8. CHANGE HISTOGRAM TITLE
+------------------------------------------------------------
+
+h_mjj->SetTitle("Particle-level dijet invariant mass");
+
+h_mjj->Draw();
+
+
+9. CHANGE X AXIS TITLE
+------------------------------------------------------------
+
+h_mjj->GetXaxis()->SetTitle("m_{jj} [GeV]");
+
+
+10. CHANGE Y AXIS TITLE
+------------------------------------------------------------
+
+h_mjj->GetYaxis()->SetTitle("Events");
+
+
+11. ZOOM X AXIS
+------------------------------------------------------------
+
+h_mjj->GetXaxis()->SetRangeUser(0, 1500);
+
+h_mjj->Draw();
+
+
+12. REMOVE X-AXIS ZOOM
+------------------------------------------------------------
+
+h_mjj->GetXaxis()->UnZoom();
+
+h_mjj->Draw();
+
+
+============================================================
+INSPECT A HISTOGRAM NUMERICALLY
+============================================================
+
+13. NUMBER OF ENTRIES
+------------------------------------------------------------
+
+h_mjj->GetEntries();
+
+
+14. MEAN
+------------------------------------------------------------
+
+h_mjj->GetMean();
+
+
+15. STANDARD DEVIATION
+------------------------------------------------------------
+
+h_mjj->GetStdDev();
+
+
+16. INTEGRAL OF BIN CONTENTS
+------------------------------------------------------------
+
+h_mjj->Integral();
+
+
+17. PRINT OBJECT INFORMATION
+------------------------------------------------------------
+
+h_mjj->Print();
+
+
+============================================================
+SAVE PLOTS
+============================================================
+
+18. SAVE CURRENT CANVAS AS PNG
+------------------------------------------------------------
+
+gPad->SaveAs("mjj.png");
+
+
+19. SAVE CURRENT CANVAS AS PDF
+------------------------------------------------------------
+
+gPad->SaveAs("mjj.pdf");
+
+
+20. CREATE A CANVAS EXPLICITLY
+------------------------------------------------------------
+
+TCanvas c("c", "c", 900, 700);
+
+h_mjj->Draw("HIST");
+
+c.SaveAs("../plots/mjj.png");
+
+
+============================================================
+EXAMPLE MULTI-PLOT WORKFLOW
+============================================================
+
+gROOT->SetBatch(kTRUE);
+
+TCanvas c("c", "c", 900, 700);
+
+h_mjj->Draw("HIST");
+c.SaveAs("../plots/mjj.png");
+
+c.Clear();
+h_dy_jj->Draw("HIST");
+c.SaveAs("../plots/dy_jj.png");
+
+c.Clear();
+h_lepton1_pt->Draw("HIST");
+c.SaveAs("../plots/lepton1_pt.png");
+
+c.Clear();
+h_mll->Draw("HIST");
+c.SaveAs("../plots/mll.png");
+
+
+============================================================
+CURRENT ANALYSIS DEFINITIONS
+============================================================
+
+JET RECONSTRUCTION
+------------------------------------------------------------
+
+Algorithm:
+    anti-kT
+
+Radius:
+    R = 0.4
+
+Jet input:
+    Stable final-state visible particles.
+
+Excluded from jet clustering:
+    neutrinos and muons
+
+Minimum reconstructed jet pT:
+    pT > 25 GeV
+
+Jet acceptance:
+    |eta| < 4.5
+
+Tagging jets:
+    Two highest-pT selected jets.
+
+
+VBS JET SELECTION
+------------------------------------------------------------
+
+Leading jet:
+    pT > 65 GeV
+
+Subleading jet:
+    pT > 35 GeV
+
+Dijet invariant mass:
+    m_jj > 500 GeV
+
+Rapidity separation:
+    |Delta y_jj| > 2
+
+
+DRESSED LEPTONS
+------------------------------------------------------------
+
+Prompt electron/muon candidates are identified from the
+generated W-boson decay history.
+
+Stable photons within
+
+    Delta R(l, gamma) < 0.1
+
+are added to the lepton four-momentum.
+
+Current dressed-lepton acceptance:
+
+    pT > 27 GeV
+    |eta| < 2.5
+
+Event requirements:
+
+    exactly two selected dressed leptons
+    same-sign leptons
+    m_ll > 20 GeV
+
+
+MISSING TRANSVERSE MOMENTUM
+------------------------------------------------------------
+
+Particle-level MET is constructed from stable neutrinos.
+
+Requirement:
+
+    MET > 30 GeV
+
+
+============================================================
+CURRENT BASELINE RESULT — 10,000 EVENTS
+============================================================
+
+Lepton / MET cumulative cutflow:
+
+    2 dressed leptons             3416
+    + same sign                   3415
+    + m_ll > 20 GeV               3380
+    + MET > 30 GeV                2959
+
+
+Jet / VBS cutflow:
+
+    >= 2 jets                     9749
+    + jet pT cuts                 8459
+    + m_jj > 500 GeV              2783
+    + |Delta y_jj| > 2            1384
+
+
+Combined ATLAS-inspired baseline:
+
+    371 / 10000 events
+
+Baseline efficiency:
+
+    3.71 %
+
+
+============================================================
+IMPORTANT STATUS / CAVEATS
+============================================================
+
+This is the current SM particle-level baseline analysis.
+
+It is ATLAS-inspired, but it is NOT yet an exact reproduction
+of the final ATLAS particle-level fiducial definition.
+
+Remaining refinements include:
+
+    - exact prompt-photon treatment
+    - electron-jet overlap removal
+    - b-jet veto
+    - full normalization / event-weight treatment
+    - comparison with unfolded ATLAS / HEPData results
+    - validation of the complete fiducial definition
+
+The current histograms are not all filled after the same
+selection stage.
+
+For example:
+
+    h_mjj:
+        filled for events with >= 2 selected jets
+
+    h_mll:
+        filled after the two-lepton + same-sign requirement
+
+Therefore histogram entry counts should always be interpreted
+together with the corresponding selection stage.
+
+
+============================================================
+END
+============================================================

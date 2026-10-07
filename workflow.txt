@@ -1,0 +1,79 @@
+============================================================
+3. GIT QUICK REFERENCE
+============================================================
+
+Check what changed:
+git status
+
+See line-by-line changes:
+git diff
+
+Stage a specific file:
+git add analysis/particle_level.cpp
+
+Stage everything:
+git add .
+
+Commit:
+git commit -m "Describe what changed"
+
+Push to GitHub:
+git push
+
+Typical workflow:
+git status
+git diff
+git add .
+git commit -m "Implement ATLAS-like VBS jet selection"
+git push
+
+
+============================================================
+4. COMPILE PARTICLE-LEVEL ANALYSIS
+============================================================
+
+First go to the analysis directory:
+
+cd ~/projects/collider_to_cosmos/analysis
+
+Activate HEP environment if needed:
+
+conda activate hep
+
+Compile:
+
+g++ -std=c++17 particle_level.cpp \
+-I../MG5_aMC_v3_8_0/HEPTools/hepmc/include \
+-L../MG5_aMC_v3_8_0/HEPTools/hepmc/lib -lHepMC \
+$(fastjet-config --cxxflags --libs) \
+$(root-config --cflags --libs) \
+-o particle_level
+
+
+============================================================
+5. RUN PARTICLE-LEVEL ANALYSIS
+============================================================
+
+HepMC runtime library path:
+
+export LD_LIBRARY_PATH="$HOME/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/hepmc/lib:$LD_LIBRARY_PATH"
+
+Run:
+
+./particle_level
+
+
+Typical compile + run workflow:
+
+conda activate hep
+
+export LD_LIBRARY_PATH="$HOME/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/hepmc/lib:$LD_LIBRARY_PATH"
+
+g++ -std=c++17 particle_level.cpp \
+-I../MG5_aMC_v3_8_0/HEPTools/hepmc/include \
+-L../MG5_aMC_v3_8_0/HEPTools/hepmc/lib -lHepMC \
+$(fastjet-config --cxxflags --libs) \
+$(root-config --cflags --libs) \
+-o particle_level
+
+./particle_level

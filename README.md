@@ -1,22 +1,20 @@
 # Collider → Cosmos
 
-**A computational high-energy physics project exploring same-sign W-boson scattering, from hard-scattering event generation to particle-level collider observables and, ultimately, connections to extended Higgs sectors and the electroweak phase transition.**
+### From same-sign WW scattering at the LHC to extended Higgs sectors and the early Universe
+
+**Collider → Cosmos** is an MSc-level computational high-energy physics project developing a particle-level analysis of electroweak same-sign W-boson scattering at the LHC.
+
+The project starts from the Standard Model process
+
+**pp → W⁺W⁺jj**
+
+and builds the simulation and analysis chain from hard-scattering event generation to experimentally motivated particle-level observables.
+
+The longer-term objective is to use this validated Standard Model baseline to investigate extended Higgs sectors — particularly the **Georgi–Machacek model** — and ultimately connect collider constraints with the physics of the **electroweak phase transition in the early Universe**.
 
 ---
 
-## Overview
-
-**Collider → Cosmos** is a developing research project focused on electroweak same-sign W-boson scattering at the LHC.
-
-The project begins with the Standard Model process
-
-$$
-pp \rightarrow W^+W^+jj
-$$
-
-and builds a computational workflow from matrix-element event generation to particle-level collider analysis.
-
-The current simulation chain is:
+## Simulation and Analysis Pipeline
 
 ```text
 MadGraph5_aMC@NLO
@@ -27,187 +25,216 @@ Pythia 8
         ↓
 Parton shower + hadronization
         ↓
-HepMC particle-level events
+HepMC
         ↓
-FastJet                     [next]
+Stable final-state particles
         ↓
-Jet reconstruction
+FastJet
+anti-kT, R = 0.4
+        ↓
+Particle-level jets
         ↓
 C++ / ROOT analysis
+        ↓
+Dressed leptons + MET + VBS observables
+        ↓
+ATLAS-inspired particle-level selection
 ```
 
-The longer-term goal is to use the validated Standard Model workflow as a foundation for studying extended Higgs sectors, particularly the **Georgi–Machacek model**, and investigating how collider constraints may connect to the physics of the **electroweak phase transition in the early Universe**.
+The current workflow therefore reaches the **particle-level fiducial-analysis stage**.
 
 ---
 
 ## Physics Motivation
 
-Same-sign W-boson scattering is an important vector-boson-scattering (VBS) process at the LHC.
+Same-sign W-boson scattering is an important vector-boson-scattering (VBS) process at the LHC and provides a direct probe of the electroweak sector.
 
-A characteristic electroweak topology contains two energetic forward jets with a large rapidity separation and large dijet invariant mass:
+For the leptonic channel considered here,
 
-$$
-pp \rightarrow W^+W^+jj
-$$
+**pp → W⁺W⁺jj**
 
-For leptonic W-boson decays, the final-state signature considered here is
+with
 
-$$
-pp \rightarrow \ell^+\nu\,\ell^+\nu\,jj,
-\qquad \ell = e,\mu
-$$
+**W⁺ → ℓ⁺ν, ℓ = e, μ**
 
-Experimentally, this corresponds approximately to:
+the characteristic experimental signature contains
 
 ```text
-same-sign charged leptons
-        +
+two same-sign charged leptons
+              +
 missing transverse momentum
-        +
-two tagging jets
-        +
-additional QCD activity
+              +
+two energetic tagging jets
+              +
+additional QCD radiation
 ```
 
-The VBS topology provides a useful laboratory for studying electroweak symmetry breaking and for searching for modifications of the Standard Model scalar sector.
+The VBS topology is characterized by two energetic jets with large dijet invariant mass and substantial rapidity separation.
+
+The analysis therefore focuses particularly on:
+
+- dijet invariant mass **m<sub>jj</sub>**
+- jet rapidity separation **|Δy<sub>jj</sub>|**
+
+These observables help select a VBS-enhanced region of phase space and provide sensitivity to the dynamics of electroweak symmetry breaking.
 
 ---
 
-## Current Status
+## Current Standard Model Sample
 
-### 1. Standard Model hard-process generation
-
-Electroweak same-sign W-boson scattering events have been generated with **MadGraph5_aMC@NLO**.
-
-The current leptonic sample contains:
+The present baseline uses a pure electroweak same-sign W⁺W⁺jj sample generated with **MadGraph5_aMC@NLO**.
 
 ```text
-Process:       pp → W+ W+ jj
-Decay:         W+ → l+ ν
-Leptons:       e+, μ+
-Events:        10,000
-√s:            13 TeV
-Cross section: 0.008951 ± 0.00002036 pb
+Process:        pp → W+ W+ jj
+Decay:          W+ → l+ ν
+Leptons:        e+, μ+
+Events:         10,000
+Collision:      pp
+√s:             13 TeV
+Cross section:  0.008951 ± 0.00002036 pb
 ```
 
-The quoted uncertainty is the Monte Carlo integration uncertainty from event generation and should not be interpreted as a full theoretical uncertainty.
+The quoted uncertainty is the Monte Carlo integration uncertainty from event generation and is **not** a complete theoretical uncertainty.
+
+The hard events are showered and hadronized using **Pythia 8**, with the resulting particle-level event record stored in **HepMC** format.
 
 ---
 
-### 2. C++ / ROOT analysis
+## Particle-Level Object Reconstruction
 
-A standalone C++ analysis has been developed to read MadGraph LHE events and reconstruct basic kinematic observables.
+### Jets
 
-Implemented quantities include:
+Stable visible final-state particles are clustered with **FastJet** using the anti-kT algorithm with
 
-- transverse momentum $p_T$
-- rapidity $y$
-- invariant masses
-- rapidity separation
-- dilepton invariant mass $m_{\ell\ell}$
-- dilepton angular separation $\Delta R_{\ell\ell}$
-- truth-level missing transverse momentum from neutrinos
+**R = 0.4**
 
-For the original parton-level VBS study, the outgoing matrix-element quarks were used to explore
+The current jet definition uses:
 
-$$
-\Delta y_{qq}
-$$
+- **p<sub>T</sub> > 25 GeV**
+- **|η| < 4.5**
 
-and
+Neutrinos and muons are excluded from jet clustering.
 
-$$
-m_{qq}
-$$
-
-These quantities are useful for understanding the VBS topology but are **not equivalent to experimentally reconstructed jets**.
+The two highest-p<sub>T</sub> selected jets define the current tagging-jet pair.
 
 ---
 
-## Selected Results
+### Dressed Leptons
 
-### Parton-Level VBS Topology
+Prompt electron and muon candidates are identified from the generated W-boson decay history.
 
-The matrix-element quarks provide a first view of the characteristic VBS topology. In particular, the correlation between their invariant mass and rapidity separation illustrates the kinematic region that will later be reconstructed using particle-level jets.
+To account for nearby photon radiation, the lepton four-momentum is dressed using stable photons satisfying
 
-![Parton-level mqq vs rapidity separation](analysis/mqq_vs_delta_y.png)
+**ΔR(ℓ, γ) < 0.1**
 
-### Leptonic Final State
+The current dressed-lepton acceptance is:
 
-After introducing leptonic W decays, the analysis was extended to experimentally motivated final-state quantities.
+- **p<sub>T</sub> > 27 GeV**
+- **|η| < 2.5**
 
-#### Charged-Lepton Transverse Momentum
+Events are then required to contain exactly two selected same-sign dressed leptons with
 
-![Charged-lepton transverse momentum](analysis/lepton_pt.png)
-
-#### Dilepton Invariant Mass
-
-![Dilepton invariant mass](analysis/m_ll.png)
-
-#### Dilepton Angular Separation
-
-![Dilepton angular separation](analysis/delta_r_ll.png)
-
-#### Truth-Level Missing Transverse Momentum
-
-The missing transverse momentum at this stage is constructed directly from the generated neutrino momenta and therefore represents a truth-level quantity.
-
-![Truth-level missing transverse momentum](analysis/missing_pt.png)
+**m<sub>ℓℓ</sub> > 20 GeV**
 
 ---
 
-## Pythia 8 Shower and Hadronization
+### Missing Transverse Momentum
 
-The leptonic MadGraph sample has successfully been passed through **Pythia 8**.
+Particle-level missing transverse momentum is currently constructed from stable final-state neutrinos.
 
-The simulation now includes the transition from the hard scattering to a particle-level event through:
+The baseline requirement is
 
-```text
-hard partons
-     ↓
-parton shower
-     ↓
-hadronization
-     ↓
-final-state particles
-```
-
-The resulting events are stored in **HepMC** format.
-
-This establishes the first:
-
-```text
-MadGraph → Pythia → HepMC
-```
-
-pipeline in the project.
-
-The current Pythia setup has produced a successful showered event sample. Environment and version configuration will be cleaned and documented before the final production setup is considered reproducible.
+**E<sub>T</sub><sup>miss</sup> > 30 GeV**
 
 ---
 
-## Next Milestone: Particle-Level Jets
+## VBS Selection
 
-The next stage is jet reconstruction with **FastJet**.
+The current ATLAS-inspired VBS jet requirements are:
 
-Stable final-state particles from the Pythia-generated HepMC events will be clustered using the anti-$k_T$ algorithm.
+- **p<sub>T,j1</sub> > 65 GeV**
+- **p<sub>T,j2</sub> > 35 GeV**
+- **m<sub>jj</sub> > 500 GeV**
+- **|Δy<sub>jj</sub>| > 2**
 
-The initial target is
+These cuts select a VBS-enhanced region of phase space. They should not be interpreted as isolating an individual subset of Feynman diagrams.
 
-$$
-\text{anti-}k_T,\qquad R=0.4
-$$
+---
 
-This will allow the parton-level quantities currently constructed from outgoing MadGraph quarks to be replaced by particle-level jet observables:
+## First Particle-Level Baseline Result
 
-$$
-p_T^j,\qquad
-\eta_j,\qquad
-\Delta\eta_{jj},\qquad
-m_{jj}
-$$
+For the current sample of **10,000 generated events**, the cumulative lepton and missing-momentum selection gives:
 
-A central validation study will therefore follow the evolution:
+| Selection | Events |
+|---|---:|
+| Two dressed leptons, p<sub>T</sub> > 27 GeV and \|η\| < 2.5 | 3416 |
+| + same-sign requirement | 3415 |
+| + m<sub>ℓℓ</sub> > 20 GeV | 3380 |
+| + E<sub>T</sub><sup>miss</sup> > 30 GeV | 2959 |
+
+The independent jet/VBS cutflow is:
+
+| Selection | Events |
+|---|---:|
+| At least two selected jets | 9749 |
+| + p<sub>T,j1</sub> > 65 GeV, p<sub>T,j2</sub> > 35 GeV | 8459 |
+| + m<sub>jj</sub> > 500 GeV | 2783 |
+| + \|Δy<sub>jj</sub>\| > 2 | 1384 |
+
+Requiring the current lepton, missing-momentum and VBS selections simultaneously gives:
+
+### **371 / 10,000 selected events**
+
+corresponding to a baseline Monte Carlo efficiency of:
+
+### **3.71%**
+
+This is the first complete **Standard Model particle-level baseline selection** in the project.
+
+---
+
+## Selected Particle-Level Distributions
+
+### Dijet Invariant Mass
+
+The reconstructed particle-level dijet invariant-mass distribution shows a broad falling spectrum extending into the multi-TeV region.
+
+![Particle-level dijet invariant mass](plots/mjj.png)
+
+---
+
+### Dijet Rapidity Separation
+
+The rapidity separation of the two leading selected jets provides a second characteristic VBS observable.
+
+![Particle-level dijet rapidity separation](plots/dy_jj.png)
+
+---
+
+### Leading Dressed-Lepton Transverse Momentum
+
+![Leading dressed-lepton transverse momentum](plots/lepton1_pt.png)
+
+---
+
+### Dilepton Invariant Mass
+
+![Particle-level dilepton invariant mass](plots/mll.png)
+
+---
+
+## From Partons to Particle-Level Jets
+
+An earlier stage of the project studied the outgoing matrix-element quarks directly.
+
+This provided a useful first view of the VBS topology through quantities such as:
+
+- **m<sub>qq</sub>**
+- **|Δy<sub>qq</sub>|**
+
+Those quantities are useful for understanding the hard process but are **not experimentally reconstructed jets**.
+
+The current analysis has therefore progressed through:
 
 ```text
 matrix-element quarks
@@ -216,20 +243,42 @@ parton shower
         ↓
 hadronization
         ↓
+stable final-state particles
+        ↓
+anti-kT clustering
+        ↓
 particle-level jets
 ```
 
-and quantify how the characteristic VBS observables change through the simulation chain.
+This allows the analysis to work with experimentally meaningful particle-level jet observables.
 
 ---
 
-## Toward Experimental Observables
+## Current Status and Validation
 
-The objective is to move progressively from generator-level quantities toward observables that can be compared with particle-level measurements from LHC experiments.
+The present analysis should be interpreted as an **ATLAS-inspired Standard Model particle-level baseline**, not yet as an exact reproduction of the final ATLAS fiducial definition.
 
-The intended workflow is:
+The next validation steps include:
+
+- refining the prompt-photon definition used for lepton dressing
+- implementing the particle-level electron–jet overlap-removal prescription
+- implementing the b-jet veto
+- validating event weights and absolute normalization
+- including the corresponding W⁻W⁻jj contribution where required
+- comparing particle-level distributions with unfolded ATLAS / HEPData results
+- documenting a fully reproducible Pythia/HepMC runtime configuration
+
+Scientific correctness and validation take priority over agreement with any particular reference distribution.
+
+---
+
+## Toward Experimental Measurements
+
+The analysis is designed to meet collider measurements at the **particle level**:
 
 ```text
+THEORY / SIMULATION
+
 Matrix element
       ↓
 Parton shower
@@ -238,49 +287,57 @@ Hadronization
       ↓
 Particle-level objects
       ↓
-Fiducial event selection
+Fiducial observables
+
+              ↕ comparison
+
+EXPERIMENT
+
+Detector data
       ↓
-Comparison with unfolded collider distributions
+Reconstruction
+      ↓
+Background subtraction
+      ↓
+Unfolding
+      ↓
+Particle-level observables
 ```
 
-The distinction between **parton-level**, **particle-level**, and **detector-level** quantities is treated explicitly throughout the project.
-
-A full detector simulation is not currently part of the baseline workflow.
+A full detector simulation is therefore not required for the current baseline comparison with unfolded measurements.
 
 ---
 
 ## Long-Term Research Direction
 
-Once the Standard Model VBS baseline is established and validated, the project is intended to investigate physics beyond the Standard Model.
+Once the Standard Model same-sign WW baseline is validated, the project will move toward physics beyond the Standard Model.
 
-The primary model of interest is the **Georgi–Machacek (GM) model**, which extends the Standard Model Higgs sector with additional scalar triplets while preserving custodial symmetry at tree level.
+The primary model of interest is the **Georgi–Machacek (GM) model**, which extends the Standard Model Higgs sector while allowing custodial symmetry to be preserved at tree level.
 
 Of particular interest is the custodial-fiveplet doubly charged scalar
 
-$$
-H_5^{++}
-$$
+**H₅⁺⁺**
 
 which can couple directly to
 
-$$
-W^+W^+
-$$
+**W⁺W⁺**
 
-This makes same-sign W-boson scattering a natural collider channel for investigating the extended scalar sector.
+Same-sign WW scattering therefore provides a natural collider channel for investigating this extended scalar sector.
 
-The longer-term research chain is:
+The intended research chain is:
 
 ```text
 SM same-sign WW VBS
         ↓
-Validated collider baseline
+Validated particle-level baseline
         ↓
-Georgi–Machacek model
+Georgi–Machacek benchmarks
         ↓
-Collider constraints on scalar-sector parameters
+Collider constraints
         ↓
-Finite-temperature scalar potential
+Viable scalar-sector parameter space
+        ↓
+Finite-temperature electroweak physics
         ↓
 Electroweak phase transition
         ↓
@@ -297,69 +354,61 @@ Possible gravitational-wave phenomenology is considered a later extension rather
 collider_to_cosmos/
 │
 ├── analysis/
+│   ├── particle_level.cpp
 │   ├── lhe_reader.cpp
-│   └── analysis plots
+│   └── supporting analysis code
 │
+├── plots/
+│   ├── mjj.png
+│   ├── dy_jj.png
+│   ├── lepton1_pt.png
+│   └── mll.png
+│
+├── ROOT_examples.txt
+├── workflow.txt
 ├── README.md
-├── .gitignore
-│
-└── [simulation cards and additional analysis modules to be added]
+└── .gitignore
 ```
 
-Large generated event samples, local MadGraph installations, compiled binaries, ROOT files and HepMC files are intentionally excluded from version control.
+Large generated event samples, local generator installations, HepMC files, ROOT output files and compiled binaries are intentionally excluded from version control.
 
 ---
 
 ## Tools
 
-The project currently uses:
+The current workflow uses:
 
 - **C++17**
 - **ROOT**
 - **MadGraph5_aMC@NLO**
 - **Pythia 8**
 - **HepMC**
-- **Linux / WSL2**
-- **Git**
-
-Planned additions include:
-
 - **FastJet**
-- particle-level fiducial selections
-- comparison with experimental unfolded distributions
-- Georgi–Machacek UFO model studies
+- **Linux / WSL2**
+- **Git / GitHub**
 
 ---
 
 ## Project Philosophy
 
-The project is developed around the workflow
+The project follows the workflow:
 
-$$
-\boxed{
-\text{Physical principle}
-\rightarrow
-\text{research question}
-\rightarrow
-\text{observable}
-\rightarrow
-\text{simulation/code}
-\rightarrow
-\text{validation}
-\rightarrow
-\text{physical interpretation}
-}
-$$
+> **Physical principle → research question → observable → simulation/code → validation → physical interpretation**
 
-The emphasis is not only on producing Monte Carlo events, but on understanding how theoretical quantities become experimentally meaningful collider observables.
+The objective is not simply to generate Monte Carlo events, but to understand how theoretical quantities become experimentally meaningful collider observables — and how those observables can ultimately constrain physics beyond the Standard Model.
 
 ---
 
-## Status
+## Current Milestone
 
-**Current milestone:** MadGraph → Pythia → HepMC completed.
+**Completed:**  
+MadGraph → Pythia → HepMC → FastJet → ROOT particle-level analysis
 
-**Next milestone:** FastJet jet reconstruction and particle-level VBS analysis.
+**Current result:**  
+First ATLAS-inspired same-sign WWjj baseline selection, with **371 / 10,000 events** passing the combined selection.
+
+**Next milestone:**  
+Complete the fiducial-definition refinements and validate the Standard Model baseline against unfolded ATLAS measurements before introducing controlled Georgi–Machacek benchmarks.
 
 ---
 
