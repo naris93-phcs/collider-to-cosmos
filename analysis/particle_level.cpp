@@ -2,12 +2,9 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
-
 #include "fastjet/ClusterSequence.hh"
-
 #include "TH1D.h"
 #include "TFile.h"
 
@@ -156,6 +153,12 @@ int main()
         50, 0.0, 300.0
     );
 
+    TH1D h_cutflow(
+        "h_cutflow",
+        "SM same-sign WWjj cumulative cutflow;Selection stage;Events",
+        9, 0.5, 9.5
+    );
+
 
     // -------------------------------------------------------------------------
     // Counters
@@ -180,6 +183,12 @@ int main()
     int events_pass_jet_pt = 0;
     int events_pass_mjj = 0;
     int events_pass_dy = 0;
+
+    // Unified cumulative cutflow: VBS cuts after lepton/MET selection.
+    int full_pass_two_jets = 0;
+    int full_pass_jet_pt = 0;
+    int full_pass_mjj = 0;
+    int full_pass_dy = 0;
 
     // Full cumulative baseline selection.
     int events_pass_full_baseline = 0;
@@ -467,6 +476,27 @@ int main()
         }
 
 
+        // Unified cutflow: apply jet/VBS cuts after lepton/MET selection.
+        if (pass_met) {
+
+            if (selected_jets.size() >= 2) {
+                ++full_pass_two_jets;
+            }
+
+            if (pass_jet_pt) {
+                ++full_pass_jet_pt;
+            }
+
+            if (pass_mjj) {
+                ++full_pass_mjj;
+            }
+
+            if (pass_dy) {
+                ++full_pass_dy;
+            }
+        }
+
+
         // ---------------------------------------------------------------------
         // Full cumulative ATLAS-inspired baseline
         // ---------------------------------------------------------------------
@@ -493,7 +523,35 @@ int main()
         }
     }
 
+    // Fill unified cumulative cutflow histogram.
+    const char* cut_labels[9] = {
+        "Generated",
+        "2 dressed leptons",
+        "Same sign",
+        "mll > 20",
+        "MET > 30",
+        ">= 2 jets",
+        "Jet pT",
+        "mjj > 500",
+        "|dy_jj| > 2"
+    };
 
+    const int cut_counts[9] = {
+        event_count,
+        events_pass_two_leptons,
+        events_pass_same_sign,
+        events_pass_mll,
+        events_pass_met,
+        full_pass_two_jets,
+        full_pass_jet_pt,
+        full_pass_mjj,
+        full_pass_dy
+    };
+
+    for (int i = 0; i < 9; ++i) {
+        h_cutflow.GetXaxis()->SetBinLabel(i + 1, cut_labels[i]);
+        h_cutflow.SetBinContent(i + 1, cut_counts[i]);
+    }
     // -------------------------------------------------------------------------
     // Save histograms
     // -------------------------------------------------------------------------
@@ -511,7 +569,7 @@ int main()
     h_mjj.Write();
     h_deta_jj.Write();
     h_dy_jj.Write();
-
+    h_cutflow.Write();
     h_lepton1_pt.Write();
     h_lepton2_pt.Write();
     h_mll.Write();
@@ -546,6 +604,36 @@ int main()
     std::cout << "  + jet pT cuts: " << events_pass_jet_pt << "\n";
     std::cout << "  + mjj > 500 GeV: " << events_pass_mjj << "\n";
     std::cout << "  + |dy_jj| > 2: " << events_pass_dy << "\n";
+    std::cout << "\n========================================\n";
+    std::cout << "UNIFIED CUMULATIVE CUTFLOW\n";
+    std::cout << "========================================\n";
+
+    std::cout << "Generated events: "
+            << event_count << "\n";
+
+    std::cout << "+ Two dressed leptons: "
+            << events_pass_two_leptons << "\n";
+
+    std::cout << "+ Same sign: "
+            << events_pass_same_sign << "\n";
+
+    std::cout << "+ mll > 20 GeV: "
+            << events_pass_mll << "\n";
+
+    std::cout << "+ MET > 30 GeV: "
+            << events_pass_met << "\n";
+
+    std::cout << "+ >= 2 jets: "
+            << full_pass_two_jets << "\n";
+
+    std::cout << "+ Jet pT cuts: "
+            << full_pass_jet_pt << "\n";
+
+    std::cout << "+ mjj > 500 GeV: "
+            << full_pass_mjj << "\n";
+
+    std::cout << "+ |dy_jj| > 2: "
+            << full_pass_dy << "\n";
 
     std::cout << "\nFull ATLAS-inspired baseline:\n";
     std::cout << "  leptons + MET + VBS jets: "

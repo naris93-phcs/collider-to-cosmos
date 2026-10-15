@@ -32,48 +32,33 @@ git push
 4. COMPILE PARTICLE-LEVEL ANALYSIS
 ============================================================
 
-First go to the analysis directory:
-
-cd ~/projects/collider_to_cosmos/analysis
-
-Activate HEP environment if needed:
-
+# Activate environment
 conda activate hep
 
-Compile:
+# Go to project root
+cd ~/projects/collider_to_cosmos
 
-g++ -std=c++17 particle_level.cpp \
--I../MG5_aMC_v3_8_0/HEPTools/hepmc/include \
--L../MG5_aMC_v3_8_0/HEPTools/hepmc/lib -lHepMC \
-$(fastjet-config --cxxflags --libs) \
-$(root-config --cflags --libs) \
--o particle_level
+# Configure CMake (first time / configuration changes)
+cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
 
-
+# Compile (after modifying the .cpp)
+cmake --build build
+  
 ============================================================
 5. RUN PARTICLE-LEVEL ANALYSIS
 ============================================================
 
-HepMC runtime library path:
+# Go to analysis directory
+cd ~/projects/collider_to_cosmos/analysis
 
-export LD_LIBRARY_PATH="$HOME/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/hepmc/lib:$LD_LIBRARY_PATH"
-
-Run:
-
-./particle_level
-
+# Run the CMake executable
+../build/particle_level
+  
 
 Typical compile + run workflow:
 
 conda activate hep
-
-export LD_LIBRARY_PATH="$HOME/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/hepmc/lib:$LD_LIBRARY_PATH"
-
-g++ -std=c++17 particle_level.cpp \
--I../MG5_aMC_v3_8_0/HEPTools/hepmc/include \
--L../MG5_aMC_v3_8_0/HEPTools/hepmc/lib -lHepMC \
-$(fastjet-config --cxxflags --libs) \
-$(root-config --cflags --libs) \
--o particle_level
-
-./particle_level
+cd ~/projects/collider_to_cosmos
+cmake --build build
+cd analysis
+../build/particle_level
