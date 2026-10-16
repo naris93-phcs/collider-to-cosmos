@@ -5,11 +5,11 @@ project(ColliderToCosmos LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(ROOT CONFIG REQUIRED COMPONENTS Core Hist RIO)
+find_package(ROOT CONFIG REQUIRED COMPONENTS Core Hist RIO Tree)
 
 add_executable(particle_level analysis/particle_level.cpp)
 
-target_link_libraries(particle_level PRIVATE ROOT::Core ROOT::Hist ROOT::RIO)
+target_link_libraries(particle_level PRIVATE ROOT::Core ROOT::Hist ROOT::RIO ROOT::Tree)
 
 target_include_directories(particle_level PRIVATE
     "$ENV{CONDA_PREFIX}/include"

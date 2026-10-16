@@ -2,414 +2,180 @@
 
 ### From same-sign WW scattering at the LHC to extended Higgs sectors and the early Universe
 
-**Collider → Cosmos** is an MSc-level computational high-energy physics project developing a particle-level analysis of electroweak same-sign W-boson scattering at the LHC.
+**MadGraph5_aMC@NLO → Pythia 8 → HepMC → FastJet → C++/ROOT**
 
-The project starts from the Standard Model process
+> **Research status:** ATLAS-inspired Standard Model **particle-level baseline**, validated on a 10,000-event electroweak `W+W+jj` simulation. **Not** an official ATLAS analysis or a matched fiducial cross-section measurement.
 
-**pp → W⁺W⁺jj**
+## The physics question
 
-and builds the simulation and analysis chain from hard-scattering event generation to experimentally motivated particle-level observables.
+Vector-boson scattering (VBS) probes the electroweak gauge and scalar sectors at high energies. This project starts with electroweak `pp → W+W+jj`, with both W bosons decaying to electrons/muons and neutrinos, and constructs a reproducible path from generated events to VBS-sensitive observables. The longer-term goal is to study extended Higgs sectors, especially the **Georgi–Machacek model**, and explore their implications for the electroweak phase transition.
 
-The longer-term objective is to use this validated Standard Model baseline to investigate extended Higgs sectors — particularly the **Georgi–Machacek model** — and ultimately connect collider constraints with the physics of the **electroweak phase transition in the early Universe**.
-
----
-
-## Simulation and Analysis Pipeline
+## Simulation → analysis
 
 ```text
-MadGraph5_aMC@NLO
-        ↓
-Hard-scattering events
-        ↓
-Pythia 8
-        ↓
-Parton shower + hadronization
-        ↓
-HepMC
-        ↓
-Stable final-state particles
-        ↓
-FastJet
-anti-kT, R = 0.4
-        ↓
-Particle-level jets
-        ↓
-C++ / ROOT analysis
-        ↓
-Dressed leptons + MET + VBS observables
-        ↓
-ATLAS-inspired particle-level selection
+13 TeV pp collisions
+    │
+    ▼
+MadGraph5_aMC@NLO (electroweak W+W+jj, leptonic W decays)
+    │  hard-process events
+    ▼
+Pythia 8 (parton shower, hadronization)
+    │
+    ▼
+HepMC2 event record
+    │
+    ├── stable e/μ from hard-W decay lineages → photon dressing
+    ├── stable neutrinos → missing transverse momentum
+    └── stable jet inputs + b-hadron ghosts → FastJet anti-kT R=0.4
+                                             │
+                                             ▼
+                           C++ particle-level object selection
+                                             │
+                                             ▼
+                               ROOT histograms + cutflow
 ```
 
-The current workflow therefore reaches the **particle-level fiducial-analysis stage**.
+## Current sample and result
 
----
-
-## Physics Motivation
-
-Same-sign W-boson scattering is an important vector-boson-scattering (VBS) process at the LHC and provides a direct probe of the electroweak sector.
-
-For the leptonic channel considered here,
-
-**pp → W⁺W⁺jj**
-
-with
-
-**W⁺ → ℓ⁺ν, ℓ = e, μ**
-
-the characteristic experimental signature contains
-
-```text
-two same-sign charged leptons
-              +
-missing transverse momentum
-              +
-two energetic tagging jets
-              +
-additional QCD radiation
-```
-
-The VBS topology is characterized by two energetic jets with large dijet invariant mass and substantial rapidity separation.
-
-The analysis therefore focuses particularly on:
-
-- dijet invariant mass **m<sub>jj</sub>**
-- jet rapidity separation **|Δy<sub>jj</sub>|**
-
-These observables help select a VBS-enhanced region of phase space and provide sensitivity to the dynamics of electroweak symmetry breaking.
-
----
-
-## Current Standard Model Sample
-
-The present baseline uses a pure electroweak same-sign W⁺W⁺jj sample generated with **MadGraph5_aMC@NLO**.
-
-```text
-Process:        pp → W+ W+ jj
-Decay:          W+ → l+ ν
-Leptons:        e+, μ+
-Events:         10,000
-Collision:      pp
-√s:             13 TeV
-Cross section:  0.008951 ± 0.00002036 pb
-```
-
-The quoted uncertainty is the Monte Carlo integration uncertainty from event generation and is **not** a complete theoretical uncertainty.
-
-The hard events are showered and hadronized using **Pythia 8**, with the resulting particle-level event record stored in **HepMC** format.
-
----
-
-## Particle-Level Object Reconstruction
-
-### Jets
-
-Stable visible final-state particles are clustered with **FastJet** using the anti-kT algorithm with
-
-**R = 0.4**
-
-The current jet definition uses:
-
-- **p<sub>T</sub> > 25 GeV**
-- **|η| < 4.5**
-
-Neutrinos and muons are excluded from jet clustering.
-
-The two highest-p<sub>T</sub> selected jets define the current tagging-jet pair.
-
----
-
-### Dressed Leptons
-
-Prompt electron and muon candidates are identified from the generated W-boson decay history.
-
-To account for nearby photon radiation, the lepton four-momentum is dressed using stable photons satisfying
-
-**ΔR(ℓ, γ) < 0.1**
-
-The current dressed-lepton acceptance is:
-
-- **p<sub>T</sub> > 27 GeV**
-- **|η| < 2.5**
-
-Events are then required to contain exactly two selected same-sign dressed leptons with
-
-**m<sub>ℓℓ</sub> > 20 GeV**
-
----
-
-### Missing Transverse Momentum
-
-Particle-level missing transverse momentum is currently constructed from stable final-state neutrinos.
-
-The baseline requirement is
-
-**E<sub>T</sub><sup>miss</sup> > 30 GeV**
-
----
-
-## VBS Selection
-
-The current ATLAS-inspired VBS jet requirements are:
-
-- **p<sub>T,j1</sub> > 65 GeV**
-- **p<sub>T,j2</sub> > 35 GeV**
-- **m<sub>jj</sub> > 500 GeV**
-- **|Δy<sub>jj</sub>| > 2**
-
-These cuts select a VBS-enhanced region of phase space. They should not be interpreted as isolating an individual subset of Feynman diagrams.
-
----
-
-## First Particle-Level Baseline Result
-
-For the current sample of **10,000 generated events**, the cumulative lepton and missing-momentum selection gives:
-
-| Selection | Events |
+| Quantity | Value |
 |---|---:|
-| Two dressed leptons, p<sub>T</sub> > 27 GeV and \|η\| < 2.5 | 3416 |
-| + same-sign requirement | 3415 |
-| + m<sub>ℓℓ</sub> > 20 GeV | 3380 |
-| + E<sub>T</sub><sup>miss</sup> > 30 GeV | 2959 |
+| Process | Electroweak `pp → W+W+jj`, `W+ → ℓ+ν`, ℓ = e, μ |
+| Collision energy | √s = 13 TeV |
+| Generated events | 10,000 |
+| Generator-reported cross section | 0.008951 ± 0.00002036 pb |
+| Events passing current selection | **339** |
+| Unweighted selection efficiency | **3.39%** |
 
-The independent jet/VBS cutflow is:
+The generator-reported cross section is taken from the existing run documentation and its uncertainty is the integration uncertainty, **not** the total theory uncertainty. Its normalization, subprocess definition, branching-ratio conventions and event weights must be verified before deriving an absolute fiducial prediction. The 3.39% value is a **sample acceptance**, not an ATLAS-measured efficiency.
 
-| Selection | Events |
+### Cumulative selection
+
+| Stage | Events |
 |---|---:|
-| At least two selected jets | 9749 |
-| + p<sub>T,j1</sub> > 65 GeV, p<sub>T,j2</sub> > 35 GeV | 8459 |
-| + m<sub>jj</sub> > 500 GeV | 2783 |
-| + \|Δy<sub>jj</sub>\| > 2 | 1384 |
+| Generated | 10,000 |
+| Exactly two dressed leptons, pT > 27 GeV, abs(η) < 2.5 | 3,259 |
+| Same charge | 3,259 |
+| mℓℓ > 20 GeV | 3,226 |
+| Third prompt-lepton veto | 3,226 |
+| Dielectron Z-window veto | 3,116 |
+| Missing pT > 30 GeV | 2,730 |
+| b-jet veto | 2,649 |
+| At least two jets | 2,541 |
+| Leading/subleading jet pT ≥ 65/35 GeV | 2,247 |
+| mjj > 500 GeV | 772 |
+| abs(Δyjj) > 2 | **339** |
 
-Requiring the current lepton, missing-momentum and VBS selections simultaneously gives:
+**Object definitions (implemented):** direct hard-W e/μ lineage (no τ decay chain); photon dressing using ΔR < 0.1 about **bare** leptons, assigning each photon at most once to its nearest lepton and excluding photons with generator-history hadron-decay ancestry; stable-neutrino vector sum for missing pT; anti-kT R=0.4 jets with muons and neutrinos excluded, electron/photon inputs retained; electron–jet overlap removal; open-bottom-hadron ghost-based b-jet veto. Jet acceptance abs(η) < 4.5; b-jet veto pT > 20 GeV and abs(η) < 2.5. These are **ATLAS-inspired approximations**, not a claim of exact experiment-level equivalence.
 
-### **371 / 10,000 selected events**
+## Comparison with published ATLAS measurements
 
-corresponding to a baseline Monte Carlo efficiency of:
+### References
 
-### **3.71%**
+1. **ATLAS, PRL 123 (2019) 161801** — *Observation of Electroweak Production of a Same-Sign W Boson Pair in Association with Two Jets in pp Collisions at √s = 13 TeV*. [DOI](https://doi.org/10.1103/PhysRevLett.123.161801). The paper provides an explicit particle-level fiducial prescription.
+2. **ATLAS, JHEP 04 (2024) 026** — *Measurement and interpretation of same-sign W boson pair production in association with two jets in pp collisions at √s = 13 TeV with the ATLAS detector*. [DOI](https://doi.org/10.1007/JHEP04(2024)026) · [CERN record](https://cds.cern.ch/record/2882929). Includes fiducial and differential results and a search for doubly charged Higgs bosons.
 
-This is the first complete **Standard Model particle-level baseline selection** in the project.
+### Definition-level comparison against the 2019 ATLAS fiducial region
 
----
+| Component | This project | ATLAS 2019 fiducial region | Status |
+|---|---|---|---|
+| Same-sign leptons | Exactly two e/μ from hard-W lineage, pT > 27 GeV, abs(η) < 2.5 | Exactly two e/μ from W, excluding τ decays; same kinematics | Broadly aligned; lineage implementation approximate |
+| Photon dressing | ΔR < 0.1; prompt-like ancestry filter, unique assignment | Photon four-momenta within ΔR = 0.1 | Cone aligned; photon provenance/assignment not identical by construction |
+| Dilepton mass | mℓℓ > 20 GeV | mℓℓ > 20 GeV | Aligned |
+| Dilepton separation | **Not explicitly cut** | ΔRℓℓ > 0.3 | **Missing** |
+| Missing transverse momentum | Vector sum of **all stable neutrinos**, magnitude > 30 GeV | Vector sum of the **two highest-pT final-state neutrinos**, magnitude > 30 GeV | **Different definition** |
+| Jets | anti-kT R=0.4; jet inputs exclude all muons/neutrinos; selected pT ≥ 25 GeV, abs(η) < 4.5 | anti-kT R=0.4; excludes neutrinos and charged leptons from W decays; jets pT > 35 GeV, abs(η) < 4.5 | **Different inputs / threshold** |
+| Lepton–jet overlap | Electron-only, ΔR < 0.4 with pT ratio decision | Event veto if a charged lepton is within ΔR < 0.3 of a jet | **Different prescription** |
+| Tagging jets | Leading > 65 GeV, subleading > 35 GeV; mjj > 500 GeV; abs(Δyjj) > 2 | Same tagging-jet and VBS kinematic thresholds | Aligned in principle |
+| Additional vetoes | Third-lepton, dielectron Z-window and ghost b-jet veto | Not part of the quoted 2019 particle-level fiducial definition | **Additional selections** |
+| Charge channels | **W+W+ only** | **W±W± combined** | **Not directly comparable** |
 
-## Selected Particle-Level Distributions
+**Important:** This table compares to the *2019 fiducial prescription*, not an assertion that every object cut matches the 2024 analysis. A separate cut-by-cut audit of the 2024 definition is needed before calling the sample a faithful reproduction.
 
-### Dijet Invariant Mass
+### Published ATLAS fiducial cross sections — context, NOT a direct comparison
 
-The reconstructed particle-level dijet invariant-mass distribution shows a broad falling spectrum extending into the multi-TeV region.
+| Measurement | Electroweak fiducial cross section |
+|---|---:|
+| ATLAS 2019, 36.1 fb⁻¹ | 2.89 fb, with asymmetric statistical/systematic uncertainties |
+| ATLAS 2024, 139 fb⁻¹ | **2.92 ± 0.22 (stat.) ± 0.19 (syst.) fb** |
 
-![Particle-level dijet invariant mass](plots/mjj.png)
+The 2024 ATLAS paper also reports an **inclusive** (EW + interference + QCD) fiducial result of **3.38 ± 0.22 (stat.) ± 0.19 (syst.) fb**. These published results combine same-sign charge configurations and use experiment-defined fiducial regions. **Do not compare 339/10,000, or a cross section obtained by naively multiplying 3.39% by the generator-reported number, directly to these measurements.** First align the signal definition, both charge channels, fiducial cuts, event-weight normalization and generator conventions.
 
----
+## Validation performed on the current 10k-event sample
 
-### Dijet Rapidity Separation
+| Check | Result | Interpretation |
+|---|---|---|
+| Hard-W lepton lineage | 20,000 direct-lineage stable e/μ; 2 per generated event | Consistent with the generated signal topology |
+| Broad vs direct lineage | 64 broad-only candidates across 32 events | Broad ancestry admits additional candidates |
+| Momentum closure | Mean transverse closure 3.81 × 10⁻⁶ GeV; max 0.00417 GeV | Strong generator-record momentum consistency |
+| Refined photon dressing | 2,455 in-cone hadron-ancestry photons excluded; 8,704 assigned | Generator-history approximation |
+| Paired old/new dressing | Two-lepton count 3,272 → 3,259; **13** events change two-lepton pass/fail | Quantified impact |
+| Paired final selection | **339 → 339; 0 events change final pass/fail** | Final event set robust under this dressing change, for this sample |
+| b-hadron ghosts | 1,436 last open-bottom hadrons, all status 2 with end vertices | Supports record consistency; does **not** establish weak-decay definition |
+| Jet counting | 9,749 events with ≥2 jets before electron–jet overlap removal; 9,529 after | Overlap removal changes jet multiplicity |
 
-The rapidity separation of the two leading selected jets provides a second characteristic VBS observable.
+**Validation scope:** These checks test internal consistency and the effect of a particular object-definition change. They do **not** establish agreement with unfolded ATLAS distributions or a validated absolute cross section.
 
-![Particle-level dijet rapidity separation](plots/dy_jj.png)
+## Figures
 
----
+Existing project figures (verify they correspond to the current selection before interpreting them as post-validation outputs):
 
-### Leading Dressed-Lepton Transverse Momentum
+![Dijet invariant mass](plots/mjj.png)
+
+![Tagging-jet rapidity separation](plots/dy_jj.png)
 
 ![Leading dressed-lepton transverse momentum](plots/lepton1_pt.png)
 
----
+![Dilepton invariant mass](plots/mll.png)
 
-### Dilepton Invariant Mass
+## Reproducibility
 
-![Particle-level dilepton invariant mass](plots/mll.png)
-
----
-
-## From Partons to Particle-Level Jets
-
-An earlier stage of the project studied the outgoing matrix-element quarks directly.
-
-This provided a useful first view of the VBS topology through quantities such as:
-
-- **m<sub>qq</sub>**
-- **|Δy<sub>qq</sub>|**
-
-Those quantities are useful for understanding the hard process but are **not experimentally reconstructed jets**.
-
-The current analysis has therefore progressed through:
+The current C++ source is `analysis/particle_level.cpp`, and the analysis is built through the project's CMake configuration. The current executable expects the HepMC2 sample at a **relative local path**:
 
 ```text
-matrix-element quarks
-        ↓
-parton shower
-        ↓
-hadronization
-        ↓
-stable final-state particles
-        ↓
-anti-kT clustering
-        ↓
-particle-level jets
+sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc
 ```
 
-This allows the analysis to work with experimentally meaningful particle-level jet observables.
+From the `analysis/` directory, in the configured WSL/Linux environment:
 
----
-
-## Current Status and Validation
-
-The present analysis should be interpreted as an **ATLAS-inspired Standard Model particle-level baseline**, not yet as an exact reproduction of the final ATLAS fiducial definition.
-
-The next validation steps include:
-
-- refining the prompt-photon definition used for lepton dressing
-- implementing the particle-level electron–jet overlap-removal prescription
-- implementing the b-jet veto
-- validating event weights and absolute normalization
-- including the corresponding W⁻W⁻jj contribution where required
-- comparing particle-level distributions with unfolded ATLAS / HEPData results
-- documenting a fully reproducible Pythia/HepMC runtime configuration
-
-Scientific correctness and validation take priority over agreement with any particular reference distribution.
-
----
-
-## Toward Experimental Measurements
-
-The analysis is designed to meet collider measurements at the **particle level**:
-
-```text
-THEORY / SIMULATION
-
-Matrix element
-      ↓
-Parton shower
-      ↓
-Hadronization
-      ↓
-Particle-level objects
-      ↓
-Fiducial observables
-
-              ↕ comparison
-
-EXPERIMENT
-
-Detector data
-      ↓
-Reconstruction
-      ↓
-Background subtraction
-      ↓
-Unfolding
-      ↓
-Particle-level observables
+```bash
+cmake --build ../build
+../build/particle_level
 ```
 
-A full detector simulation is therefore not required for the current baseline comparison with unfolded measurements.
+This creates `particle_level.root` in the working directory. The exact generator cards, software versions, input sample checksums, build dependencies, and complete from-scratch instructions still need to be published. The generated samples and locally installed generator are intentionally **not** committed.
 
----
-
-## Long-Term Research Direction
-
-Once the Standard Model same-sign WW baseline is validated, the project will move toward physics beyond the Standard Model.
-
-The primary model of interest is the **Georgi–Machacek (GM) model**, which extends the Standard Model Higgs sector while allowing custodial symmetry to be preserved at tree level.
-
-Of particular interest is the custodial-fiveplet doubly charged scalar
-
-**H₅⁺⁺**
-
-which can couple directly to
-
-**W⁺W⁺**
-
-Same-sign WW scattering therefore provides a natural collider channel for investigating this extended scalar sector.
-
-The intended research chain is:
-
-```text
-SM same-sign WW VBS
-        ↓
-Validated particle-level baseline
-        ↓
-Georgi–Machacek benchmarks
-        ↓
-Collider constraints
-        ↓
-Viable scalar-sector parameter space
-        ↓
-Finite-temperature electroweak physics
-        ↓
-Electroweak phase transition
-        ↓
-Early-Universe interpretation
-```
-
-Possible gravitational-wave phenomenology is considered a later extension rather than part of the current baseline.
-
----
-
-## Repository Structure
+## Repository layout
 
 ```text
 collider_to_cosmos/
-│
 ├── analysis/
-│   ├── particle_level.cpp
-│   ├── lhe_reader.cpp
-│   └── supporting analysis code
-│
+│   └── particle_level.cpp
 ├── plots/
 │   ├── mjj.png
 │   ├── dy_jj.png
 │   ├── lepton1_pt.png
 │   └── mll.png
-│
-├── ROOT_examples.txt
-├── workflow.txt
 ├── README.md
 └── .gitignore
 ```
 
-Large generated event samples, local generator installations, HepMC files, ROOT output files and compiled binaries are intentionally excluded from version control.
+Other supporting files may be present; this tree highlights the central analysis and existing plots.
+
+## Research roadmap
+
+- [x] Electroweak same-sign `W+W+jj` generation and showering
+- [x] HepMC2 → FastJet → ROOT particle-level pipeline
+- [x] Lepton lineage, MET closure and photon-dressing robustness checks
+- [x] Electron–jet overlap removal and b-jet ghost-veto **implementations**
+- [ ] Exact ATLAS fiducial-object definitions and selection audit
+- [ ] Event-weight and cross-section normalization validation
+- [ ] Both `W+W+` and `W−W−` samples
+- [ ] ATLAS/HEPData differential comparison with matched definitions
+- [ ] Reproducible environment, run cards, checksums and analysis tests
+- [ ] Georgi–Machacek benchmarks, collider constraints and finite-temperature electroweak interpretation
+
+**Research principle:** *Physical principle → research question → observable → simulation/code → validation → physical interpretation.*
 
 ---
 
-## Tools
-
-The current workflow uses:
-
-- **C++17**
-- **ROOT**
-- **MadGraph5_aMC@NLO**
-- **Pythia 8**
-- **HepMC**
-- **FastJet**
-- **Linux / WSL2**
-- **Git / GitHub**
-
----
-
-## Project Philosophy
-
-The project follows the workflow:
-
-> **Physical principle → research question → observable → simulation/code → validation → physical interpretation**
-
-The objective is not simply to generate Monte Carlo events, but to understand how theoretical quantities become experimentally meaningful collider observables — and how those observables can ultimately constrain physics beyond the Standard Model.
-
----
-
-## Current Milestone
-
-**Completed:**  
-MadGraph → Pythia → HepMC → FastJet → ROOT particle-level analysis
-
-**Current result:**  
-First ATLAS-inspired same-sign WWjj baseline selection, with **371 / 10,000 events** passing the combined selection.
-
-**Next milestone:**  
-Complete the fiducial-definition refinements and validate the Standard Model baseline against unfolded ATLAS measurements before introducing controlled Georgi–Machacek benchmarks.
-
----
-
-*Collider → Cosmos is an ongoing MSc-level high-energy physics research project.*
+*Independent MSc-level research software project. Not affiliated with or endorsed by the ATLAS Collaboration or CERN.*
