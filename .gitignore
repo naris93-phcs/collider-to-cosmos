@@ -1,44 +1,47 @@
-# MadGraph installation
+# Local MadGraph installation and archives
 MG5_aMC_v3_8_0/
 MG5_aMC_v3.8.0.tar.gz
 
-# Generated MadGraph process directories
+# Generated MadGraph process directories / event samples
 sm_wpwpjj/
 sm_wpwpjj_leptonic/
-
-# Large generated event files
 *.lhe
 *.lhe.gz
 *.hepmc
 *.hepmc.gz
 
-# Compiled files
+# CMake / build products
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
 *.o
 *.so
+*.a
 *.out
 
-# Local executables
+# Local executables and scratch test programs
 analysis/lhe_reader
-
-# ROOT output files
-*.root
-
-# Editor / OS
-.vscode/
-.DS_Store
-._*
-# Analysis debug / temporary files
-analysis/pythia8312/
-analysis/*.lhe
-analysis/*.txt
-analysis/stream_test
+analysis/particle_level
 analysis/pythia_test
 analysis/reader_test
+analysis/stream_test
 analysis/nano*
-
-# VS Code local configuration
-analysis/.vscode/
+analysis/pythia8312/
 analysis/pythia_test.cpp
 analysis/reader_test.cpp
 analysis/stream_test.cpp
-analysis/particle_level
+
+# Analysis scratch data; keep source, documentation and tracked figures
+analysis/*.lhe
+analysis/*.txt
+*.root
+
+# Editor / OS / Python
+.vscode/
+.DS_Store
+._*
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
