@@ -1,0 +1,425 @@
+============================================================
+ROOT QUICK REFERENCE — COLLIDER TO COSMOS (v0.2)
+SM W+W+jj | ATLAS-inspired particle-level baseline
+Updated: 21 October 2026
+============================================================
+
+WORKING DIRECTORY
+------------------------------------------------------------
+Run the commands below from:
+  ~/projects/collider_to_cosmos/analysis
+
+Current main outputs:
+  particle_level.root          ROOT histograms + selected-event TTree
+  cutflow.png                  Cumulative selection plot
+  ../plots/fiducial/*.png     Four normalized selected-event shapes
+
+IMPORTANT: relative file paths are resolved from the CURRENT
+working directory, not automatically from the macro directory.
+
+============================================================
+1. OPEN / INSPECT ROOT DATA — COMMAND LIBRARY
+============================================================
+
+START HERE  (run in ~/projects/collider_to_cosmos/analysis)
+------------------------------------------------------------
+  root -l particle_level.root       Open the current ROOT file
+
+Inside the ROOT prompt (root [0], root [1], ...):
+  .ls                               List all objects in the ROOT file
+  .q                                Quit ROOT
+
+NOTE: Commands below run INSIDE ROOT unless explicitly marked BASH.
+      The diagnostic histograms and fiducial_events are DIFFERENT
+      analysis stages. Only fiducial_events has the 339 final events.
+
+
+A. STORED HISTOGRAMS — QUICK VIEW
+------------------------------------------------------------
+  h_cutflow->Draw("BAR0");          Cumulative cutflow
+  h_njets->Draw("HIST");            Number of selected jets
+  h_jet1_pt->Draw("HIST");          Leading jet transverse momentum
+  h_jet2_pt->Draw("HIST");          Subleading jet transverse momentum
+  h_jet1_eta->Draw("HIST");         Leading jet pseudorapidity
+  h_jet2_eta->Draw("HIST");         Subleading jet pseudorapidity
+  h_mjj->Draw("HIST");              Dijet invariant mass
+  h_deta_jj->Draw("HIST");          Absolute pseudorapidity separation
+  h_dy_jj->Draw("HIST");            Absolute rapidity separation
+  h_lepton1_pt->Draw("HIST");       Leading dressed-lepton pT
+  h_lepton2_pt->Draw("HIST");       Subleading dressed-lepton pT
+  h_mll->Draw("HIST");              Dilepton invariant mass
+  h_met->Draw("HIST");              Particle-level missing pT
+
+  IMPORTANT: These histograms are NOT all filled after the final
+  fiducial selection. Their Entries may differ substantially.
+
+
+B. FINAL-SELECTED EVENT TREE — INSPECT THE DATA
+------------------------------------------------------------
+  fiducial_events->Print();         Show schema, branches and types
+  fiducial_events->GetEntries();    Number of final selected events: 339
+  fiducial_events->Show(0);         Show ALL branch values for entry 0
+  fiducial_events->Show(10);        Show ALL branch values for entry 10
+
+  Available branches (all Double_t):
+    mjj          dy_jj          mll           met
+    lepton1_pt   lepton2_pt     jet1_pt       jet2_pt
+
+  Scan a few entries (third argument = options, fourth = max rows):
+  fiducial_events->Scan("mjj:dy_jj:mll", "", "", 5);
+  fiducial_events->Scan("lepton1_pt:lepton2_pt:met", "", "", 10);
+  fiducial_events->Scan("jet1_pt:jet2_pt:mjj", "", "", 10);
+  fiducial_events->Scan("mjj:dy_jj:mll:met:lepton1_pt:lepton2_pt:jet1_pt:jet2_pt", "", "", 3);
+  fiducial_events->Scan("*", "", "", 5);
+
+  NOTE: Show(0) refers to the FIRST SELECTED event, not event 0
+  in the original 10,000-event HepMC sample.
+
+
+C. QUERY / FILTER THE SELECTED EVENTS
+------------------------------------------------------------
+  Count events satisfying an additional condition:
+  fiducial_events->GetEntries("mjj>1000");
+  fiducial_events->GetEntries("dy_jj>3");
+  fiducial_events->GetEntries("met>100");
+  fiducial_events->GetEntries("mjj>1000 && dy_jj>3");
+
+  Inspect only entries passing an additional condition:
+  fiducial_events->Scan("mjj:dy_jj", "mjj>1500", "", 10);
+  fiducial_events->Scan("lepton1_pt:met", "met>100", "", 10);
+  fiducial_events->Scan("jet1_pt:jet2_pt", "jet1_pt>150", "", 10);
+
+  REMEMBER: These filters act on the ALREADY SELECTED 339 events.
+  They do not reprocess the original 10,000 HepMC events.
+
+
+D. QUICK TREE PLOTS (FROM THE 339 FINAL EVENTS)
+------------------------------------------------------------
+  fiducial_events->Draw("mjj");              Final dijet mass
+  fiducial_events->Draw("dy_jj");            Final rapidity separation
+  fiducial_events->Draw("mll");              Final dilepton mass
+  fiducial_events->Draw("met");              Final missing pT
+  fiducial_events->Draw("lepton1_pt");       Final leading lepton pT
+  fiducial_events->Draw("lepton2_pt");       Final subleading lepton pT
+  fiducial_events->Draw("jet1_pt");          Final leading jet pT
+  fiducial_events->Draw("jet2_pt");          Final subleading jet pT
+
+  Plot only events satisfying an EXTRA condition:
+  fiducial_events->Draw("mjj", "dy_jj>3");
+  fiducial_events->Draw("met", "mjj>1000");
+
+  Plot correlations (ROOT uses y:x):
+  fiducial_events->Draw("dy_jj:mjj", "", "COLZ");
+  fiducial_events->Draw("lepton2_pt:lepton1_pt", "", "COLZ");
+  fiducial_events->Draw("met:mll", "", "COLZ");
+
+  For publication-style NORMALIZED plots with statistical error
+  bars and fixed binning, use macros/fiducial_shapes.C instead.
+  The quick Draw() calls above use ROOT's automatic binning and
+  are not automatically normalized.
+
+
+E. NUMBERS / STATISTICS / CUTFLOW
+------------------------------------------------------------
+  h_mjj->GetEntries();              Number of histogram fills
+  h_mjj->GetMean();                 Mean of stored diagnostic histogram
+  h_mjj->GetStdDev();               Standard deviation
+  h_mjj->Integral();                Sum of regular-bin contents
+  h_cutflow->GetBinContent(1);      Generated events (expected 10000)
+  h_cutflow->GetBinContent(12);     Final selected events (expected 339)
+  h_cutflow->Print("all");         Print histogram/bin information
+
+  Mean of a FINAL-selected branch (creates a temporary histogram):
+  fiducial_events->Draw("mjj>>h_tmp_mjj(25,500,3000)", "", "goff");
+  h_tmp_mjj->GetMean();
+  h_tmp_mjj->GetStdDev();
+
+  NOTE: Means of a histogram can be affected by the specified
+  histogram range. The published fiducial plots have their own
+  binning and ranges, defined in fiducial_shapes.C.
+
+
+F. DISPLAY / SAVE
+------------------------------------------------------------
+  gPad->SetLogy();                  Logarithmic y axis (after drawing)
+  gPad->SetLogy(0);                 Return to linear y axis
+  gStyle->SetOptStat(0);            Hide statistics box
+  gStyle->SetOptStat(1111);         Show statistics box
+  h_mjj->GetXaxis()->SetRangeUser(0,1500);
+  h_mjj->GetXaxis()->UnZoom();
+  gPad->SaveAs("mjj.png");          Save the current canvas in analysis/
+  gPad->SaveAs("mjj.pdf");          Save as PDF
+
+  Separate canvases for simultaneous viewing:
+  TCanvas *c1 = new TCanvas("c1", "mjj", 850, 600);
+  h_mjj->Draw("HIST");
+  TCanvas *c2 = new TCanvas("c2", "dy_jj", 850, 600);
+  h_dy_jj->Draw("HIST");
+
+  NOTE: Interactive canvases require an available graphical display.
+
+
+G. BASH — OPEN OUTPUT FOLDERS FROM WSL
+------------------------------------------------------------
+  explorer.exe .
+      Open the analysis directory in Windows File Explorer.
+
+  explorer.exe "$(wslpath -w ../plots/fiducial)"
+      Open the final fiducial PNG folder in Windows File Explorer.
+
+
+============================================================
+2. RUN PLOTTING MACROS
+============================================================
+
+From analysis/:
+  root -l -b -q 'macros/fiducial_shapes.C()'
+
+The fiducial_shapes() macro:
+  - reads particle_level.root / fiducial_events
+  - makes normalized shape histograms (fraction per bin)
+  - draws step histograms WITH statistical error bars
+  - saves four images under ../plots/fiducial/:
+      mjj.png, dy_jj.png, lepton1_pt.png, mll.png
+  - is NOT a comparison with ATLAS data
+
+To run interactively (ROOT stays open):
+  root -l
+  .x macros/fiducial_shapes.C
+
+NOTE: canvases are local variables in the macro; they may close
+when the macro finishes. Saved PNGs are the reliable presentation
+outputs. To browse the directory from WSL:
+  explorer.exe "$(wslpath -w ../plots/fiducial)"
+
+For the cutflow macro, use its ACTUAL location:
+  root -l -b -q 'plot_cutflow.C()'          [if in analysis/]
+  root -l -b -q 'macros/plot_cutflow.C()'   [if in analysis/macros/]
+
+The provided plot_cutflow() source reads h_cutflow from
+particle_level.root and saves cutflow.png in the current directory.
+Check the filename/location with 'ls' before running.
+
+============================================================
+3. CURRENT ROOT OBJECTS
+============================================================
+
+Diagnostic TH1D histograms:
+  h_njets
+  h_jet1_pt, h_jet2_pt
+  h_jet1_eta, h_jet2_eta
+  h_mjj, h_deta_jj, h_dy_jj
+  h_lepton1_pt, h_lepton2_pt
+  h_mll, h_met
+  h_cutflow
+
+CAUTION: these diagnostic histograms are NOT all filled at the
+same selection stage. In the current C++ source:
+  h_mjj, h_deta_jj, h_dy_jj: events with >=2 selected jets
+  h_jet1_pt, h_jet2_pt:        same >=2-jet condition
+  h_lepton1_pt, h_lepton2_pt, h_met:
+                                events with exactly 2 dressed leptons
+  h_mll:                      after 2 leptons + same-sign requirement
+  h_njets:                    all processed events after overlap removal
+
+Do NOT label the above as final fiducial distributions.
+
+Final selected-event TTree:
+  fiducial_events
+  339 entries, one per event passing ALL current cuts.
+  Eight double-precision branches:
+    mjj         Dijet invariant mass [GeV]
+    dy_jj       Absolute jet rapidity difference
+    mll         Dilepton invariant mass [GeV]
+    lepton1_pt  Leading dressed-lepton transverse momentum [GeV]
+    lepton2_pt  Subleading dressed-lepton transverse momentum [GeV]
+    met         Stable-neutrino transverse-momentum magnitude [GeV]
+    jet1_pt     Leading selected-jet pT [GeV]
+    jet2_pt     Subleading selected-jet pT [GeV]
+
+TTree = per-event observables; TH1D = binned distribution.
+The TTree does NOT contain complete particle four-vectors.
+
+============================================================
+4. CURRENT EVENT / OBJECT DEFINITIONS (SOURCE CODE)
+============================================================
+
+Input:
+  ../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc
+
+Jet clustering:
+  FastJet anti-kT, R=0.4
+  Stable visible particles, excluding neutrinos and muons
+  Electrons and photons included in clustering inputs
+  Jet acceptance: |eta| < 4.5
+  VBS jet candidates: pT >= 25 GeV
+  Tagging jets: two highest-pT selected jets
+
+Prompt signal leptons (generator-history approximation):
+  Stable e/mu with direct hard-W decay lineage, following
+  W-copy and same-lepton-copy chains.
+
+Photon dressing:
+  Bare-lepton direction used for DeltaR(l,gamma) < 0.1
+  Reject photons with hadron-decay ancestry (approximation)
+  Assign each eligible photon uniquely to nearest bare lepton
+  Add photon four-momentum to the lepton four-momentum
+  Selected dressed leptons: pT > 27 GeV, |eta| < 2.5
+
+Electron-jet overlap removal:
+  For electron-jet DeltaR < 0.4 and jet pT >= 25 GeV:
+    if pT(e)/pT(jet) < 0.5, remove electron;
+    otherwise remove overlapping jet.
+  Applied before VBS jet selection.
+
+Lepton / event selection:
+  Exactly 2 selected dressed leptons
+  Same electric charge (the current signal is W+W+)
+  m_ll > 20 GeV
+  Third prompt-lepton veto: no >2 prompt e/mu with
+    pT > 3 GeV and |eta| < 2.5 (source approximation)
+  Dielectron-only Z-window veto: |m_ll - 91.1876| >= 15 GeV
+  MET > 30 GeV
+
+MET:
+  Magnitude of vector sum of stable-neutrino transverse momenta
+  (not a detector-reconstructed missing-energy measurement).
+
+b-jet veto:
+  Approximate last-open-bottom-hadron ghost association
+  Veto a tagged jet with pT > 20 GeV and |eta| < 2.5
+  This is not yet a fully verified official ATLAS weakly-
+  decaying-b-hadron truth definition.
+
+VBS topology:
+  >=2 jets with pT >= 25 GeV and |eta| < 4.5
+  Leading jet pT >= 65 GeV
+  Subleading jet pT >= 35 GeV
+  m_jj > 500 GeV
+  |Delta y_jj| > 2
+
+============================================================
+5. LATEST CONFIRMED CUMULATIVE CUTFLOW (10,000 EVENTS)
+============================================================
+
+  Generated                       10000
+  + exactly 2 dressed leptons     3259
+  + same sign                     3259
+  + m_ll > 20 GeV                 3226
+  + third-lepton veto             3226
+  + ee Z-veto                     3116
+  + MET > 30 GeV                  2730
+  + b-jet veto                    2649
+  + >= 2 selected jets            2541
+  + leading/subleading jet pT     2247
+  + m_jj > 500 GeV                 772
+  + |Delta y_jj| > 2               339
+
+  Selected / generated: 339 / 10000 = 3.39%
+
+These counts describe the last confirmed analysis output in our
+session; the C++ source defines HOW to compute them but does not
+hard-code the counts. If you regenerate particle_level.root,
+recheck the cutflow before quoting these numbers.
+
+The 3.39% is an unweighted selection fraction for this sample.
+It is NOT a measured cross section or detector efficiency.
+
+============================================================
+6. FINAL FIDUCIAL SHAPES (339 SELECTED EVENTS)
+============================================================
+
+From the supplied final selected-event plots:
+  mjj         mean ~959.2 GeV;  plot range 500-3000 GeV
+  |dy_jj|     mean ~3.081;      plot range 2-10
+  lepton1_pt  mean ~100.6 GeV;  plot range 0-250 GeV
+  mll         mean ~241.2 GeV;  plot range 0-600 GeV
+
+Macro binning:
+  mjj         25 bins
+  dy_jj       20 bins
+  lepton1_pt  25 bins
+  mll         30 bins
+
+Y-axis: 'Fraction / bin', normalized by histogram integral
+INCLUDING underflow/overflow in the denominator.
+For ordinary unweighted bins, the macro enables Sumw2() and
+shows approximate counting-statistical uncertainties.
+These are NOT systematic uncertainty bands.
+
+Interpretation:
+  The VBS cuts remove the low-mjj and low-|dy_jj| regions.
+  A falling distribution above the cut threshold is normal.
+  The selected distributions are not yet validated against
+  unfolded ATLAS data or HEPData tables.
+
+============================================================
+7. PHYSICS REMINDERS
+============================================================
+
+  m_jj^2 = (p_j1 + p_j2)^2
+  m_ll^2 = (p_l1 + p_l2)^2
+  pT = sqrt(px^2 + py^2)
+  y = 0.5 * ln((E+pz)/(E-pz))
+  |Delta y_jj| = |y_j1 - y_j2|
+
+For approximately massless jets:
+  m_jj^2 ~ 2 pT1 pT2 [cosh(Delta y) - cos(Delta phi)]
+
+Large dijet mass and large rapidity separation are characteristic
+of VBS-like tagging-jet topologies, not mandatory for every
+generated electroweak event.
+
+============================================================
+8. VALIDATION / LIMITATIONS / NEXT STEPS
+============================================================
+
+Implemented:
+  - Full MadGraph -> Pythia8 -> HepMC -> FastJet -> ROOT pipeline
+  - Direct hard-W lepton-lineage selection (signal approximation)
+  - Bare-cone photon dressing with unique photon assignment
+  - Electron-jet overlap removal
+  - Approximate b-hadron ghost-matched b-jet veto
+  - Third-lepton and dielectron Z-window vetoes
+  - Unified cumulative cutflow
+  - Selected-event ROOT TTree and normalized shape plots
+  - Paired old/new dressing and MET-closure diagnostics
+
+Still to establish:
+  - Exact agreement with a specified ATLAS fiducial definition
+  - Generator configuration, event weights and normalization
+  - Proper fiducial cross-section calculation
+  - Relevant backgrounds / other charge channels as needed
+  - Statistical and systematic uncertainty treatment
+  - Comparison with published ATLAS/HEPData distributions
+  - BSM Georgi-Machacek implementation and parameter scan
+  - Any finite-temperature EWPT analysis
+
+The current output is a functioning SM particle-level baseline,
+NOT a complete experimental validation or BSM result.
+
+============================================================
+9. TROUBLESHOOTING
+============================================================
+
+Error: Cannot open particle_level.root
+  Check 'pwd' and 'ls particle_level.root'. Run macros from
+  analysis/ or pass the correct input file path.
+
+Error: missing fiducial_events tree
+  Check '.ls' in ROOT; confirm this is the latest output file.
+
+Why do diagnostic histogram entries differ?
+  Histograms are filled at different stages of the event loop.
+  The final TTree always stores only full-selection events.
+
+Why do final plots have vertical lines?
+  They ARE histograms, drawn with statistical error bars.
+
+Why does ROOT close plots?
+  Batch execution exits, and the macro uses local canvases.
+  Inspect saved PNGs independently in Windows Explorer.
+
+============================================================
+END — Collider to Cosmos ROOT Quick Reference v0.2
+============================================================
