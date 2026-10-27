@@ -13,6 +13,13 @@
 #include "TTree.h"
 
 
+// Object-matching distance in pseudorapidity and wrapped azimuth.
+double deltaREta(const fastjet::PseudoJet& a, const fastjet::PseudoJet& b)
+{
+    return std::hypot(a.eta() - b.eta(), a.delta_phi_to(b));
+}
+
+
 // -----------------------------------------------------------------------------
 // Generator-history helpers
 // -----------------------------------------------------------------------------
@@ -667,7 +674,7 @@ int main()
             for (size_t i = 0; i < prompt_leptons.size(); ++i) {
                 const auto& lm = prompt_leptons[i]->momentum();
                 const fastjet::PseudoJet bare(lm.px(),lm.py(),lm.pz(),lm.e());
-                const double dr = bare.delta_R(gamma);
+                const double dr = deltaREta(bare, gamma);
                 if (dr < 0.1) ++candidates;
                 if (dr < best_dr) { best_dr = dr; closest = i; }
             }
@@ -796,7 +803,7 @@ int main()
                 double smallest_dr = 0.4;
                 for (size_t j = 0; j < selected_jets.size(); ++j) {
                     if (selected_jets[j].pt() < 25.0) continue;
-                    const double dr = dressed_leptons[i].delta_R(selected_jets[j]);
+                    const double dr = deltaREta(dressed_leptons[i], selected_jets[j]);
                     if (dr < smallest_dr) {
                         smallest_dr = dr;
                         closest = j;
