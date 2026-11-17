@@ -34,6 +34,14 @@ target_link_libraries(particle_level PRIVATE
     "${HEPMC_DIR}/lib/libHepMC.so"
 )
 
+# Keep the validated Pythia version ahead of the Conda installation.
+set(LIFETIME_PYTHIA_DIR "${HEPMC_DIR}/pythia8")
+target_include_directories(particle_level BEFORE PRIVATE "${LIFETIME_PYTHIA_DIR}/include")
+target_link_libraries(particle_level PRIVATE "${LIFETIME_PYTHIA_DIR}/lib/libpythia8.so")
+target_compile_definitions(particle_level PRIVATE
+    LIFETIME_PYTHIA_XML="${LIFETIME_PYTHIA_DIR}/share/Pythia8/xmldoc"
+)
+
 set_target_properties(particle_level PROPERTIES
-    BUILD_RPATH "${HEPMC_DIR}/lib"
+    BUILD_RPATH "${LIFETIME_PYTHIA_DIR}/lib;${HEPMC_DIR}/lib"
 )

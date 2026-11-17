@@ -1,0 +1,175 @@
+{
+  "passed": true,
+  "subprocess_directories": [
+    "P1_qq_wpwpqq_wp_lvl_wp_lvl"
+  ],
+  "matrix_subprocesses": 14,
+  "diagram_orders": {
+    "QCD=0, QED=6": 860
+  },
+  "matrices": [
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix10_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "c d~ > w+ w+ s u~ QCD=0 QED<=4 @1",
+        "u s~ > w+ w+ d c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix11_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1",
+        "s~ s~ > w+ w+ c~ c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix12_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1",
+        "s~ s~ > w+ w+ c~ c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix13_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix14_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix1_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "c c > w+ w+ s s QCD=0 QED<=4 @1",
+        "u u > w+ w+ d d QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix2_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "c c > w+ w+ s s QCD=0 QED<=4 @1",
+        "u u > w+ w+ d d QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix3_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "u c > w+ w+ d s QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix4_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "u c > w+ w+ d s QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix5_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "c s~ > w+ w+ s c~ QCD=0 QED<=4 @1",
+        "u d~ > w+ w+ d u~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix6_orig.f",
+      "ngraphs": 86,
+      "orders": {
+        "QCD=0, QED=6": 86
+      },
+      "production_headers": [
+        "c s~ > w+ w+ s c~ QCD=0 QED<=4 @1",
+        "u d~ > w+ w+ d u~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix7_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "c s~ > w+ w+ d u~ QCD=0 QED<=4 @1",
+        "u d~ > w+ w+ s c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix8_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "c s~ > w+ w+ d u~ QCD=0 QED<=4 @1",
+        "u d~ > w+ w+ s c~ QCD=0 QED<=4 @1"
+      ]
+    },
+    {
+      "file": "sm_ew_wpwpjj_leptonic/SubProcesses/P1_qq_wpwpqq_wp_lvl_wp_lvl/matrix9_orig.f",
+      "ngraphs": 43,
+      "orders": {
+        "QCD=0, QED=6": 43
+      },
+      "production_headers": [
+        "c d~ > w+ w+ s u~ QCD=0 QED<=4 @1",
+        "u s~ > w+ w+ d c~ QCD=0 QED<=4 @1"
+      ]
+    }
+  ],
+  "note": "Initial extracted command included XML CDATA delimiters; MG ignored those two commands. Clean command and original extraction retained. All actual process matrix checks pass.",
+  "matrix_couplings": {
+    "GC_1": "{'QED':1}",
+    "GC_100": "{'QED':1}",
+    "GC_2": "{'QED':1}",
+    "GC_3": "{'QED':1}",
+    "GC_35": "{'QED':2}",
+    "GC_50": "{'QED':1}",
+    "GC_53": "{'QED':1}",
+    "GC_58": "{'QED':1}",
+    "GC_72": "{'QED':1}"
+  },
+  "no_strong_couplings_in_matrix_code": true
+}

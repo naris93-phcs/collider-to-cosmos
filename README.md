@@ -1,3 +1,43 @@
+# From Collider Physics to the Early Universe
+
+MSc research software for Standard Model same-sign WWjj production at 13 TeV,
+with a later research direction in extended Higgs sectors and the electroweak
+phase transition. The current baseline contains separately generated EW and
+QCD-induced W⁺W⁺jj and W⁻W⁻jj, with 10,000 analyzed events per sample.
+
+Start with the [curated results](results/README.md) and
+[four-sample provenance index](docs/RESULTS_INDEX.md). The common analysis is the
+existing particle-level `lifetime` selection. Rates are preliminary because
+the EW positive generator discrepancy and the ATLAS fiducial audit remain
+open. The baseline excludes interference and PDF/scale systematics.
+[Validation status](docs/VALIDATION_STATUS.md)
+
+## Build and use
+
+The workflow uses MadGraph5_aMC@NLO 3.8.0, Pythia 8.317, HepMC2, FastJet,
+ROOT and C++17. With the local `hep` Conda environment active and HEPTools
+in place, CMake 3.28 or newer can build the `particle_level` target.
+[Environment, exact commands and isolated replay](docs/REPRODUCIBILITY.md)
+
+```bash
+replay_build=$(mktemp -d /tmp/collider-build.XXXXXX)
+cmake -S . -B "$replay_build" -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
+cmake --build "$replay_build" --target particle_level
+"$replay_build/particle_level" lifetime /absolute/path/to/input.hepmc /absolute/path/to/new.root
+```
+
+
+## Repository navigation
+
+- [Project map](docs/PROJECT_MAP.md), [workflow tools](scripts/README.md) and [configuration cards](configs/README.md)
+- [Four-sample results](results/README.md), [historical figures](plots/legacy_charge_study/README.md) and [release checksums](results/SHA256SUMS)
+- [Cleanup and storage record](docs/CLEANUP_REPORT.md)
+
+The preserved notes below describe earlier studies. Use the four-sample index
+for the current sample identities, counts, normalizations and output paths.
+
+---
+
 # Collider → Cosmos
 
 ### From same-sign WW scattering at the LHC to extended Higgs sectors and the early Universe
@@ -5,6 +45,18 @@
 **MadGraph5_aMC@NLO → Pythia 8 → HepMC → FastJet → C++/ROOT**
 
 > **Research status:** ATLAS-inspired Standard Model **particle-level baseline**, validated on a 10,000-event electroweak `W+W+jj` simulation. **Not** an official ATLAS analysis or a matched fiducial cross-section measurement.
+
+**Stable-particle modes:** new runs default to `lifetime`; use `status1`
+to reproduce the original particle collection. See the
+[lifetime integration guide](validation/lifetime_integration/README.md) for
+build/run commands, regression results and protected output paths. The
+earlier baseline cutflow and plots below are historical references.
+
+**Tagging jets:** the current fiducial cut requires leading `pT > 65 GeV`
+and subleading `pT > 35 GeV` (ATLAS 2024 §7.1). Exactly 65 or 35 GeV,
+respectively, fails the cut. The historical cutflow below used inclusive
+endpoints. See the [strict-threshold regression](validation/strict_tagging_pt/README.md).
+
 
 ## The physics question
 
@@ -120,10 +172,11 @@ The 2024 ATLAS paper also reports an **inclusive** (EW + interference + QCD) fid
 
 ## Figures and ROOT outputs
 
-The analysis writes `analysis/particle_level.root` containing **diagnostic histograms**, a **12-stage cumulative cutflow** (`h_cutflow`) and a selected-event TTree (`fiducial_events`). The latter contains **339 entries** for the current 10,000-event run and eight `double` branches:
+The analysis writes a mode-specific ROOT file containing **diagnostic histograms**, a **12-stage cumulative cutflow** (`h_cutflow`) and a selected-event TTree (`fiducial_events`). The latter contains **339 entries** for the current 10,000-event run and eight `double` observables plus the one-based sequential index:
 
 | Branch | Selected-event observable |
 |---|---|
+| `event_index` | Sequential index in the input HepMC file (one-based) |
 | `mjj` | Tagging-dijet invariant mass [GeV] |
 | `dy_jj` | Absolute tagging-jet rapidity separation |
 | `mll` | Dilepton invariant mass [GeV] |
@@ -180,12 +233,14 @@ cmake --build ../build
 ../build/particle_level
 ```
 
-This creates `particle_level.root` in the working directory.
+This creates `particle_level_lifetime.root` in the working directory. Run
+`../build/particle_level status1` for `particle_level_status1.root`. Existing
+files are refused. The historical `particle_level.root` is preserved.
 
 Inspect the ROOT file and its selected-event tree:
 
 ```bash
-root -l particle_level.root
+root -l particle_level_lifetime.root
 ```
 
 ```cpp
@@ -196,7 +251,9 @@ fiducial_events->Scan("*", "", "", 5);
 .q
 ```
 
-From `analysis/`, regenerate the selected-event plots:
+The following historical command reads `particle_level.root` and writes to
+fixed plot destinations. Use an isolated directory before making new plots
+so the previous figures are preserved:
 
 ```bash
 root -l -b -q 'macros/fiducial_shapes.C()'

@@ -1,0 +1,12 @@
+{
+  "file": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wmwmjj_10000_seed161803/sm_ew_wmwmjj_leptonic/Events/ew_wmwm_10000_seed161803/unweighted_events.lhe.gz",
+  "sha256": "69ce9eb5cf065a900a8c3bbb3570eb88f32d1c2e0845a02dfdd2fe7fbf069e10",
+  "requested_events": 10000,
+  "written_events": 3031,
+  "XSECUP_pb": 0.004085351,
+  "XERRUP_pb": 8.687279e-06,
+  "weight_strategy": -4,
+  "nominal_weights": {
+    "+4.0853512e-03": 3031
+  }
+}

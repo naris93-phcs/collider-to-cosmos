@@ -1,0 +1,29 @@
+{
+  "original_lhe": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wmwmjj_manual/Events/run_01/unweighted_events.lhe.gz",
+  "original_sha256": "5420336fbc0e887adad5c785df5dff584eee21d5aa13c803fef1ba6f1cb9091e",
+  "shower_lhe": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wmwmjj_manual_analysis_seed161805/ew_wmwmjj_10000_format_corrected.lhe.gz",
+  "shower_lhe_sha256": "694505f2391e74e5a7d2050417bb3ed212cf74cffec8f8323f3fa9860fdf0644",
+  "blank_gaps_removed": 5038,
+  "events": 10000,
+  "generator_sigma_pb": 0.0040766554172,
+  "integration_error_pb": 1.0756622585e-05,
+  "XSECUP_pb": 0.004076655,
+  "XERRUP_pb": 1.075662e-05,
+  "nominal_weights": {
+    "0.0040766554": 10000
+  },
+  "flavour_counts": {
+    "(11, 13)": 5004,
+    "(13, 13)": 2506,
+    "(11, 11)": 2490
+  },
+  "NUP_counts": {
+    "10": 7469,
+    "11": 2490,
+    "12": 41
+  },
+  "W_record_patterns": {
+    "(-24, -24)": 7768,
+    "(-24, -24, 24)": 2232
+  }
+}

@@ -1,0 +1,13 @@
+--- archived_positive_run_04
++++ EW_pilot_run_card
+@@ -23,8 +23,8 @@
+ # Number of events and rnd seed                                      *
+ # Warning: Do not generate more than 1M events in a single run       *
+ #*********************************************************************
+-  10000 = nevents ! Number of unweighted events requested 
+- 42 = iseed   ! rnd seed (0=assigned automatically=default))
++ 1000 = nevents ! Number of unweighted events requested 
++ 271828 = iseed   ! rnd seed (0=assigned automatically=default))
+ #*********************************************************************
+ # Collider type and energy                                           *
+ # lpp: 0=No PDF, 1=proton, -1=antiproton,                            *

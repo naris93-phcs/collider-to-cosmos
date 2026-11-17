@@ -1,0 +1,20 @@
+415305179fd55b0af704a91ae310b9e09d04297e1eaefaba954a0cf74e2620f8  validation/stable_particles/diagnostic.cpp
+330ba4e7f5a081235b5055f7b312fe6f5c9fe9c95411a845cba7a3e82e67ecca  MG5_aMC_v3_8_0/HEPTools/pythia8/share/Pythia8/xmldoc/ParticleData.xml
+0ba06616a064d6bebe412a6306fd0237c874db7592fede8e14f7de30d562153e  MG5_aMC_v3_8_0/HEPTools/pythia8/share/Pythia8/xmldoc/Version.xml
+3461d86a05b92d1201961b455e348f3603158de0b01a4193c4f055c75165d379  MG5_aMC_v3_8_0/HEPTools/pythia8/lib/libpythia8.so
+5a952bd4ebc5d592d93afa5279fd67b4aef02eace38e9ae82bec6d321b065e7f  MG5_aMC_v3_8_0/HEPTools/hepmc/lib/libHepMC.so
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+	linux-vdso.so.1 (0x0000791e3fb8a000)
+	libHepMC.so.4 => /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/hepmc/lib/libHepMC.so.4 (0x0000791e3fb2c000)
+	libpythia8.so => /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/pythia8/lib/libpythia8.so (0x0000791e3f000000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000791e3ec00000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000791e3faf6000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000791e3e800000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000791e3ef17000)
+	libz.so.1 => /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/zlib/lib/libz.so.1 (0x0000791e3fad6000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000791e3fb8c000)
+sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc size=2294641869 mtime=2026-09-27 23:10:20.667421764 +0300

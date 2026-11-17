@@ -1,0 +1,167 @@
+Stable-particle mode: lifetime
+#--------------------------------------------------------------------------
+#                         FastJet release 3.5.1
+#                 M. Cacciari, G.P. Salam and G. Soyez                  
+#     A software package for jet finding and analysis at colliders      
+#                           https://fastjet.fr                           
+#	                                                                      
+# Please cite EPJC72(2012)1896 [arXiv:1111.6097] if you use this package
+# for scientific work and optionally PLB641(2006)57 [hep-ph/0512210].   
+#                                                                       
+# FastJet is provided without warranty under the GNU GPL v2 or higher.  
+# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code,
+# CGAL and 3rd party plugin jet algorithms. See COPYING file for details.
+#--------------------------------------------------------------------------
+Processed 1000 events
+Processed 2000 events
+Processed 3000 events
+Processed 4000 events
+Processed 5000 events
+Processed 6000 events
+Processed 7000 events
+Processed 8000 events
+Processed 9000 events
+Processed 10000 events
+
+========================================
+Particle-level analysis done!
+Events processed: 10000
+
+PROMPT-LEPTON LINEAGE COMPARISON:
+  Old broad hard-W ancestry leptons: 20630
+  New direct-W lepton-lineage leptons: 20000
+  Old-only candidates rejected: 630
+  Events with definition difference: 376
+  Note: this run uses the new definition; compare the cutflow with baseline 339.
+
+MET MOMENTUM-CLOSURE DIAGNOSTIC (no selection changes):
+  Mean |pT(nu) + pT(visible)| [GeV]: 2.89861e-07
+  Max  |pT(nu) + pT(visible)| [GeV]: 0.000471619
+  Mean ||pT(nu)| - |pT(visible)|| [GeV]: 1.89027e-07
+  Events with closure > 0.001 GeV: 0 / 10000
+  Visible sum uses all stable non-neutrino particles, without object cuts.
+
+PAIRED OLD VS NEW PHOTON DRESSING (same events):
+  New assigned prompt-like photons: 9006
+  Rejected in-cone hadron-ancestry photons: 1896
+  Shared-cone photons uniquely assigned: 16
+  Old two-lepton cut: 4561
+  New two-lepton cut: 4554
+  Events changing two-lepton pass/fail: 7
+  Old final baseline: 1974
+  New final baseline: 1971
+  Events changing final pass/fail: 3
+  Old-only final: 3
+  New-only final: 0
+  Photon prompt definition is a generator-history approximation, not an official ATLAS truth label.
+
+PHOTON DRESSING AUDIT (historical cone diagnostic):
+  All stable photons: 1895858
+  Stable photons with immediate hadron parent: 1878706
+  Photons within DR<0.1 of a bare selected-lineage lepton: 10902
+  Of these, immediate hadron-parent photons: 1896
+  Events with such hadron-parent photons in cone: 1551
+  Photons within DR<0.1 of multiple bare leptons: 16
+  Events with shared-cone photons: 6
+  Caveat: immediate hadron parent != full prompt-photon classification.
+  Caveat: diagnostic uses bare lepton cones; baseline dressing
+          uses an iteratively updated dressed-lepton direction.
+
+B-GHOST RECORD AUDIT (diagnostic only):
+  Ghosted last-open-bottom hadrons, status 2: 1202
+  Ghosted last-open-bottom hadrons, other statuses: 0
+  Ghosted last-open-bottom hadrons without end vertex: 0
+  Caveat: this does not by itself prove weak-decay status.
+
+B-HADRON RECORD DIAGNOSTIC (candidate IDs; no veto):
+  Events with candidates: 589
+  Total candidate entries: 1991
+  PDG IDs (signed):
+    -5232 : 1
+    -5224 : 3
+    -5222 : 1
+    -5212 : 2
+    -5132 : 7
+    -5122 : 22
+    -5112 : 2
+    -533 : 48
+    -531 : 68
+    -523 : 165
+    -521 : 263
+    -513 : 167
+    -511 : 242
+    511 : 258
+    513 : 167
+    521 : 250
+    523 : 173
+    531 : 62
+    533 : 46
+    541 : 2
+    543 : 2
+    5112 : 2
+    5122 : 23
+    5132 : 2
+    5212 : 2
+    5214 : 3
+    5222 : 2
+    5224 : 2
+    5232 : 3
+    5314 : 1
+  HepMC statuses:
+    2 : 1991
+
+B-JET GHOST MATCHING:
+  Last open-bottom hadrons ghosted: 1202
+  Events with tagged b-jets: 175
+  Events vetoed after lepton/MET cuts: 69
+
+Electron-jet overlap removal (events):
+  Electron removed: 97
+  Jet removed     : 5548
+
+Events with >=3 prompt leptons (pT>3, |eta|<2.5): 0
+
+Prompt-lepton multiplicity (pre-cuts):
+  0 leptons : 0
+  1 lepton  : 0
+  2 leptons : 10000
+  >2 leptons: 0
+
+Lepton/MET cumulative cutflow:
+  2 dressed leptons (pT>27, |eta|<2.5): 4554
+  + same sign: 4554
+  + mll > 20 GeV: 4495
+  + third prompt-lepton veto: 4495
+  + ee Z-veto: 4330
+  Z-veto rejected at this stage: 165
+  + MET > 30 GeV: 3766
+
+Jet/VBS cutflow (after dressing-dependent overlap removal):
+  >= 2 jets BEFORE overlap removal: 9683
+  >= 2 jets: 9296
+  + jet pT cuts: 7755
+  + mjj > 500 GeV: 5262
+  + |dy_jj| > 2: 4954
+
+========================================
+UNIFIED CUMULATIVE CUTFLOW
+========================================
+Generated events: 10000
++ Two dressed leptons: 4554
++ Same sign: 4554
++ mll > 20 GeV: 4495
++ third prompt-lepton veto: 4495
++ ee Z-veto: 4330
++ MET > 30 GeV: 3766
++ b-jet veto: 3697
++ >= 2 jets: 3458
++ Jet pT cuts: 2989
++ mjj > 500 GeV: 2103
++ |dy_jj| > 2: 1971
+
+Full ATLAS-inspired baseline:
+  leptons + MET + VBS jets: 1971
+  baseline efficiency: 19.71 %
+
+Output: /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/analysis/ew_wpwpjj_10000_lifetime.root
+========================================

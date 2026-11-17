@@ -1,0 +1,103 @@
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/bin/internal/file_writers.py:188: SyntaxWarning: invalid escape sequence '\s'
+  keyword_pairs = {r'^if.+then\s*$': ('^end\s*if', 2),
+************************************************************
+*                                                          *
+*                      W E L C O M E to                    *
+*             M A D G R A P H 5 _ a M C @ N L O            *
+*                      M A D E V E N T                     *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 3.8.0                                    *
+*                                                          *
+*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*                                                          *
+************************************************************
+INFO: load configuration from /home/naris/.config/mg5_configuration.txt  
+INFO: load configuration from /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Cards/me5_configuration.txt  
+INFO: load configuration from /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/MG5_aMC_v3_8_0/input/mg5_configuration.txt  
+INFO: load configuration from /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Cards/me5_configuration.txt  
+Using default text editor "vi". Set another one in ./input/mg5_configuration.txt
+No valid eps viewer found. Please set in ./input/mg5_configuration.txt
+No valid web browser found. Please set in ./input/mg5_configuration.txt
+Using default gzip "gzip". Set another one in ./input/mg5_configuration.txt
+generate_events ew_wpwp_1000_seed271828 --laststep=parton --nb_core=1 -f
+stty: 'standard input': Inappropriate ioctl for device
+[1;34mvalue '[]' for entry 'bypass_check' is not valid. Preserving previous value: '[]'.
+allowed values are any list composed of the following entries: partonshower[0m
+Generating 1000 events with run name ew_wpwp_1000_seed271828
+survey  ew_wpwp_1000_seed271828 
+INFO: compile directory 
+[1;34mNot able to open file /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/crossx.html since no program configured.Please set one in ./input/mg5_configuration.txt[0m
+compile Source Directory
+Using random number seed offset = 271828
+INFO: Running Survey 
+Creating Jobs
+Working on SubProcesses
+INFO: Compiling for process 1/1. 
+INFO:     P1_qq_wpwpqq_wp_lvl_wp_lvl  
+INFO:     P1_qq_wpwpqq_wp_lvl_wp_lvl  
+INFO:  Idle: 14,  Running: 1,  Completed: 0 [ current time: 15h51 ] 
+INFO:  Idle: 13,  Running: 1,  Completed: 1 [  16.2s  ] 
+INFO:  Idle: 12,  Running: 1,  Completed: 2 [  34.3s  ] 
+INFO:  Idle: 11,  Running: 1,  Completed: 3 [  51.3s  ] 
+INFO:  Idle: 10,  Running: 1,  Completed: 4 [  58.9s  ] 
+INFO:  Idle: 9,  Running: 1,  Completed: 5 [  1m 26s  ] 
+INFO:  Idle: 8,  Running: 1,  Completed: 6 [  1m 34s  ] 
+INFO:  Idle: 7,  Running: 1,  Completed: 7 [  1m 40s  ] 
+INFO:  Idle: 5,  Running: 1,  Completed: 9 [  1m 49s  ] 
+INFO:  Idle: 2,  Running: 1,  Completed: 12 [  1m 53s  ] 
+INFO:  Idle: 1,  Running: 1,  Completed: 13 [  1m 57s  ] 
+INFO:  Idle: 0,  Running: 1,  Completed: 14 [  2m 3s  ] 
+INFO:  Idle: 0,  Running: 0,  Completed: 15 [  2m 4s  ] 
+INFO: End survey 
+refine 1000
+Creating Jobs
+INFO: Refine results to 1000 
+INFO: Generating 1000.0 unweighted events. 
+sum of cpu time of last step: 2m12s
+INFO: Effective Luminosity 123853.83317299742 pb^-1 
+INFO: need to improve 11 channels 
+- Current estimate of cross-section: 0.009688840218 +- 0.00028522651259634587
+    P1_qq_wpwpqq_wp_lvl_wp_lvl 
+INFO:  Idle: 10,  Running: 1,  Completed: 0 [ current time: 15h53 ] 
+INFO:  Idle: 9,  Running: 1,  Completed: 1 [  7.2s  ] 
+INFO:  Idle: 7,  Running: 1,  Completed: 3 [  3m 55s  ] 
+INFO:  Idle: 5,  Running: 1,  Completed: 5 [  4m 27s  ] 
+INFO:  Idle: 3,  Running: 1,  Completed: 7 [  4m 31s  ] 
+INFO:  Idle: 2,  Running: 1,  Completed: 8 [  4m 38s  ] 
+INFO:  Idle: 1,  Running: 1,  Completed: 9 [  4m 42s  ] 
+INFO:  Idle: 0,  Running: 1,  Completed: 10 [  5m 13s  ] 
+INFO:  Idle: 0,  Running: 0,  Completed: 11 [  5m 22s  ] 
+INFO:  Idle: 0,  Running: 0,  Completed: 11 [  5m 22s  ] 
+INFO: Combining runs 
+sum of cpu time of last step: 6m55s
+INFO: finish refine 
+refine 1000 --treshold=0.9
+No need for second refine due to stability of cross-section
+INFO: Combining Events 
+combination of events done in 0.2440195083618164 s 
+  === Results Summary for run: ew_wpwp_1000_seed271828 tag: tag_1 ===
+
+     Cross-section :   0.009831 +- 7.026e-05 pb
+     Nb of events :  1000
+ 
+fail
+[1;34mFailed to access python version of LHAPDF: If the python interface to LHAPDF is available on your system, try adding its location to the PYTHONPATH environment variable and theLHAPDF library location to LD_LIBRARY_PATH (linux) or DYLD_LIBRARY_PATH (mac os x).The required LD_LIBRARY_PATH is /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3//lib[0m
+INFO: can not run systematics since can not link python to lhapdf 
+store_events
+INFO: Storing parton level results 
+INFO: End Parton 
+reweight --mode=OFF -from_cards
+decay_events -from_cards
+INFO: storing files of previous run 
+INFO: Done 
+quit
+INFO:  

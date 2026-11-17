@@ -1,0 +1,13 @@
+./comparison: Symbol `_ZTVN7Pythia87StringZE' has different size in shared object, consider re-linking
+./comparison: Symbol `_ZTVN7Pythia88StringPTE' has different size in shared object, consider re-linking
+
+ *** Break *** segmentation violation
+ Generating stack trace...
+ 0x00006411a0284154 in Pythia8::PartonLevel::onInitInfoPtr() + 0x14 from ./comparison
+ 0x00007da233793660 in Pythia8::Pythia::registerPhysicsBase(Pythia8::PhysicsBase&) + 0xd0 from /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/pythia8/lib/libpythia8.so
+ 0x00007da2337730a0 in Pythia8::Pythia::initPtrs() + 0xe0 from /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/pythia8/lib/libpythia8.so
+ 0x00007da23377a35d in Pythia8::Pythia::Pythia(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool) + 0xbdd from /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/pythia8/lib/libpythia8.so
+ 0x00006411a027954b in <unknown> from ./comparison
+ 0x00007da232a2a1ca in <unknown> from /lib/x86_64-linux-gnu/libc.so.6
+ 0x00007da232a2a28b in __libc_start_main + 0x8b from /lib/x86_64-linux-gnu/libc.so.6
+ 0x00006411a027e955 in <unknown> from ./comparison

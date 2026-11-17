@@ -1,0 +1,47 @@
+--- analysis/particle_level.cpp
++++ checkpoint.cpp
+@@ -274,7 +274,7 @@
+     // -------------------------------------------------------------------------
+ 
+     HepMC::IO_GenEvent ascii_in(
+-        "../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
++        "/home/naris/projects/collider_to_cosmos/sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
+         std::ios::in
+     );
+ 
+@@ -436,6 +436,9 @@
+     // Jet/VBS cutflow, independent of the lepton cutflow.
+     int events_with_two_jets = 0;
+     int events_pass_jet_pt = 0;
++    TH1D checkpoint_pre("checkpoint_pre","",130,0,13000);
++    TH1D checkpoint_mass("checkpoint_mass","",130,0,13000);
++    TH1D checkpoint_full("checkpoint_full","",130,0,13000);
+     int events_pass_mjj = 0;
+     int events_pass_dy = 0;
+ 
+@@ -987,6 +990,12 @@
+         }
+ 
+ 
++        if (pass_b_cumulative && pass_jet_pt) {
++            const double m = (selected_jets[0]+selected_jets[1]).m();
++            checkpoint_pre.Fill(m);
++            if (pass_mjj) checkpoint_mass.Fill(m);
++            if (pass_dy) checkpoint_full.Fill(m);
++        }
+         // Unified cutflow: apply jet/VBS cuts after lepton/MET selection.
+         if (pass_b_cumulative) {
+ 
+@@ -1091,10 +1100,11 @@
+     // -------------------------------------------------------------------------
+ 
+     TFile output(
+-        "particle_level.root",
++        "checkpoint.root",
+         "RECREATE"
+     );
+ 
++    checkpoint_pre.Write(); checkpoint_mass.Write(); checkpoint_full.Write();
+     h_njets.Write();
+     h_jet1_pt.Write();
+     h_jet2_pt.Write();

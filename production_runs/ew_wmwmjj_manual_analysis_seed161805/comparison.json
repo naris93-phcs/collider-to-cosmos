@@ -1,0 +1,264 @@
+{
+  "samples": {
+    "EW +": {
+      "generated": 10000,
+      "selected": 1971,
+      "acceptance": 0.1971,
+      "acceptance_mc_stat": 0.00397808484072424,
+      "generator_fb": 10.425759999999999,
+      "generator_integration_error_fb": 0.01079378,
+      "fiducial_fb": 2.0549172959999997,
+      "fiducial_mc_stat_fb": 0.041474557809029144,
+      "fiducial_propagated_integration_error_fb": 0.002127454038,
+      "cutflow": [
+        [
+          "Generated",
+          10000
+        ],
+        [
+          "2 dressed leptons",
+          4554
+        ],
+        [
+          "Same sign",
+          4554
+        ],
+        [
+          "mll > 20",
+          4495
+        ],
+        [
+          "3rd lepton veto",
+          4495
+        ],
+        [
+          "Z veto (ee)",
+          4330
+        ],
+        [
+          "MET > 30",
+          3766
+        ],
+        [
+          "b-jet veto",
+          3697
+        ],
+        [
+          ">= 2 jets",
+          3458
+        ],
+        [
+          "Jet pT",
+          2989
+        ],
+        [
+          "mjj > 500",
+          2103
+        ],
+        [
+          "|dy_jj| > 2",
+          1971
+        ]
+      ]
+    },
+    "EW -": {
+      "generated": 10000,
+      "selected": 1848,
+      "acceptance": 0.1848,
+      "acceptance_mc_stat": 0.0038813523416458854,
+      "generator_fb": 4.0766554172,
+      "generator_integration_error_fb": 0.010756622585,
+      "fiducial_fb": 0.7533659210985599,
+      "fiducial_mc_stat_fb": 0.015822936049632603,
+      "fiducial_propagated_integration_error_fb": 0.001987823853708,
+      "cutflow": [
+        [
+          "Generated",
+          10000
+        ],
+        [
+          "2 dressed leptons",
+          5286
+        ],
+        [
+          "Same sign",
+          5286
+        ],
+        [
+          "mll > 20",
+          5219
+        ],
+        [
+          "3rd lepton veto",
+          5219
+        ],
+        [
+          "Z veto (ee)",
+          5026
+        ],
+        [
+          "MET > 30",
+          4157
+        ],
+        [
+          "b-jet veto",
+          4085
+        ],
+        [
+          ">= 2 jets",
+          3780
+        ],
+        [
+          "Jet pT",
+          3159
+        ],
+        [
+          "mjj > 500",
+          1980
+        ],
+        [
+          "|dy_jj| > 2",
+          1848
+        ]
+      ]
+    },
+    "QCD +": {
+      "generated": 10000,
+      "selected": 339,
+      "acceptance": 0.0339,
+      "acceptance_mc_stat": 0.0018097179338228374,
+      "generator_fb": 8.95104,
+      "generator_integration_error_fb": 0.02035674,
+      "fiducial_fb": 0.303440256,
+      "fiducial_mc_stat_fb": 0.016198857614365573,
+      "fiducial_propagated_integration_error_fb": 0.000690093486,
+      "cutflow": [
+        [
+          "Generated",
+          10000
+        ],
+        [
+          "2 dressed leptons",
+          3258
+        ],
+        [
+          "Same sign",
+          3258
+        ],
+        [
+          "mll > 20",
+          3225
+        ],
+        [
+          "3rd lepton veto",
+          3225
+        ],
+        [
+          "Z veto (ee)",
+          3115
+        ],
+        [
+          "MET > 30",
+          2729
+        ],
+        [
+          "b-jet veto",
+          2648
+        ],
+        [
+          ">= 2 jets",
+          2539
+        ],
+        [
+          "Jet pT",
+          2248
+        ],
+        [
+          "mjj > 500",
+          772
+        ],
+        [
+          "|dy_jj| > 2",
+          339
+        ]
+      ]
+    },
+    "QCD -": {
+      "generated": 10000,
+      "selected": 291,
+      "acceptance": 0.0291,
+      "acceptance_mc_stat": 0.0016808685254950787,
+      "generator_fb": 3.870572,
+      "generator_integration_error_fb": 0.009298089999999998,
+      "fiducial_fb": 0.11263364520000001,
+      "fiducial_mc_stat_fb": 0.006505922650462538,
+      "fiducial_propagated_integration_error_fb": 0.00027057441899999994,
+      "cutflow": [
+        [
+          "Generated",
+          10000
+        ],
+        [
+          "2 dressed leptons",
+          4245
+        ],
+        [
+          "Same sign",
+          4245
+        ],
+        [
+          "mll > 20",
+          4202
+        ],
+        [
+          "3rd lepton veto",
+          4202
+        ],
+        [
+          "Z veto (ee)",
+          4077
+        ],
+        [
+          "MET > 30",
+          3250
+        ],
+        [
+          "b-jet veto",
+          3172
+        ],
+        [
+          ">= 2 jets",
+          2998
+        ],
+        [
+          "Jet pT",
+          2606
+        ],
+        [
+          "mjj > 500",
+          741
+        ],
+        [
+          "|dy_jj| > 2",
+          291
+        ]
+      ]
+    }
+  },
+  "combined_charge": {
+    "EW": {
+      "fiducial_fb": 2.80828321709856,
+      "fiducial_mc_stat_fb": 0.044390362137352105,
+      "fiducial_propagated_integration_error_fb": 0.0029116154205480207,
+      "generator_fb": 14.502415417199998,
+      "generator_integration_error_fb": 0.015238458456304957
+    },
+    "QCD": {
+      "fiducial_fb": 0.41607390120000004,
+      "fiducial_mc_stat_fb": 0.017456517910061302,
+      "fiducial_propagated_integration_error_fb": 0.0007412418874003409,
+      "generator_fb": 12.821612000000002,
+      "generator_integration_error_fb": 0.022379708243757335
+    }
+  }
+}

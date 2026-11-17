@@ -1,0 +1,1450 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcdd0ea..387c93b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,6 +34,14 @@ target_link_libraries(particle_level PRIVATE
+     "${HEPMC_DIR}/lib/libHepMC.so"
+ )
+ 
++# Keep the validated Pythia version ahead of the Conda installation.
++set(LIFETIME_PYTHIA_DIR "${HEPMC_DIR}/pythia8")
++target_include_directories(particle_level BEFORE PRIVATE "${LIFETIME_PYTHIA_DIR}/include")
++target_link_libraries(particle_level PRIVATE "${LIFETIME_PYTHIA_DIR}/lib/libpythia8.so")
++target_compile_definitions(particle_level PRIVATE
++    LIFETIME_PYTHIA_XML="${LIFETIME_PYTHIA_DIR}/share/Pythia8/xmldoc"
++)
++
+ set_target_properties(particle_level PROPERTIES
+-    BUILD_RPATH "${HEPMC_DIR}/lib"
++    BUILD_RPATH "${LIFETIME_PYTHIA_DIR}/lib;${HEPMC_DIR}/lib"
+ )
+\ No newline at end of file
+diff --git a/README.md b/README.md
+index 56ab5c5..8ac2e42 100644
+--- a/README.md
++++ b/README.md
+@@ -6,6 +6,18 @@
+ 
+ > **Research status:** ATLAS-inspired Standard Model **particle-level baseline**, validated on a 10,000-event electroweak `W+W+jj` simulation. **Not** an official ATLAS analysis or a matched fiducial cross-section measurement.
+ 
++**Stable-particle modes:** new runs default to `lifetime`; use `status1`
++to reproduce the original particle collection. See the
++[lifetime integration guide](validation/lifetime_integration/README.md) for
++build/run commands, regression results and protected output paths. The
++earlier baseline cutflow and plots below are historical references.
++
++**Tagging jets:** the current fiducial cut requires leading `pT > 65 GeV`
++and subleading `pT > 35 GeV` (ATLAS 2024 §7.1). Exactly 65 or 35 GeV,
++respectively, fails the cut. The historical cutflow below used inclusive
++endpoints. See the [strict-threshold regression](validation/strict_tagging_pt/README.md).
++
++
+ ## The physics question
+ 
+ Vector-boson scattering (VBS) probes the electroweak gauge and scalar sectors at high energies. This project starts with electroweak `pp → W+W+jj`, with both W bosons decaying to electrons/muons and neutrinos, and constructs a reproducible path from generated events to VBS-sensitive observables. The longer-term goal is to study extended Higgs sectors, especially the **Georgi–Machacek model**, and explore their implications for the electroweak phase transition.
+@@ -120,10 +132,11 @@ The 2024 ATLAS paper also reports an **inclusive** (EW + interference + QCD) fid
+ 
+ ## Figures and ROOT outputs
+ 
+-The analysis writes `analysis/particle_level.root` containing **diagnostic histograms**, a **12-stage cumulative cutflow** (`h_cutflow`) and a selected-event TTree (`fiducial_events`). The latter contains **339 entries** for the current 10,000-event run and eight `double` branches:
++The analysis writes a mode-specific ROOT file containing **diagnostic histograms**, a **12-stage cumulative cutflow** (`h_cutflow`) and a selected-event TTree (`fiducial_events`). The latter contains **339 entries** for the current 10,000-event run and eight `double` observables plus the one-based sequential index:
+ 
+ | Branch | Selected-event observable |
+ |---|---|
++| `event_index` | Sequential index in the input HepMC file (one-based) |
+ | `mjj` | Tagging-dijet invariant mass [GeV] |
+ | `dy_jj` | Absolute tagging-jet rapidity separation |
+ | `mll` | Dilepton invariant mass [GeV] |
+@@ -180,12 +193,14 @@ cmake --build ../build
+ ../build/particle_level
+ ```
+ 
+-This creates `particle_level.root` in the working directory.
++This creates `particle_level_lifetime.root` in the working directory. Run
++`../build/particle_level status1` for `particle_level_status1.root`. Existing
++files are refused. The historical `particle_level.root` is preserved.
+ 
+ Inspect the ROOT file and its selected-event tree:
+ 
+ ```bash
+-root -l particle_level.root
++root -l particle_level_lifetime.root
+ ```
+ 
+ ```cpp
+@@ -196,7 +211,9 @@ fiducial_events->Scan("*", "", "", 5);
+ .q
+ ```
+ 
+-From `analysis/`, regenerate the selected-event plots:
++The following historical command reads `particle_level.root` and writes to
++fixed plot destinations. Use an isolated directory before making new plots
++so the previous figures are preserved:
+ 
+ ```bash
+ root -l -b -q 'macros/fiducial_shapes.C()'
+diff --git a/ROOT_QUICK_REFERENCE_Collider_to_Cosmos_v0.2.txt b/ROOT_QUICK_REFERENCE_Collider_to_Cosmos_v0.2.txt
+index 8b77d3f..9d89b3c 100755
+--- a/ROOT_QUICK_REFERENCE_Collider_to_Cosmos_v0.2.txt
++++ b/ROOT_QUICK_REFERENCE_Collider_to_Cosmos_v0.2.txt
+@@ -1,360 +1,364 @@
+ ============================================================
+-ROOT QUICK REFERENCE — COLLIDER TO COSMOS (v0.2)
+-SM W+W+jj | ATLAS-inspired particle-level baseline
+-Updated: 21 October 2026
++ROOT QUICK REFERENCE — COLLIDER TO COSMOS (v0.3)
++SM EW W+W+jj / W-W-jj | ATLAS-inspired particle-level analysis
++Updated: 9 November 2026
+ ============================================================
+ 
+-WORKING DIRECTORY
++PURPOSE
+ ------------------------------------------------------------
+-Run the commands below from:
+-  ~/projects/collider_to_cosmos/analysis
++Reference for ROOT inspection, EW charge-channel comparisons,
++physics definitions, validation, and slides for Prof. Kordas.
++The numerical results below are from the confirmed terminal
++cutflows, NOT from an independent inspection of ROOT objects.
+ 
+-Current main outputs:
+-  particle_level.root          ROOT histograms + selected-event TTree
+-  cutflow.png                  Cumulative selection plot
+-  ../plots/fiducial/*.png     Four normalized selected-event shapes
++WORKING DIRECTORY (IMPORTANT)
++------------------------------------------------------------
++Use PROJECT ROOT for the commands in sections 1, 2, 3 and 8:
++  cd ~/projects/collider_to_cosmos
++  conda activate hep
++
++Current confirmed ROOT outputs (in project root):
++  wpwp_lifetime_comparison.root   EW W+W+; 339 selected / 10000
++  wmwm_particle_level.root        EW W-W-; 291 selected / 10000
++
++Source HepMC inputs:
++  sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc
++  sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc
+ 
+-IMPORTANT: relative file paths are resolved from the CURRENT
+-working directory, not automatically from the macro directory.
++Historical outputs/macros were run from analysis/ and may still
++refer to analysis/particle_level.root. Do NOT assume those macros
++automatically read the new two-channel ROOT files.
++Relative paths resolve from the CURRENT working directory.
+ 
+ ============================================================
+ 1. OPEN / INSPECT ROOT DATA — COMMAND LIBRARY
+ ============================================================
+ 
+-START HERE  (run in ~/projects/collider_to_cosmos/analysis)
++A. BASH — INSPECT FILES (PROJECT ROOT)
+ ------------------------------------------------------------
+-  root -l particle_level.root       Open the current ROOT file
++List ROOT objects without entering interactive ROOT:
++  root -l -b -q -e 'TFile f("wpwp_lifetime_comparison.root"); f.ls();'
++  root -l -b -q -e 'TFile f("wmwm_particle_level.root"); f.ls();'
+ 
+-Inside the ROOT prompt (root [0], root [1], ...):
+-  .ls                               List all objects in the ROOT file
+-  .q                                Quit ROOT
++Open interactively:
++  root -l wpwp_lifetime_comparison.root
++  root -l wmwm_particle_level.root
+ 
+-NOTE: Commands below run INSIDE ROOT unless explicitly marked BASH.
+-      The diagnostic histograms and fiducial_events are DIFFERENT
+-      analysis stages. Only fiducial_events has the 339 final events.
++Inside ROOT prompt:
++  .ls
++  .q
+ 
++NOTE: The exact objects in these NEW files still need to be
++confirmed using f.ls(). Names below are from the earlier
++particle-level ROOT reference, not a fresh object listing.
+ 
+-A. STORED HISTOGRAMS — QUICK VIEW
++B. STORED DIAGNOSTIC HISTOGRAMS — QUICK VIEW
+ ------------------------------------------------------------
+-  h_cutflow->Draw("BAR0");          Cumulative cutflow
+-  h_njets->Draw("HIST");            Number of selected jets
+-  h_jet1_pt->Draw("HIST");          Leading jet transverse momentum
+-  h_jet2_pt->Draw("HIST");          Subleading jet transverse momentum
+-  h_jet1_eta->Draw("HIST");         Leading jet pseudorapidity
+-  h_jet2_eta->Draw("HIST");         Subleading jet pseudorapidity
+-  h_mjj->Draw("HIST");              Dijet invariant mass
+-  h_deta_jj->Draw("HIST");          Absolute pseudorapidity separation
+-  h_dy_jj->Draw("HIST");            Absolute rapidity separation
+-  h_lepton1_pt->Draw("HIST");       Leading dressed-lepton pT
+-  h_lepton2_pt->Draw("HIST");       Subleading dressed-lepton pT
+-  h_mll->Draw("HIST");              Dilepton invariant mass
+-  h_met->Draw("HIST");              Particle-level missing pT
+-
+-  IMPORTANT: These histograms are NOT all filled after the final
+-  fiducial selection. Their Entries may differ substantially.
+-
+-
+-B. FINAL-SELECTED EVENT TREE — INSPECT THE DATA
+-------------------------------------------------------------
+-  fiducial_events->Print();         Show schema, branches and types
+-  fiducial_events->GetEntries();    Number of final selected events: 339
+-  fiducial_events->Show(0);         Show ALL branch values for entry 0
+-  fiducial_events->Show(10);        Show ALL branch values for entry 10
++Inside interactive ROOT, IF objects exist with these names:
++  h_cutflow->Draw("BAR0");
++  h_njets->Draw("HIST");
++  h_jet1_pt->Draw("HIST");
++  h_jet2_pt->Draw("HIST");
++  h_jet1_eta->Draw("HIST");
++  h_jet2_eta->Draw("HIST");
++  h_mjj->Draw("HIST");
++  h_deta_jj->Draw("HIST");
++  h_dy_jj->Draw("HIST");
++  h_lepton1_pt->Draw("HIST");
++  h_lepton2_pt->Draw("HIST");
++  h_mll->Draw("HIST");
++  h_met->Draw("HIST");
+ 
+-  Available branches (all Double_t):
+-    mjj          dy_jj          mll           met
+-    lepton1_pt   lepton2_pt     jet1_pt       jet2_pt
++CAUTION: Diagnostic histograms are filled at different selection
++stages. Their entries are NOT necessarily 339 or 291.
++For FINAL fiducial distributions, use the selected-event TTree.
+ 
+-  Scan a few entries (third argument = options, fourth = max rows):
++C. FINAL-SELECTED EVENT TREE
++------------------------------------------------------------
++If f.ls() confirms the object fiducial_events:
++  fiducial_events->Print();
++  fiducial_events->GetEntries();
++  fiducial_events->Show(0);
++  fiducial_events->Show(10);
+   fiducial_events->Scan("mjj:dy_jj:mll", "", "", 5);
+   fiducial_events->Scan("lepton1_pt:lepton2_pt:met", "", "", 10);
+   fiducial_events->Scan("jet1_pt:jet2_pt:mjj", "", "", 10);
+-  fiducial_events->Scan("mjj:dy_jj:mll:met:lepton1_pt:lepton2_pt:jet1_pt:jet2_pt", "", "", 3);
+   fiducial_events->Scan("*", "", "", 5);
+ 
+-  NOTE: Show(0) refers to the FIRST SELECTED event, not event 0
+-  in the original 10,000-event HepMC sample.
++Expected FINAL tree counts, subject to verification in ROOT:
++  W+W+: 339
++  W-W-: 291
++
++Expected branches from prior analyzer reference (Double_t):
++  mjj, dy_jj, mll, met, lepton1_pt, lepton2_pt,
++  jet1_pt, jet2_pt
+ 
++Show(0) is the first SELECTED event, not original HepMC event 0.
+ 
+-C. QUERY / FILTER THE SELECTED EVENTS
++D. QUERY / FILTER SELECTED EVENTS
+ ------------------------------------------------------------
+-  Count events satisfying an additional condition:
+   fiducial_events->GetEntries("mjj>1000");
+   fiducial_events->GetEntries("dy_jj>3");
+   fiducial_events->GetEntries("met>100");
+   fiducial_events->GetEntries("mjj>1000 && dy_jj>3");
+-
+-  Inspect only entries passing an additional condition:
+   fiducial_events->Scan("mjj:dy_jj", "mjj>1500", "", 10);
+   fiducial_events->Scan("lepton1_pt:met", "met>100", "", 10);
+-  fiducial_events->Scan("jet1_pt:jet2_pt", "jet1_pt>150", "", 10);
+ 
+-  REMEMBER: These filters act on the ALREADY SELECTED 339 events.
+-  They do not reprocess the original 10,000 HepMC events.
++These queries use ONLY events that already passed all cuts.
++They do not reprocess the 10,000-event HepMC sample.
+ 
+-
+-D. QUICK TREE PLOTS (FROM THE 339 FINAL EVENTS)
++E. QUICK FINAL-SELECTED TREE PLOTS
+ ------------------------------------------------------------
+-  fiducial_events->Draw("mjj");              Final dijet mass
+-  fiducial_events->Draw("dy_jj");            Final rapidity separation
+-  fiducial_events->Draw("mll");              Final dilepton mass
+-  fiducial_events->Draw("met");              Final missing pT
+-  fiducial_events->Draw("lepton1_pt");       Final leading lepton pT
+-  fiducial_events->Draw("lepton2_pt");       Final subleading lepton pT
+-  fiducial_events->Draw("jet1_pt");          Final leading jet pT
+-  fiducial_events->Draw("jet2_pt");          Final subleading jet pT
+-
+-  Plot only events satisfying an EXTRA condition:
++  fiducial_events->Draw("mjj");
++  fiducial_events->Draw("dy_jj");
++  fiducial_events->Draw("mll");
++  fiducial_events->Draw("met");
++  fiducial_events->Draw("lepton1_pt");
++  fiducial_events->Draw("lepton2_pt");
++  fiducial_events->Draw("jet1_pt");
++  fiducial_events->Draw("jet2_pt");
+   fiducial_events->Draw("mjj", "dy_jj>3");
+-  fiducial_events->Draw("met", "mjj>1000");
+-
+-  Plot correlations (ROOT uses y:x):
+-  fiducial_events->Draw("dy_jj:mjj", "", "COLZ");
+-  fiducial_events->Draw("lepton2_pt:lepton1_pt", "", "COLZ");
+-  fiducial_events->Draw("met:mll", "", "COLZ");
++  fiducial_events->Draw("dy_jj:mjj", "", "COLZ");  // ROOT: y:x
+ 
+-  For publication-style NORMALIZED plots with statistical error
+-  bars and fixed binning, use macros/fiducial_shapes.C instead.
+-  The quick Draw() calls above use ROOT's automatic binning and
+-  are not automatically normalized.
++Quick Draw() uses automatic binning and is NOT normalized.
++Use explicit common bins for W+W+ versus W-W- comparisons.
+ 
+-
+-E. NUMBERS / STATISTICS / CUTFLOW
++F. HISTOGRAM STATISTICS / CUTFLOW
+ ------------------------------------------------------------
+-  h_mjj->GetEntries();              Number of histogram fills
+-  h_mjj->GetMean();                 Mean of stored diagnostic histogram
+-  h_mjj->GetStdDev();               Standard deviation
+-  h_mjj->Integral();                Sum of regular-bin contents
+-  h_cutflow->GetBinContent(1);      Generated events (expected 10000)
+-  h_cutflow->GetBinContent(12);     Final selected events (expected 339)
+-  h_cutflow->Print("all");         Print histogram/bin information
+-
+-  Mean of a FINAL-selected branch (creates a temporary histogram):
++  h_mjj->GetEntries();
++  h_mjj->GetMean();
++  h_mjj->GetStdDev();
++  h_mjj->Integral();
++  h_cutflow->Print("all");
++  h_cutflow->GetBinContent(1);
++  h_cutflow->GetBinContent(12);
++
++Expected first/last cutflow counts if bin layout is unchanged:
++  W+W+: 10000 / 339
++  W-W-: 10000 / 291
++Check actual labels/bin numbering before quoting a bin.
++
++Temporary selected-event histogram:
+   fiducial_events->Draw("mjj>>h_tmp_mjj(25,500,3000)", "", "goff");
+   h_tmp_mjj->GetMean();
+   h_tmp_mjj->GetStdDev();
+ 
+-  NOTE: Means of a histogram can be affected by the specified
+-  histogram range. The published fiducial plots have their own
+-  binning and ranges, defined in fiducial_shapes.C.
+-
+-
+-F. DISPLAY / SAVE
++G. DISPLAY / SAVE
+ ------------------------------------------------------------
+-  gPad->SetLogy();                  Logarithmic y axis (after drawing)
+-  gPad->SetLogy(0);                 Return to linear y axis
+-  gStyle->SetOptStat(0);            Hide statistics box
+-  gStyle->SetOptStat(1111);         Show statistics box
++  gPad->SetLogy();
++  gPad->SetLogy(0);
++  gStyle->SetOptStat(0);
++  gStyle->SetOptStat(1111);
+   h_mjj->GetXaxis()->SetRangeUser(0,1500);
+   h_mjj->GetXaxis()->UnZoom();
+-  gPad->SaveAs("mjj.png");          Save the current canvas in analysis/
+-  gPad->SaveAs("mjj.pdf");          Save as PDF
++  gPad->SaveAs("mjj.png");
++  gPad->SaveAs("mjj.pdf");
+ 
+-  Separate canvases for simultaneous viewing:
+-  TCanvas *c1 = new TCanvas("c1", "mjj", 850, 600);
+-  h_mjj->Draw("HIST");
+-  TCanvas *c2 = new TCanvas("c2", "dy_jj", 850, 600);
+-  h_dy_jj->Draw("HIST");
++Use distinct names (wpwp_..., wmwm_...) to avoid overwrites.
++Interactive canvases require a working graphical display.
+ 
+-  NOTE: Interactive canvases require an available graphical display.
++============================================================
++2. BUILD AND RUN PARTICLE-LEVEL ANALYSIS
++============================================================
+ 
++From project root:
++  conda activate hep
++  cd ~/projects/collider_to_cosmos
+ 
+-G. BASH — OPEN OUTPUT FOLDERS FROM WSL
+-------------------------------------------------------------
+-  explorer.exe .
+-      Open the analysis directory in Windows File Explorer.
++Configure when needed:
++  cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
+ 
+-  explorer.exe "$(wslpath -w ../plots/fiducial)"
+-      Open the final fiducial PNG folder in Windows File Explorer.
++Compile after source/configuration changes:
++  cmake --build build -j4
+ 
++General syntax (ALL ARGUMENTS ON ONE LINE):
++  ./build/particle_level MODE INPUT.hepmc OUTPUT.root
+ 
+-============================================================
+-2. RUN PLOTTING MACROS
+-============================================================
++Modes: lifetime | status1
+ 
+-From analysis/:
+-  root -l -b -q 'macros/fiducial_shapes.C()'
++EW W+W+ (one-line copy/paste):
++  ./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
+ 
+-The fiducial_shapes() macro:
+-  - reads particle_level.root / fiducial_events
+-  - makes normalized shape histograms (fraction per bin)
+-  - draws step histograms WITH statistical error bars
+-  - saves four images under ../plots/fiducial/:
+-      mjj.png, dy_jj.png, lepton1_pt.png, mll.png
+-  - is NOT a comparison with ATLAS data
++EW W-W- (one-line copy/paste):
++  ./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
+ 
+-To run interactively (ROOT stays open):
+-  root -l
+-  .x macros/fiducial_shapes.C
++Each output filename receives the current date/time automatically.
++The executable refuses to overwrite an existing ROOT file.
++Do not split a shell command across lines unless using '\' at
++line endings. Do not run the executable without explicit input:
++its default input is relative to the working directory.
+ 
+-NOTE: canvases are local variables in the macro; they may close
+-when the macro finishes. Saved PNGs are the reliable presentation
+-outputs. To browse the directory from WSL:
+-  explorer.exe "$(wslpath -w ../plots/fiducial)"
++============================================================
++3. RUN PLOTTING MACROS — HISTORICAL / NEEDS PATH AUDIT
++============================================================
+ 
+-For the cutflow macro, use its ACTUAL location:
+-  root -l -b -q 'plot_cutflow.C()'          [if in analysis/]
+-  root -l -b -q 'macros/plot_cutflow.C()'   [if in analysis/macros/]
++Older workflow, from analysis/:
++  cd ~/projects/collider_to_cosmos/analysis
++  root -l -b -q 'macros/fiducial_shapes.C()'
+ 
+-The provided plot_cutflow() source reads h_cutflow from
+-particle_level.root and saves cutflow.png in the current directory.
+-Check the filename/location with 'ls' before running.
++Historical macro reads analysis/particle_level.root and creates
++normalized final-event shapes under ../plots/fiducial/:
++  mjj.png, dy_jj.png, lepton1_pt.png, mll.png
+ 
+-============================================================
+-3. CURRENT ROOT OBJECTS
+-============================================================
++Do NOT run this unchanged expecting an EW charge comparison.
++Before making presentation plots, verify the macro's input path,
++then adapt it to read BOTH confirmed ROOT files with common
++binning, consistent normalization and uncertainty bars.
+ 
+-Diagnostic TH1D histograms:
+-  h_njets
+-  h_jet1_pt, h_jet2_pt
+-  h_jet1_eta, h_jet2_eta
+-  h_mjj, h_deta_jj, h_dy_jj
+-  h_lepton1_pt, h_lepton2_pt
+-  h_mll, h_met
+-  h_cutflow
+-
+-CAUTION: these diagnostic histograms are NOT all filled at the
+-same selection stage. In the current C++ source:
+-  h_mjj, h_deta_jj, h_dy_jj: events with >=2 selected jets
+-  h_jet1_pt, h_jet2_pt:        same >=2-jet condition
+-  h_lepton1_pt, h_lepton2_pt, h_met:
+-                                events with exactly 2 dressed leptons
+-  h_mll:                      after 2 leptons + same-sign requirement
+-  h_njets:                    all processed events after overlap removal
+-
+-Do NOT label the above as final fiducial distributions.
+-
+-Final selected-event TTree:
+-  fiducial_events
+-  339 entries, one per event passing ALL current cuts.
+-  Eight double-precision branches:
+-    mjj         Dijet invariant mass [GeV]
+-    dy_jj       Absolute jet rapidity difference
+-    mll         Dilepton invariant mass [GeV]
+-    lepton1_pt  Leading dressed-lepton transverse momentum [GeV]
+-    lepton2_pt  Subleading dressed-lepton transverse momentum [GeV]
+-    met         Stable-neutrino transverse-momentum magnitude [GeV]
+-    jet1_pt     Leading selected-jet pT [GeV]
+-    jet2_pt     Subleading selected-jet pT [GeV]
+-
+-TTree = per-event observables; TH1D = binned distribution.
+-The TTree does NOT contain complete particle four-vectors.
++Historical cutflow macro location may be:
++  root -l -b -q 'plot_cutflow.C()'
++  root -l -b -q 'macros/plot_cutflow.C()'
++Check actual file location first. It may also hard-code
++particle_level.root. Avoid overwriting old plot files.
++
++BASH / WSL:
++  explorer.exe .
++  explorer.exe "$(wslpath -w ~/projects/collider_to_cosmos/plots/fiducial)"
+ 
+ ============================================================
+-4. CURRENT EVENT / OBJECT DEFINITIONS (SOURCE CODE)
++4. PHYSICS / EVENT DEFINITIONS — CURRENT REFERENCE
+ ============================================================
+ 
+-Input:
+-  ../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc
++Both EW samples:
++  pp -> W+W+jj and pp -> W-W-jj, sqrt(s) = 13 TeV
++  Same ATLAS-inspired particle-level selection and analyzer
++  10,000 generated events per sample
+ 
+ Jet clustering:
+   FastJet anti-kT, R=0.4
+   Stable visible particles, excluding neutrinos and muons
+-  Electrons and photons included in clustering inputs
+-  Jet acceptance: |eta| < 4.5
+-  VBS jet candidates: pT >= 25 GeV
+-  Tagging jets: two highest-pT selected jets
++  Electrons and photons included in jet clustering inputs
++  Jet acceptance |eta| < 4.5
++  Tagging jets = two highest-pT selected jets
+ 
+-Prompt signal leptons (generator-history approximation):
++Prompt signal leptons:
+   Stable e/mu with direct hard-W decay lineage, following
+-  W-copy and same-lepton-copy chains.
++  W-copy and same-lepton-copy chains (generator approximation)
+ 
+ Photon dressing:
+-  Bare-lepton direction used for DeltaR(l,gamma) < 0.1
+-  Reject photons with hadron-decay ancestry (approximation)
+-  Assign each eligible photon uniquely to nearest bare lepton
+-  Add photon four-momentum to the lepton four-momentum
++  Prompt-like stable photons, excluding hadron-decay ancestry
++  DeltaR(l,gamma) < 0.1 using bare-lepton direction
++  Unique nearest-lepton photon assignment
+   Selected dressed leptons: pT > 27 GeV, |eta| < 2.5
++  This is NOT an official ATLAS truth-label implementation
+ 
+ Electron-jet overlap removal:
+-  For electron-jet DeltaR < 0.4 and jet pT >= 25 GeV:
+-    if pT(e)/pT(jet) < 0.5, remove electron;
+-    otherwise remove overlapping jet.
+-  Applied before VBS jet selection.
+-
+-Lepton / event selection:
+-  Exactly 2 selected dressed leptons
+-  Same electric charge (the current signal is W+W+)
++  For DeltaR(e,jet) < 0.4 and jet pT >= 25 GeV:
++    if pT(e)/pT(jet) < 0.5: remove electron
++    otherwise: remove overlapping jet
++
++Lepton/event selection:
++  Exactly 2 selected dressed leptons, same electric charge
+   m_ll > 20 GeV
+   Third prompt-lepton veto: no >2 prompt e/mu with
+-    pT > 3 GeV and |eta| < 2.5 (source approximation)
+-  Dielectron-only Z-window veto: |m_ll - 91.1876| >= 15 GeV
++    pT > 3 GeV and |eta| < 2.5
++  Dielectron-only Z veto: |m_ll - 91.1876 GeV| >= 15 GeV
+   MET > 30 GeV
+ 
+ MET:
+   Magnitude of vector sum of stable-neutrino transverse momenta
+-  (not a detector-reconstructed missing-energy measurement).
++  Not detector-reconstructed missing transverse energy
+ 
+ b-jet veto:
+   Approximate last-open-bottom-hadron ghost association
+-  Veto a tagged jet with pT > 20 GeV and |eta| < 2.5
+-  This is not yet a fully verified official ATLAS weakly-
+-  decaying-b-hadron truth definition.
++  Veto tagged jet with pT > 20 GeV and |eta| < 2.5
++  Official weakly decaying b-hadron definition not fully verified
+ 
+ VBS topology:
+-  >=2 jets with pT >= 25 GeV and |eta| < 4.5
++  >=2 jets with pT >= 25 GeV, |eta| < 4.5
+   Leading jet pT >= 65 GeV
+   Subleading jet pT >= 35 GeV
+   m_jj > 500 GeV
+   |Delta y_jj| > 2
+ 
+ ============================================================
+-5. LATEST CONFIRMED CUMULATIVE CUTFLOW (10,000 EVENTS)
++5. CONFIRMED EW CHARGE-CHANNEL CUTFLOWS — 9 NOV 2026
+ ============================================================
+ 
+-  Generated                       10000
+-  + exactly 2 dressed leptons     3259
+-  + same sign                     3259
+-  + m_ll > 20 GeV                 3226
+-  + third-lepton veto             3226
+-  + ee Z-veto                     3116
+-  + MET > 30 GeV                  2730
+-  + b-jet veto                    2649
+-  + >= 2 selected jets            2541
+-  + leading/subleading jet pT     2247
+-  + m_jj > 500 GeV                 772
+-  + |Delta y_jj| > 2               339
+-
+-  Selected / generated: 339 / 10000 = 3.39%
+-
+-These counts describe the last confirmed analysis output in our
+-session; the C++ source defines HOW to compute them but does not
+-hard-code the counts. If you regenerate particle_level.root,
+-recheck the cutflow before quoting these numbers.
+-
+-The 3.39% is an unweighted selection fraction for this sample.
+-It is NOT a measured cross section or detector efficiency.
++Selection                            W+W+       W-W-
++------------------------------------------------------------
++Generated                            10000      10000
+++ exactly 2 dressed leptons           3258       4245
+++ same sign                           3258       4245
+++ m_ll > 20 GeV                       3225       4202
+++ third prompt-lepton veto            3225       4202
+++ ee Z-veto                           3115       4077
+++ MET > 30 GeV                        2729       3250
+++ b-jet veto                          2648       3172
+++ >= 2 selected jets                  2539       2998
+++ leading/subleading jet pT           2248       2606
+++ m_jj > 500 GeV                       772        741
+++ |Delta y_jj| > 2                     339        291
++------------------------------------------------------------
++FINAL / GENERATED                    3.39%      2.91%
++
++Same freshly rebuilt C++ executable, same lifetime mode,
++same fiducial selection. The earlier October reference had
++slightly different intermediate cutflow numbers; the table
++above supersedes them based on the latest confirmed runs.
++
++Interesting cutflow feature:
++  W-W- has more events after leptonic/MET cuts, but fewer
++  survive the final VBS cuts. Conditional m_jj efficiency:
++  W+W+: 772 / 2248 = 34.34%
++  W-W-: 741 / 2606 = 28.43%
++
++This suggests different sampled kinematic distributions;
++we have NOT yet established a physical cause or statistical
++significance from plotted distributions.
++
++============================================================
++6. CROSS SECTIONS AND PRELIMINARY NORMALIZATION
++============================================================
++
++MadGraph generation cross sections:
++  EW W+W+: 0.00895104 pb = 8.95104 fb
++  EW W-W-: 0.003870572 pb = 3.870572 fb
++  W-W- integration uncertainty: 0.00000929809 pb
++
++Generation-level ratio:
++  sigma(W+W+) / sigma(W-W-) ~ 2.31
++
++Assuming uniform weights and matching sample normalization:
++  sigma_fid(W+W+) ~ 8.95104 fb * 0.0339 = 0.3034 fb
++  sigma_fid(W-W-) ~ 3.870572 fb * 0.0291 = 0.1126 fb
++  fiducial ratio ~ 2.69
++
++IMPORTANT FOR SLIDES:
++  These are preliminary generator-level estimates, NOT
++  experimental ATLAS measurements. Check exact generator
++  coupling orders, decay conventions, sample weight handling,
++  integration uncertainties and matching fiducial definitions
++  before claiming a physical cross-section prediction.
++  The 3.39% and 2.91% are unweighted MC selection fractions,
++  not detector efficiencies. MC statistical uncertainties and
++  systematic uncertainties still require proper treatment.
+ 
+ ============================================================
+-6. FINAL FIDUCIAL SHAPES (339 SELECTED EVENTS)
++7. FINAL FIDUCIAL SHAPES — HISTORICAL POSITIVE CHANNEL
+ ============================================================
+ 
+-From the supplied final selected-event plots:
++Earlier normalized W+W+ final-selected plots (339 events):
+   mjj         mean ~959.2 GeV;  plot range 500-3000 GeV
+   |dy_jj|     mean ~3.081;      plot range 2-10
+   lepton1_pt  mean ~100.6 GeV;  plot range 0-250 GeV
+   mll         mean ~241.2 GeV;  plot range 0-600 GeV
+ 
+-Macro binning:
+-  mjj         25 bins
+-  dy_jj       20 bins
+-  lepton1_pt  25 bins
+-  mll         30 bins
++Earlier macro binning:
++  mjj 25 bins; dy_jj 20; lepton1_pt 25; mll 30
+ 
+-Y-axis: 'Fraction / bin', normalized by histogram integral
+-INCLUDING underflow/overflow in the denominator.
+-For ordinary unweighted bins, the macro enables Sumw2() and
+-shows approximate counting-statistical uncertainties.
+-These are NOT systematic uncertainty bands.
++Y-axis: fraction per bin. Historical macro normalization
++included underflow/overflow in its denominator and displayed
++approximate counting-statistical error bars (not systematics).
+ 
+-Interpretation:
+-  The VBS cuts remove the low-mjj and low-|dy_jj| regions.
+-  A falling distribution above the cut threshold is normal.
+-  The selected distributions are not yet validated against
+-  unfolded ATLAS data or HEPData tables.
++These older plot values have NOT yet been independently
++rechecked in wpwp_lifetime_comparison.root. No corresponding
++W-W- shape values have been verified yet. For the Kordas slides,
++produce side-by-side charge plots with identical bins and
++explicit normalization and uncertainty conventions.
+ 
+ ============================================================
+-7. PHYSICS REMINDERS
++8. PHYSICS REMINDERS
+ ============================================================
+ 
+   m_jj^2 = (p_j1 + p_j2)^2
+@@ -366,60 +370,88 @@ Interpretation:
+ For approximately massless jets:
+   m_jj^2 ~ 2 pT1 pT2 [cosh(Delta y) - cos(Delta phi)]
+ 
+-Large dijet mass and large rapidity separation are characteristic
+-of VBS-like tagging-jet topologies, not mandatory for every
+-generated electroweak event.
++Large m_jj and |Delta y_jj| are characteristic of VBS-like
++jet topologies, but not guaranteed for every generated event.
+ 
+ ============================================================
+-8. VALIDATION / LIMITATIONS / NEXT STEPS
++9. VALIDATION / LIMITATIONS / NEXT STEPS
+ ============================================================
+ 
+-Implemented:
+-  - Full MadGraph -> Pythia8 -> HepMC -> FastJet -> ROOT pipeline
+-  - Direct hard-W lepton-lineage selection (signal approximation)
+-  - Bare-cone photon dressing with unique photon assignment
+-  - Electron-jet overlap removal
+-  - Approximate b-hadron ghost-matched b-jet veto
+-  - Third-lepton and dielectron Z-window vetoes
+-  - Unified cumulative cutflow
+-  - Selected-event ROOT TTree and normalized shape plots
+-  - Paired old/new dressing and MET-closure diagnostics
+-
+-Still to establish:
+-  - Exact agreement with a specified ATLAS fiducial definition
+-  - Generator configuration, event weights and normalization
+-  - Proper fiducial cross-section calculation
+-  - Relevant backgrounds / other charge channels as needed
+-  - Statistical and systematic uncertainty treatment
+-  - Comparison with published ATLAS/HEPData distributions
+-  - BSM Georgi-Machacek implementation and parameter scan
+-  - Any finite-temperature EWPT analysis
+-
+-The current output is a functioning SM particle-level baseline,
+-NOT a complete experimental validation or BSM result.
++CONFIRMED / IMPLEMENTED:
++  - MG5 -> Pythia8 -> HepMC2 -> C++/FastJet -> ROOT pipeline
++  - EW W+W+ and W-W- charge channels (10,000 events each)
++  - W-W- HepMC verified end-to-end (10,000 records)
++  - Same analyzer, same lifetime mode, separate ROOT outputs
++  - Direct hard-W lepton-lineage selection
++  - Prompt-like photon dressing and comparison diagnostics
++  - Electron-jet overlap removal and approximate b-ghost veto
++  - Unified cutflows and final selections: 339 / 291
++  - MET momentum closure diagnostics:
++      W+W+ mean 3.81046e-06 GeV; max 0.0041738 GeV
++      W-W- mean 1.58248e-05 GeV; max 0.00957208 GeV
++  - Photon dressing old/new final baseline unchanged:
++      W+W+ 339 / 339; W-W- 291 / 291
++
++KNOWN TECHNICAL NOTE:
++  Pythia 8.317 could not parse blank lines between the
++  LHE event header and first particle record in W-W- sample.
++  Codex produced a corrected copy preserving nonblank lines,
++  weights and particle records; 10,000/10,000 accepted.
++  Shower warnings were recorded in:
++    sm_wmwmjj_leptonic/Events/run_01/shower_8317/README.md
++  Verified negative-channel HepMC:
++    sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc
++
++NEXT PRIORITIES:
++  1. Inspect ROOT objects in BOTH confirmed files.
++  2. Compare EW charge channels: mjj, |dy_jj|, lepton pT,
++     cutflows, acceptances; normalize plots consistently.
++  3. Generate QCD-induced W+W+jj and W-W-jj samples with
++     correctly defined coupling orders; document EW-QCD
++     interference treatment.
++  4. Run same fiducial analyzer on QCD samples; audit prompt
++     ancestry, weights and b-veto before any code changes.
++  5. Quantify EW versus QCD after VBS cuts.
++  6. Compare to ATLAS JHEP 04 (2024) 026, section 7.1,
++     and available HEPData where definitions match.
++  7. Extend to Georgi-Machacek only after SM validation.
++
++NOT YET ESTABLISHED:
++  - Exact official ATLAS fiducial equivalence
++  - Final statistical/systematic uncertainty budget
++  - Full EW + QCD + interference prediction
++  - ATLAS/HEPData agreement
++  - Georgi-Machacek or finite-temperature EWPT results
+ 
+ ============================================================
+-9. TROUBLESHOOTING
++10. TROUBLESHOOTING
+ ============================================================
+ 
+-Error: Cannot open particle_level.root
+-  Check 'pwd' and 'ls particle_level.root'. Run macros from
+-  analysis/ or pass the correct input file path.
++'Input unreadable or output already exists':
++  - Confirm input path from project root.
++  - Output must be a NEW filename; executable never overwrites.
+ 
+-Error: missing fiducial_events tree
+-  Check '.ls' in ROOT; confirm this is the latest output file.
++'Permission denied' when typing a .hepmc path:
++  - Shell treated the HepMC filename as a separate command.
++  - Keep MODE INPUT OUTPUT on ONE LINE or use trailing '\'.
+ 
+-Why do diagnostic histogram entries differ?
+-  Histograms are filled at different stages of the event loop.
+-  The final TTree always stores only full-selection events.
++'Events processed: 0':
++  - Check exact input argument and current working directory.
++  - Do not assume this means all events failed selection.
+ 
+-Why do final plots have vertical lines?
+-  They ARE histograms, drawn with statistical error bars.
++ROOT cannot open file:
++  - Check pwd and ls -lh *.root.
++  - Old macros may still point to analysis/particle_level.root.
+ 
+-Why does ROOT close plots?
+-  Batch execution exits, and the macro uses local canvases.
+-  Inspect saved PNGs independently in Windows Explorer.
++ROOT has no fiducial_events:
++  - Inspect with f.ls(); check file and analyzer version.
++
++Histogram Entries differ from final event count:
++  - Diagnostic histograms fill at different selection stages.
++
++ROOT batch mode closes plots:
++  - Use saved PNG/PDF outputs for slide preparation.
+ 
+ ============================================================
+-END — Collider to Cosmos ROOT Quick Reference v0.2
+-============================================================
++END — Collider to Cosmos ROOT Quick Reference v0.3
++============================================================
+\ No newline at end of file
+diff --git a/analysis/particle_level.cpp b/analysis/particle_level.cpp
+index 2c6d161..fda7265 100644
+--- a/analysis/particle_level.cpp
++++ b/analysis/particle_level.cpp
+@@ -1,3 +1,6 @@
++#include "../validation/lifetime_impact/reconstruction.h"
++#include <filesystem>
++#include <fstream>
+ #include <iostream>
+ #include <vector>
+ #include <cmath>
+@@ -267,14 +270,34 @@ std::pair<bool,bool> oldDressingPasses(
+ }
+ 
+ 
+-int main()
++int main(int argc, char** argv)
+ {
++    static_assert(PYTHIA_VERSION_INTEGER == 8317, "Use bundled Pythia 8.317");
++    const std::string mode = argc > 1 ? argv[1] : "lifetime";
++    if (argc > 4 || (mode != "status1" && mode != "lifetime")) {
++        std::cerr << "Usage: particle_level [lifetime|status1 [input.hepmc [output.root]]]\n";
++        return 1;
++    }
++    const bool lifetime = mode == "lifetime";
++    const std::string input_path = argc > 2 ? argv[2] :
++        "../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc";
++    const std::string output_path = argc > 3 ? argv[3] :
++        "particle_level_" + mode + ".root";
++    if (std::filesystem::exists(output_path) || !std::ifstream(input_path)) {
++        std::cerr << "Input unreadable or output already exists: "
++                  << input_path << " / " << output_path << '\n';
++        return 1;
++    }
++    std::unique_ptr<Pythia8::Pythia> lifetime_data;
++    if (lifetime)
++        lifetime_data = std::make_unique<Pythia8::Pythia>(LIFETIME_PYTHIA_XML, false);
++    std::cout << "Stable-particle mode: " << mode << '\n';
+     // -------------------------------------------------------------------------
+     // Input HepMC file
+     // -------------------------------------------------------------------------
+ 
+     HepMC::IO_GenEvent ascii_in(
+-        "../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
++        input_path.c_str(),
+         std::ios::in
+     );
+ 
+@@ -394,6 +417,7 @@ int main()
+     // -------------------------------------------------------------------------
+ 
+     int event_count = 0;
++    fiducial_events.Branch("event_index", &event_count);
+     long long photons_rejected_hadron_ancestry = 0;
+     long long photons_assigned = 0;
+     long long photons_with_multiple_candidates = 0;
+@@ -481,6 +505,20 @@ int main()
+ 
+         ++event_count;
+ 
++        Set lifetime_particles;
++        if (lifetime) {
++            context = nullptr;
++            try {
++                lifetime_particles = reconstruct(*event, lifetime_data->particleData);
++            } catch (const std::exception& error) {
++                std::cerr << "Lifetime reconstruction failed at sequential event "
++                          << event_count << ": " << error.what() << '\n';
++                delete event;
++                return 1;
++            }
++            context = nullptr;
++        }
++
+         // Scan ALL HepMC particles, including unstable intermediates.
+         bool found_b_candidate = false;
+         for (auto it = event->particles_begin();
+@@ -531,7 +569,7 @@ int main()
+              p != event->particles_end();
+              ++p) {
+ 
+-            if ((*p)->status() != 1)
++            if (lifetime ? !lifetime_particles.count(*p) : (*p)->status() != 1)
+                 continue;
+ 
+             const int absId = std::abs((*p)->pdg_id());
+@@ -955,7 +993,7 @@ int main()
+             const fastjet::PseudoJet& j1 = selected_jets[0];
+             const fastjet::PseudoJet& j2 = selected_jets[1];
+ 
+-            pass_jet_pt = (j1.pt() >= 65.0 && j2.pt() >= 35.0);
++            pass_jet_pt = (j1.pt() > 65.0 && j2.pt() > 35.0);
+ 
+             if (pass_jet_pt)
+                 ++events_pass_jet_pt;
+@@ -1090,10 +1128,15 @@ int main()
+     // Save histograms
+     // -------------------------------------------------------------------------
+ 
+-    TFile output(
+-        "particle_level.root",
+-        "RECREATE"
+-    );
++    if (event_count == 0) {
++        std::cerr << "No readable events in " << input_path << '\n';
++        return 1;
++    }
++    TFile output(output_path.c_str(), "CREATE");
++    if (output.IsZombie()) {
++        std::cerr << "Cannot create new output: " << output_path << '\n';
++        return 1;
++    }
+ 
+     h_njets.Write();
+     h_jet1_pt.Write();
+@@ -1276,7 +1319,7 @@ int main()
+                   << " %\n";
+     }
+ 
+-    std::cout << "\nOutput: particle_level.root" << std::endl;
++    std::cout << "\nOutput: " << output_path << std::endl;
+     std::cout << "========================================" << std::endl;
+ 
+     return 0;
+diff --git a/workflow.txt b/workflow.txt
+index b4b05a6..7fd8a9d 100644
+--- a/workflow.txt
++++ b/workflow.txt
+@@ -24,9 +24,347 @@ Typical workflow:
+ git status
+ git diff
+ git add .
+-git commit -m "Implement ATLAS-like VBS jet selection"
++git commit -m "Update particle-level VBS analysis"
+ git push
+ 
++NOTES:
++- Always check git status before git add .
++- Avoid committing large HepMC, ROOT or temporary files.
++
++
++============================================================
++4. COMPILE PARTICLE-LEVEL ANALYSIS
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# Configure CMake (first time / configuration changes)
++cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
++
++# Compile after modifying C++ code
++cmake --build build -j4
++
++NOTES:
++- Executable: build/particle_level
++- -j4 allows up to 4 parallel build jobs.
++- CMake recompiles only what is necessary.
++- No rebuild needed when changing only the input HepMC.
++- Rebuild after modifying particle_level.cpp.
++
++
++============================================================
++5. RUN PARTICLE-LEVEL ANALYSIS
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# General syntax:
++# ./build/particle_level MODE INPUT.hepmc OUTPUT.root
++
++# Available modes:
++# lifetime : lifetime-based stable-particle reconstruction
++# status1  : HepMC status-1 stable-particle reconstruction
++
++IMPORTANT:
++All execution commands below are SINGLE-LINE commands.
++Copy and paste the entire line.
++
++
++------------------------------------------------------------
++A. ELECTROWEAK W+W+jj (POSITIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
++
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 339
++# Acceptance: 3.39%
++
++
++------------------------------------------------------------
++B. ELECTROWEAK W-W-jj (NEGATIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 291
++# Acceptance: 2.91%
++
++
++------------------------------------------------------------
++C. STATUS-1 VALIDATION MODE (OPTIONAL)
++------------------------------------------------------------
++
++# W+W+:
++./build/particle_level status1 sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_status1_$(date +%Y%m%d_%H%M%S).root"
++
++# W-W-:
++./build/particle_level status1 sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_status1_$(date +%Y%m%d_%H%M%S).root"
++
++
++------------------------------------------------------------
++D. IMPORTANT NOTES
++------------------------------------------------------------
++
++- Always run these commands from the PROJECT ROOT.
++- Input HepMC files are read, not modified.
++- Existing ROOT outputs are never overwritten.
++- Output filenames include the current date and time.
++- Each execution creates a new ROOT file.
++- Do not run the executable without arguments.
++- EW and QCD samples use the same fiducial selection.
++- QCD sample commands will be added after generation.
++
++
++============================================================
++6. TYPICAL COMPILE + RUN WORKFLOW
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# Compile if source code changed
++cmake --build build -j4
++
++# Run W+W+:
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
++
++# Run W-W-:
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++
++============================================================
++7. INSPECT ROOT OUTPUT
++============================================================
++
++# List histograms in the confirmed positive-channel file:
++root -l -b -q -e 'TFile f("wpwp_lifetime_comparison.root"); f.ls();'
++
++# List histograms in the confirmed negative-channel file:
++root -l -b -q -e 'TFile f("wmwm_particle_level.root"); f.ls();'
++
++# List all ROOT files:
++ls -lh *.root
++
++NOTES:
++- ROOT files contain histograms and analysis outputs.
++- Terminal output contains detailed cutflow diagnostics.
++- New ROOT filenames are printed at the end of each run.
++
++========================================================================================================================
++3. GIT QUICK REFERENCE
++============================================================
++
++Check what changed:
++git status
++
++See line-by-line changes:
++git diff
++
++Stage a specific file:
++git add analysis/particle_level.cpp
++
++Stage everything:
++git add .
++
++Commit:
++git commit -m "Describe what changed"
++
++Push to GitHub:
++git push
++
++Typical workflow:
++git status
++git diff
++git add .
++git commit -m "Update particle-level VBS analysis"
++git push
++
++NOTES:
++- Always check git status before git add .
++- Avoid committing large HepMC, ROOT or temporary files.
++
++
++============================================================
++4. COMPILE PARTICLE-LEVEL ANALYSIS
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# Configure CMake (first time / configuration changes)
++cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
++
++# Compile after modifying C++ code
++cmake --build build -j4
++
++NOTES:
++- Executable: build/particle_level
++- -j4 allows up to 4 parallel build jobs.
++- CMake recompiles only what is necessary.
++- No rebuild needed when changing only the input HepMC.
++- Rebuild after modifying particle_level.cpp.
++
++
++============================================================
++5. RUN PARTICLE-LEVEL ANALYSIS
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# General syntax:
++# ./build/particle_level MODE INPUT.hepmc OUTPUT.root
++
++# Available modes:
++# lifetime : lifetime-based stable-particle reconstruction
++# status1  : HepMC status-1 stable-particle reconstruction
++
++IMPORTANT:
++All execution commands below are SINGLE-LINE commands.
++Copy and paste the entire line.
++
++
++------------------------------------------------------------
++A. ELECTROWEAK W+W+jj (POSITIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
++
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 339
++# Acceptance: 3.39%
++
++
++------------------------------------------------------------
++B. ELECTROWEAK W-W-jj (NEGATIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 291
++# Acceptance: 2.91%
++
++
++------------------------------------------------------------
++C. STATUS-1 VALIDATION MODE (OPTIONAL)
++------------------------------------------------------------
++
++# W+W+:
++./build/particle_level status1 sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_status1_$(date +%Y%m%d_%H%M%S).root"
++
++# W-W-:
++./build/particle_level status1 sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_status1_$(date +%Y%m%d_%H%M%S).root"
++
++
++------------------------------------------------------------
++D. IMPORTANT NOTES
++------------------------------------------------------------
++
++- Always run these commands from the PROJECT ROOT.
++- Input HepMC files are read, not modified.
++- Existing ROOT outputs are never overwritten.
++- Output filenames include the current date and time.
++- Each execution creates a new ROOT file.
++- Do not run the executable without arguments.
++- EW and QCD samples use the same fiducial selection.
++- QCD sample commands will be added after generation.
++
++
++============================================================
++6. TYPICAL COMPILE + RUN WORKFLOW
++============================================================
++
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# Compile if source code changed
++cmake --build build -j4
++
++# Run W+W+:
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
++
++# Run W-W-:
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++
++============================================================
++7. INSPECT ROOT OUTPUT
++============================================================
++
++# List histograms in the confirmed positive-channel file:
++root -l -b -q -e 'TFile f("wpwp_lifetime_comparison.root"); f.ls();'
++
++# List histograms in the confirmed negative-channel file:
++root -l -b -q -e 'TFile f("wmwm_particle_level.root"); f.ls();'
++
++# List all ROOT files:
++ls -lh *.root
++
++NOTES:
++- ROOT files contain histograms and analysis outputs.
++- Terminal output contains detailed cutflow diagnostics.
++- New ROOT filenames are printed at the end of each run.
++
++========================================================================================================================
++3. GIT QUICK REFERENCE
++============================================================
++
++Check what changed:
++git status
++
++See line-by-line changes:
++git diff
++
++Stage a specific file:
++git add analysis/particle_level.cpp
++
++Stage everything:
++git add .
++
++Commit:
++git commit -m "Describe what changed"
++
++Push to GitHub:
++git push
++
++Typical workflow:
++git status
++git diff
++git add .
++git commit -m "Update particle-level VBS analysis"
++git push
++
++NOTES:
++- Always check git status before git add .
++- Avoid committing large HepMC, ROOT or temporary files.
++
+ 
+ ============================================================
+ 4. COMPILE PARTICLE-LEVEL ANALYSIS
+@@ -41,24 +379,124 @@ cd ~/projects/collider_to_cosmos
+ # Configure CMake (first time / configuration changes)
+ cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
+ 
+-# Compile (after modifying the .cpp)
+-cmake --build build
+-  
++# Compile after modifying C++ code
++cmake --build build -j4
++
++NOTES:
++- Executable: build/particle_level
++- -j4 allows up to 4 parallel build jobs.
++- CMake recompiles only what is necessary.
++- No rebuild needed when changing only the input HepMC.
++- Rebuild after modifying particle_level.cpp.
++
++
+ ============================================================
+ 5. RUN PARTICLE-LEVEL ANALYSIS
+ ============================================================
+ 
+-# Go to analysis directory
+-cd ~/projects/collider_to_cosmos/analysis
++# Activate environment
++conda activate hep
++
++# Go to project root
++cd ~/projects/collider_to_cosmos
++
++# General syntax:
++# ./build/particle_level MODE INPUT.hepmc OUTPUT.root
++
++# Available modes:
++# lifetime : lifetime-based stable-particle reconstruction
++# status1  : HepMC status-1 stable-particle reconstruction
++
++IMPORTANT:
++All execution commands below are SINGLE-LINE commands.
++Copy and paste the entire line.
++
++
++------------------------------------------------------------
++A. ELECTROWEAK W+W+jj (POSITIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
+ 
+-# Run the CMake executable
+-../build/particle_level
+-  
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 339
++# Acceptance: 3.39%
+ 
+-Typical compile + run workflow:
+ 
++------------------------------------------------------------
++B. ELECTROWEAK W-W-jj (NEGATIVE CHARGE)
++------------------------------------------------------------
++
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++# Confirmed baseline:
++# Generated events: 10000
++# Fiducial selected: 291
++# Acceptance: 2.91%
++
++
++------------------------------------------------------------
++C. STATUS-1 VALIDATION MODE (OPTIONAL)
++------------------------------------------------------------
++
++# W+W+:
++./build/particle_level status1 sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_status1_$(date +%Y%m%d_%H%M%S).root"
++
++# W-W-:
++./build/particle_level status1 sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_status1_$(date +%Y%m%d_%H%M%S).root"
++
++
++------------------------------------------------------------
++D. IMPORTANT NOTES
++------------------------------------------------------------
++
++- Always run these commands from the PROJECT ROOT.
++- Input HepMC files are read, not modified.
++- Existing ROOT outputs are never overwritten.
++- Output filenames include the current date and time.
++- Each execution creates a new ROOT file.
++- Do not run the executable without arguments.
++- EW and QCD samples use the same fiducial selection.
++- QCD sample commands will be added after generation.
++
++
++============================================================
++6. TYPICAL COMPILE + RUN WORKFLOW
++============================================================
++
++# Activate environment
+ conda activate hep
++
++# Go to project root
+ cd ~/projects/collider_to_cosmos
+-cmake --build build
+-cd analysis
+-../build/particle_level
++
++# Compile if source code changed
++cmake --build build -j4
++
++# Run W+W+:
++./build/particle_level lifetime sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc "wpwp_$(date +%Y%m%d_%H%M%S).root"
++
++# Run W-W-:
++./build/particle_level lifetime sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc "wmwm_$(date +%Y%m%d_%H%M%S).root"
++
++
++============================================================
++7. INSPECT ROOT OUTPUT
++============================================================
++
++# List histograms in the confirmed positive-channel file:
++root -l -b -q -e 'TFile f("wpwp_lifetime_comparison.root"); f.ls();'
++
++# List histograms in the confirmed negative-channel file:
++root -l -b -q -e 'TFile f("wmwm_particle_level.root"); f.ls();'
++
++# List all ROOT files:
++ls -lh *.root
++
++NOTES:
++- ROOT files contain histograms and analysis outputs.
++- Terminal output contains detailed cutflow diagnostics.
++- New ROOT filenames are printed at the end of each run.
++
++============================================================
+\ No newline at end of file

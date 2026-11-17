@@ -45,3 +45,48 @@ analysis/*.txt
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Local generated process scaffolding and integration work areas.
+# Run cards, banners, top-level run logs and exported diagram files stay visible.
+/production_runs/*/sm_ew_*/bin/
+/production_runs/*/sm_ew_*/lib/
+/production_runs/*/sm_ew_*/Source/
+/production_runs/*/sm_ew_*/SubProcesses/P*/G*/
+/production_runs/ew_wmwmjj_manual/bin/
+/production_runs/ew_wmwmjj_manual/lib/
+/production_runs/ew_wmwmjj_manual/Source/
+/production_runs/ew_wmwmjj_manual/SubProcesses/P*/G*/
+/sm_wmwmjj_leptonic/bin/
+/sm_wmwmjj_leptonic/lib/
+/sm_wmwmjj_leptonic/Source/
+/sm_wmwmjj_leptonic/SubProcesses/P*/G*/
+madevent.tar.gz
+
+# Additional generated data and shared-library forms.
+*.lhef
+*.lhef.gz
+*.hepmc2
+*.hepmc2.gz
+*.root.gz
+*.so.*
+*.dylib
+
+# Known extensionless compiled probes and validation binaries.
+/production_runs/**/shower/verify_reader
+/production_runs/**/SubProcesses/**/madevent
+/sm_wmwmjj_leptonic/SubProcesses/**/madevent
+/sm_wmwmjj_leptonic/Events/*/shower_8317/read_probe
+/sm_wmwmjj_leptonic/Events/*/shower_8317/verify_hepmc
+/validation/stable_particles/diagnostic
+/validation/stable_particles/diagnostic_full
+/validation/lifetime_impact/comparison
+/validation/lifetime_impact/*/comparison
+/validation/physics_checkpoints/*/checkpoint
+
+# Generated parser tables and scratch files.
+/py.py
+/production_runs/**/py.py
+*.partial
+*.partial.json
+*.tmp
+*.swp

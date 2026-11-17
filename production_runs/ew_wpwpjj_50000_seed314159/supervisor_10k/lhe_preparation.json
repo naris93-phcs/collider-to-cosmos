@@ -1,0 +1,11 @@
+{
+  "original_sha256": "e53b4c8a94fb49a310e6ff3b6000735ae8671cd77cd981a8c4e374306cc35df4",
+  "full_events": 50000,
+  "blank_gaps_removed": 48338,
+  "corrected_sha256": "5973906669b00567af7fc5f8bb15ed3812004084cd8fe5087795435c5f4b5139",
+  "subset_events": 10000,
+  "subset_sha256": "56a05284232a85fe94f3e4ef076ad74a5df312e98e07cfdee46dc2e5b9bf848b",
+  "subset_seed": 314161,
+  "nominal_weight_pb": 0.010425765,
+  "subset_contribution_pb": 1.0425765e-06
+}

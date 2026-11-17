@@ -1,0 +1,5 @@
+Python: /home/naris/miniforge3/envs/hep/bin/python 3.14.7 | packaged by conda-forge | (main, Sep  2 2026, 21:08:32) [GCC 15.3.0]
+LHAPDF: /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3//lib/python3.14/site-packages/lhapdf/__init__.py 6.5.5
+PDF paths: ['/home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3//share/LHAPDF']
+PDF ID 247000, x*f_u(0.1, Q=100 GeV): 0.5878841524843783
+PDF members: 101

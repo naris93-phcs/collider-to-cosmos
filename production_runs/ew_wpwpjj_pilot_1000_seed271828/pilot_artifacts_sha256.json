@@ -1,0 +1,13 @@
+{
+  "cards/process.mg5": "9c2447b1dae7f59791c3d7e987d30ac9952a147b3d5893c25055f2cfb689dc8d",
+  "cards/run_card.dat": "2fee50334d8d72549b934744ae529df9878c164b4299e49a62636fa2c02cfd8e",
+  "cards/pythia8.cmd": "87192280dcd50716c28f4305cc68845f549f15989608e8ea55359c3df2abe170",
+  "cards/param_card.dat": "7a75a60c9a53c3b0ec80797cb70a2c1fc7f2c08f726ba89f57c076e0ac4ad49a",
+  "cards/process.mg5.extracted_original": "8e1c4cab96537c9596ddde2e2ab45d1eb890d25d5c6b0e421bd3ee534cbfe2eb",
+  "cards/run_card.dat.extracted_original": "b3554808be2cfd8cf8f7965b74be414ccbe46f2e2c22065c1c058cceffdbd5b7",
+  "matrix_element_verification.json": "20e223f7f879e8b2f8b5181c0bfb213e20b63e847e663d0330c36e788df43598",
+  "lhe_verification.json": "6f962069a8782f1d52dda06150d9a16331d61e81186a6cd886aa07e5485b9704",
+  "verify_lhe.py": "55fb2c3521ffa1a46063f3cf412925a70730fa837d64cbdc661f294791781921",
+  "generation.log": "f29ade0261cf6d534f37d68203a87bb12342f28a27109a587d3d72ce0123f44e",
+  "process.log": "6f9dfb3316e61a55d5c6c0f3cd53312f58db8502fcf12bd8f334147b9affd646"
+}

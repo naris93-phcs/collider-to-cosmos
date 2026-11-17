@@ -1,0 +1,31 @@
+--- /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/pythia8.cmd	2026-11-17 15:53:53.366827626 +0200
++++ /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/cards/pythia8.cmd	2026-11-17 16:23:11.699253369 +0200
+@@ -11,7 +11,7 @@
+ ! General parameters 
+ ! ==================
+ !
+-Main:numberOfEvents = 1000
++Main:numberOfEvents = 50000
+ !
+ ! -------------------------------------------------------------------
+ ! Specify the HEPMC output of the Pythia8 shower. You can set it to:
+@@ -33,7 +33,7 @@
+ !               fifo). Note that the fifo file extension *must* be '.hepmc.fifo'.
+ ! -------------------------------------------------------------------
+ !
+-HEPMCoutput:file = ew_wpwp_1000_seed271828_pythia8317.hepmc
++HEPMCoutput:file = ew_wpwp_50000_seed314159_pythia8317.hepmc
+ !
+ ! --------------------------------------------------------------------
+ ! Parameters relevant only when performing MLM merging, which can be
+@@ -117,8 +117,8 @@
+ !
+ !  Definition of subrun 0
+ !
+-Beams:LHEF=/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Events/ew_wpwp_1000_seed271828/unweighted_events.lhe.gz
++Beams:LHEF=/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/sm_ew_wpwpjj_leptonic/Events/ew_wpwp_50000_seed314159/unweighted_events.lhe.gz
+ 
+ ! Explicit reproducible shower seed; baseline physics settings retained.
+ Random:setSeed = on
+-Random:seed = 271829
++Random:seed = 314160

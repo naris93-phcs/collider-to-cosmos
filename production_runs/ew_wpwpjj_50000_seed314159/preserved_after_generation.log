@@ -1,0 +1,12 @@
+analysis/particle_level.cpp: OK
+build/particle_level: OK
+CMakeLists.txt: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/param_card.dat: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/process.mg5: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/process.mg5.extracted_original: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/pythia8.cmd: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/run_card.dat: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/run_card.dat.extracted_original: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Events/ew_wpwp_1000_seed271828/unweighted_events.lhe.gz: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/shower/ew_wpwp_1000_seed271828_pythia8317.hepmc: OK
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/shower_particle_level_audit/ew_wpwp_1000_seed271828_lifetime.root: OK

@@ -1,0 +1,1 @@
+../../production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/shower/pythia8.cmd

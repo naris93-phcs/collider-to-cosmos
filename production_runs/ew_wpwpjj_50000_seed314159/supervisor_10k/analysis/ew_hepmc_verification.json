@@ -1,0 +1,14 @@
+{
+  "events": 10000,
+  "generator_sigma_pb": 0.01042576,
+  "integration_error_pb": 1.079378e-05,
+  "per_event_pb": 1.042576e-06,
+  "hepmc_nominal_weight": 0.010425765000000002,
+  "hepmc_merging_weight": 1.0425765e-06,
+  "hepmc_last_xsec_pb": 0.010425764999999886,
+  "event_number_sequence_sizes": [
+    10000
+  ],
+  "hepmc_sha256": "87ba643a8fb747e21e432e8108d26b6ec5d70dd442e2c701a4a81d2c6cfdad7e",
+  "hepmc_file": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/shower/ew_wpwpjj_10000_pythia8317.hepmc"
+}

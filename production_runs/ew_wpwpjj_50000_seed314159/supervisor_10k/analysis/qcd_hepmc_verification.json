@@ -1,0 +1,26 @@
+{
+  "events": 10000,
+  "generator_sigma_pb": 0.00895104,
+  "integration_error_pb": 2.035674e-05,
+  "per_event_pb": 8.95104e-07,
+  "hepmc_nominal_weight": 0.008951040000000002,
+  "hepmc_merging_weight": 0.008951040000000002,
+  "hepmc_last_xsec_pb": 0.008951040000000049,
+  "event_number_sequence_sizes": [
+    834,
+    834,
+    834,
+    834,
+    833,
+    833,
+    833,
+    833,
+    833,
+    833,
+    833,
+    833
+  ],
+  "hepmc_sha256": "0bd8bbebfd20a73ad9828299da44fc5458e28a2b5d1612cae8193697b55e50f1",
+  "hepmc_file": "/home/naris/projects/collider_to_cosmos/sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
+  "lhe_sha256": "2d2e47a6d54fcc6cf3e5c5acd8e5a0d3bd5fc64a5804be642baa804c09498d14"
+}

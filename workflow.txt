@@ -1,64 +1,211 @@
-============================================================
-3. GIT QUICK REFERENCE
-============================================================
+COLLIDER TO COSMOS — ΤΡΕΧΟΝ WORKFLOW
+===================================
+SM same-sign WWjj, pp στα 13 TeV · LO · particle level · 18 Νοεμβρίου 2026
 
-Check what changed:
-git status
+1. Από πού ξεκινώ
+------------------
+README.md                       Γρήγορος προσανατολισμός.
+docs/PROJECT_MAP.md              Δομή και εξαρτήσεις του repository.
+docs/RESULTS_INDEX.md             Ταυτότητα δειγμάτων, seeds, LHE, HepMC και ROOT.
+docs/REPRODUCIBILITY.md           Ακριβείς εντολές και απομονωμένο replay.
+docs/VALIDATION_STATUS.md         Τεκμηριωμένοι έλεγχοι και ανοιχτά ζητήματα.
+analysis/particle_level.cpp      CMake target particle_level.
+validation/lifetime_impact/reconstruction.h
+                                Ενεργή εξάρτηση της ανάλυσης.
+scripts/ και configs/            Σχετικοί σύνδεσμοι προς scripts και cards.
+production_runs/                 EW παραγωγές, έλεγχοι και τελικά ROOT outputs.
+sm_wpwpjj_leptonic/ και sm_wmwmjj_leptonic/
+                                Αρχικές διεργασίες και QCD δείγματα.
+results/                         Τελικά plots, cutflows, CSV, manifest και SHA-256.
+plots/ και references/           Ιστορικά plots και πηγές.
 
-See line-by-line changes:
-git diff
+Τα scripts του κάθε run συχνά υπολογίζουν διαδρομές από τη θέση τους.
+Χρησιμοποίησε το docs/REPRODUCIBILITY.md για ασφαλή αντιγραφή σε νέο χώρο.
+Το Git checkout χρειάζεται χωριστή πρόσβαση στα μεγάλα δεδομένα και στα HEPTools.
+Για έλεγχο τοπικών αλλαγών: git status --short και git diff.
 
-Stage a specific file:
-git add analysis/particle_level.cpp
+2. Περιβάλλον και build
+-----------------------
+Εκτέλεσε σε Bash στο WSL2. Το υπάρχον conda περιβάλλον hep παρέχει ROOT
+6.40.04/PyROOT και FastJet 3.5.1. Χρησιμοποιούνται C++17, GCC 13.3.0 στον
+τοπικό host και CMake >= 3.28. Το MadGraph5_aMC@NLO 3.8.0 και ο standalone
+MG5aMC_PY8_interface βρίσκονται στην τοπική εγκατάσταση. Το CMake χρησιμοποιεί
+Pythia 8.317 (με gzip support), τα XML δεδομένα του και HepMC 2.06.09 από
+MG5_aMC_v3_8_0/HEPTools. Απαιτείται το ακριβές τοπικό layout.
 
-Stage everything:
-git add .
+  cd /home/naris/projects/collider_to_cosmos
+  source "$HOME/miniforge3/etc/profile.d/conda.sh"
+  conda activate hep
+  root-config --version
+  cmake --version
+  replay_build=$(mktemp -d /tmp/collider-build.XXXXXX)
+  cmake -S "$PWD" -B "$replay_build" -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
+  cmake --build "$replay_build" --target particle_level -j 4
 
-Commit:
-git commit -m "Describe what changed"
+Το παραπάνω build επαληθεύτηκε σε προσωρινό κατάλογο. Τα τελικά αποτελέσματα δημιουργήθηκαν
+με το διατηρημένο build/particle_level. Αν αλλάζει μόνο το HepMC input,
+χρησιμοποίησε το υπάρχον binary. Για μεταφορά σε άλλον host δες
+docs/REPRODUCIBILITY.md για rpath, XML path και το αρχείο checksums.
 
-Push to GitHub:
-git push
+3. Παραγωγή, LHE και shower
+--------------------------
+Η ακολουθία είναι MG5 process/run/param cards → LHE → έλεγχος και, όπου
+χρειάζεται, format-only copy → Pythia 8.317 → HepMC2 → particle_level
+→ ROOT cutflow/διαγνωστικά/selected TTree → PyROOT plots και CSV.
 
-Typical workflow:
-git status
-git diff
-git add .
-git commit -m "Implement ATLAS-like VBS jet selection"
-git push
+Δείγμα       Production     Leptonic ME    Parent / input   MG5      Pythia
+EW  W+W+     QCD=0 QED=4    QCD=0 QED=6    50000 / 10000    314159   314160
+EW  W-W-     QCD=0 QED=4    QCD=0 QED=6    10000 / 10000    161804   161805
+QCD W+W+     QCD=2 QED=2    QCD=2 QED=4    10000 / 10000    42       άγνωστο
+QCD W-W-     QCD=2 QED=2    QCD=2 QED=4    10000 / 10000    314161   άγνωστο
 
+EW process statements από τα πραγματικά cards:
+  generate p p > w+ w+ j j QCD=0 QED=4, w+ > lp vlp
+  generate p p > w- w- j j QCD=0 QED=4, w- > lm vlm
+lp = e+ mu+, vlp = ve vm, lm = e- mu-, vlm = ve~ vm~. Τα p και j
+περιέχουν g, u, c, d, s και τα αντίστοιχα antiquarks. Το placement
+πριν από το comma εφαρμόζει τον περιορισμό στο production block.
+Οι τάξεις του QCD archive τεκμηριώνονται από τα exported διαγράμματα,
+επειδή η παλιά σύνταξη των banners έβαλε τον περιορισμό στο decay block.
 
-============================================================
-4. COMPILE PARTICLE-LEVEL ANALYSIS
-============================================================
+Στα διατηρημένα cards: 6.5 TeV ανά δέσμη, pdlabel=nn23lo1,
+dynamical_scale_choice=-1, ptj=20 GeV, etaj=5, drjj=0.4,
+maxjetflavor=4, bwcutoff=15 και cut_decays=False. Το generator
+phase space διαφέρει από τα τελικά particle-level cuts. Τα banners
+τεκμηριώνουν τις ρυθμίσεις ανά run. Τα άμεσα e/μ είναι resonant
+decay chains και δεν περιλαμβάνουν ME W→τ.
 
-# Activate environment
-conda activate hep
+- EW W+W+: από το 50k parent αφαιρέθηκαν μόνο 48.338 κενά μετά τα
+  event headers στο διορθωμένο αντίγραφο. Ο reader έλεγξε όλα τα
+  50k. Το 10k subset επιλέχθηκε χωρίς αντικατάσταση με seed 314161,
+  σε σειρά αρχείου, διατηρώντας average weights και XSECUP.
+- EW W-W-: το manual run είναι production_runs/ew_wmwmjj_manual/Events/run_01.
+  Το διατηρημένο LHE έχει 10.000 events. Στο ξεχωριστό αντίγραφο
+  αφαιρέθηκαν 5.038 κενά. Ο reader επαλήθευσε όλες τις εγγραφές.
+  Το προηγούμενο EW run των 3.031 events είναι ιστορικό τεκμήριο.
+- QCD: επανάχρηση των αρχειοθετημένων HepMC. Το W+W+ έχει 12
+  numbering sequences και η σωζόμενη κάρτα είναι nominal reference.
+  Τα ακριβή chunk invocations και τα effective shower seeds παραμένουν
+  ανεπιβεβαίωτα. Το W-W- production card είναι διαθέσιμο στο configs/shower/.
 
-# Go to project root
-cd ~/projects/collider_to_cosmos
+Βρες τα ακριβή LHE/banner/log paths στο docs/RESULTS_INDEX.md ή στο
+results/samples.json. Για εντολές MG5, LHE preparation, shower και
+αρχειακή αναπαραγωγή δες docs/REPRODUCIBILITY.md. Αυτά τα replays είναι
+δαπανηρά και δεν επανεκτελέστηκαν στην παρούσα ενημέρωση. Η ακριβής
+αρχική interactive εντολή του manual EW W-W- δεν έχει ανακτηθεί.
+Τα Pythia checks ελέγχουν τον reader, accepted count, framing και βάρη.
+Exit code 0 από μόνο του μπορεί να συνοδεύει πρόωρο EOF.
 
-# Configure CMake (first time / configuration changes)
-cmake -S . -B build -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
+Προαιρετικό replay του EW W-W- από το υπάρχον LHE, σε νέο run directory
+(εντολή της καταγεγραμμένης διαδικασίας, χωρίς νέα δοκιμή αυτού του replay):
 
-# Compile (after modifying the .cpp)
-cmake --build build
-  
-============================================================
-5. RUN PARTICLE-LEVEL ANALYSIS
-============================================================
+  src=production_runs/ew_wmwmjj_manual_analysis_seed161805
+  work=$(mktemp -d "$PWD/production_runs/ew_wmwmjj_replay.XXXXXX")
+  mkdir "$work"/{cards,shower,analysis}
+  cp "$src"/{postprocess.sh,prepare_lhe.py,verify_hepmc.py,verify_pythia_reader.cpp} "$work/"
+  bash "$work/postprocess.sh"
 
-# Go to analysis directory
-cd ~/projects/collider_to_cosmos/analysis
+Το postprocess.sh προετοιμάζει και ελέγχει το LHE, γράφει νέα κάρτα,
+τρέχει το MG5aMC_PY8_interface με το seed 161805, επαληθεύει το HepMC
+και καλεί το lifetime analysis. Για το EW W+W+ χρησιμοποίησε το
+διατηρημένο 10k subset και την αντίστοιχη κάρτα με νέο output path,
+σύμφωνα με docs/REPRODUCIBILITY.md.
 
-# Run the CMake executable
-../build/particle_level
-  
+4. Particle-level analysis
+--------------------------
+Από το project root, οι παρακάτω εντολές αναπαράγουν το interface των
+καταγεγραμμένων runs με νέα ονόματα ROOT. Η πλήρης ανάλυση δεν
+επανεκτελέστηκε για τον έλεγχο του παρόντος εγγράφου.
 
-Typical compile + run workflow:
+  ep=production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k
+  em=production_runs/ew_wmwmjj_manual_analysis_seed161805
+  qp=sm_wpwpjj_leptonic/Events/run_04
+  qm=sm_wmwmjj_leptonic/Events/run_01
+  out=$(mktemp -d /tmp/collider-analysis.XXXXXX)
+  ./build/particle_level lifetime "$ep/shower/ew_wpwpjj_10000_pythia8317.hepmc" "$out/ew_plus.root" > "$out/ew_plus.log" 2>&1
+  ./build/particle_level lifetime "$em/shower/ew_wmwmjj_10000_pythia8317.hepmc" "$out/ew_minus.root" > "$out/ew_minus.log" 2>&1
+  ./build/particle_level lifetime "$qp/tag_1_pythia8_events.hepmc" "$out/qcd_plus.root" > "$out/qcd_plus.log" 2>&1
+  ./build/particle_level lifetime "$qm/tag_1_pythia8_events_verified.hepmc" "$out/qcd_minus.root" > "$out/qcd_minus.log" 2>&1
 
-conda activate hep
-cd ~/projects/collider_to_cosmos
-cmake --build build
-cd analysis
-../build/particle_level
+Δώσε πάντα mode, input και νέο output. Το υπάρχον αρχείο output απορρίπτεται.
+Σύγκρινε τα 10.000 αναγνωσμένα events και το τελικό bin με results/cutflow.csv.
+Για αναπαραγωγή του status-1 regression στο αρχειοθετημένο QCD W+W+:
+  ./build/particle_level status1 "$qp/tag_1_pythia8_events.hepmc" "$out/qcd_plus_status1.root" > "$out/qcd_plus_status1.log" 2>&1
+Το καταγεγραμμένο status1 regression πέρασε 10.000 events και επέλεξε 339.
+Είχε μικρές διαφορές σε ενδιάμεσα jet bins έναντι lifetime. Τα τελικά τέσσερα
+δείγματα χρησιμοποιούν lifetime. Βλ. validation/lifetime_integration/README.md.
+
+Ανακατασκευή και selection
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+- lifetime: Pythia particle data και HepMC decay graph με όριο proper lifetime
+  3e-11 s (cτ≈8.99377 mm), με χειρισμό εγγενώς σταθερών ειδών και χωρίς
+  διπλομέτρηση parent/descendant. status1: επιλογή HepMC status()==1.
+- Prompt approximation: direct hard-W e/μ, με W-copy και same-lepton-copy
+  chains. Dressing: ΔR(η,φ)<0.1 γύρω από bare leptons, αποκλεισμός φωτονίων
+  με hadron-decay ancestry, μία ανάθεση στον πλησιέστερο bare lepton.
+- FastJet anti-kT R=0.4 σε stable visible inputs εκτός μ και νετρίνων.
+  Η συλλογή περιλαμβάνει e και γ. Ghost association για last open-bottom
+  hadrons. Jet |η|<4.5. Για το πλησιέστερο jet με pT≥25 GeV σε
+  ΔR(e,j)<0.4, αφαιρείται το ηλεκτρόνιο αν pT(e)/pT(j)<0.5, αλλιώς το jet.
+- Ακριβώς δύο dressed e/μ μετά το overlap, pT>27 GeV και |η|<2.5,
+  ίδιο φορτίο, mll>20 GeV. Veto αν υπάρχουν >2 bare prompt e/μ
+  με pT>3 GeV και |η|<2.5. Μόνο για ee, veto για |mll−91.1876|<15 GeV.
+- MET>30 GeV από το μέτρο του διανυσματικού αθροίσματος pT των stable
+  νετρίνων. b-jet veto μετά το overlap για tagged jet με pT>20 GeV
+  και |η|<2.5. Για VBS, ≥2 jets με pT≥25 GeV και strict tagging
+  pT(j1)>65 GeV, pT(j2)>35 GeV, mjj>500 GeV, |Δyjj|>2
+  στα δύο jets με το υψηλότερο pT. Το Δy χρησιμοποιεί rapidity.
+
+5. Βάρη, τελικά αποτελέσματα και plots
+--------------------------------------
+Το h_cutflow και τα ROOT histograms είναι counts. Το fiducial_events
+αποθηκεύει μόνο τελικά επιλεγμένα events και δεν περιέχει weight branch.
+Στα τέσσερα δείγματα τα nominal LHE βάρη είναι σταθερά, IDWTUP=-4,
+event_norm=average. Η συνεισφορά κάθε event είναι σ_gen/N_analyzed.
+Τα δύο EW και το QCD W-W- έχουν επαληθευμένη sum-normalized HepMC
+συνεισφορά. Στο αρχειοθετημένο QCD W+W+ και τα δύο slots επαναλαμβάνουν
+το nominal average weight. Χρησιμοποίησε XSECUP/10000, όπως επαληθεύτηκε
+στο αντίστοιχο log. 1 pb = 1000 fb. Δεν εφαρμόζεται δεύτερος W branching ratio.
+
+Δείγμα    N_sel / 10000  Αποδοχή  Generator ± integration  Fiducial ± MC stat.
+                                      [fb]                        [fb]
+EW  W+W+      1971       19.71%    10.42576 ± 0.01079       2.05492 ± 0.04147
+EW  W-W-      1848       18.48%     4.07666 ± 0.01076       0.75337 ± 0.01582
+QCD W+W+       339        3.39%     8.95104 ± 0.02036       0.30344 ± 0.01620
+QCD W-W-       291        2.91%     3.87057 ± 0.00930       0.11263 ± 0.00651
+
+A = N_sel/N_analyzed, σ_fid = σ_gen A και MC stat. = σ_gen sqrt(A(1−A)/N).
+Η χωριστή διάδοση integration error είναι A δσ_gen. Τα δύο φορτία
+δίνουν EW 2.80828 ± 0.04439 fb και QCD 0.41607 ± 0.01746 fb (MC stat.).
+Οι αβεβαιότητες ανά συνιστώσα προστίθενται σε τετραγωνική μορφή για
+ανεξάρτητα δείγματα. Η αποδοχή αφορά αυτά τα generator samples.
+
+results/four_sample_fiducial.pdf και .png     mjj και |Δyjj|, shapes και rates.
+results/{cross_sections,cutflow,distributions}.csv
+results/{samples,comparison}.json
+results/SHA256SUMS                           Έλεγχος από το project root.
+  sha256sum -c results/SHA256SUMS
+
+Το compare.py διαβάζει τα τέσσερα τελικά ROOT trees με κοινά bins.
+Ο οδηγός ROOT_QUICK_REFERENCE_Collider_to_Cosmos_v0.2.txt δίνει επιθεώρηση
+και plotting. Για αναπαραγωγή του PDF και των CSV χρησιμοποίησε το staged
+replot του docs/REPRODUCIBILITY.md σε νέο προσωρινό κατάλογο.
+
+6. Ολοκληρωμένοι έλεγχοι και επόμενα βήματα
+----------------------------------------
+Ολοκληρωμένα: coupling-order, LHE και parser checks, 10k HepMC και
+κανονικοποίηση ανά δείγμα, 12 cumulative bins, συμφωνία τελικού bin
+με το selected tree, lifetime και strict-tagging regressions, έλεγχοι
+ακεραιότητας για τα τελικά artifacts. Δες docs/VALIDATION_STATUS.md.
+
+Ανοιχτά: EW W+W+ pilot 9.830870 fb έναντι 50k parent 10.425760 fb
+(+6.05%, ανεξήγητο). Οι απόλυτες EW τιμές παραμένουν προκαταρκτικές.
+Ο έλεγχος ATLAS JHEP 04 (2024) 026 §7.1 παραμένει ημιτελής, ιδίως για
+MET, prompt-object/overlap ορισμούς και b-hadron seeds. Δεν έχει ελεγχθεί
+generator-cut independence. Απουσιάζουν EW–QCD interference και PDF/scale
+systematics. Το LO baseline είναι ATLAS-inspired particle-level σύγκριση.
+
+Προγραμματισμένα: διερεύνηση της EW κανονικοποίησης και ολοκλήρωση του
+ATLAS fiducial audit πριν από συγκρίσεις με HEPData, προσθήκη EW–QCD
+interference και PDF/scale variations, στη συνέχεια Georgi–Machacek
+benchmarks, και σε μεταγενέστερη φάση finite-temperature EWPT.

@@ -1,0 +1,12 @@
+EVENT 0 original=362 candidates=8 nested=0 roots=8 removed_final=18 reconstructed=352
+residual reconstructed-original [px,py,pz,E] GeV: -1.05818132034585233e-16 -5.2822329843493776e-16 -1.2694359452503079e-13 1.10134124042815529e-13
+identities_unique=PASS ancestry=PASS closure=PASS
+CHAIN barcode=718 PDG=310 ct_mm=26.8419999999999987 daughters: [945,211,status=1] [946,-211,status=1]
+CHAIN barcode=918 PDG=3122 ct_mm=78.9000000000000057 daughters: [1045,2112,status=1] [1046,111,status=2]
+EVENT 2 original=575 candidates=26 nested=2 roots=24 removed_final=59 reconstructed=540
+residual reconstructed-original [px,py,pz,E] GeV: -1.08246744900952763e-15 -6.59194920871186696e-16 -2.99205105136479688e-14 -3.90798504668055102e-14
+identities_unique=PASS ancestry=PASS closure=PASS
+CHAIN barcode=1143 PDG=3122 ct_mm=78.9000000000000057 daughters: [1725,2212,status=1] [1726,-211,status=1]
+CHAIN barcode=1144 PDG=-3312 ct_mm=49.1000000000000014 daughters: [1727,-3122,status=2] [1728,211,status=1]
+CHAIN barcode=1708 PDG=310 ct_mm=26.8419999999999987 daughters: [1998,111,status=2] [1999,111,status=2]
+CHAIN barcode=1493 PDG=3322 ct_mm=87.0999999999999943 daughters: [1869,3122,status=2] [1870,111,status=2]

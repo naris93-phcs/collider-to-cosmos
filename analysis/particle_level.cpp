@@ -1,3 +1,6 @@
+#include "../validation/lifetime_impact/reconstruction.h"
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -267,14 +270,34 @@ std::pair<bool,bool> oldDressingPasses(
 }
 
 
-int main()
+int main(int argc, char** argv)
 {
+    static_assert(PYTHIA_VERSION_INTEGER == 8317, "Use bundled Pythia 8.317");
+    const std::string mode = argc > 1 ? argv[1] : "lifetime";
+    if (argc > 4 || (mode != "status1" && mode != "lifetime")) {
+        std::cerr << "Usage: particle_level [lifetime|status1 [input.hepmc [output.root]]]\n";
+        return 1;
+    }
+    const bool lifetime = mode == "lifetime";
+    const std::string input_path = argc > 2 ? argv[2] :
+        "../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc";
+    const std::string output_path = argc > 3 ? argv[3] :
+        "particle_level_" + mode + ".root";
+    if (std::filesystem::exists(output_path) || !std::ifstream(input_path)) {
+        std::cerr << "Input unreadable or output already exists: "
+                  << input_path << " / " << output_path << '\n';
+        return 1;
+    }
+    std::unique_ptr<Pythia8::Pythia> lifetime_data;
+    if (lifetime)
+        lifetime_data = std::make_unique<Pythia8::Pythia>(LIFETIME_PYTHIA_XML, false);
+    std::cout << "Stable-particle mode: " << mode << '\n';
     // -------------------------------------------------------------------------
     // Input HepMC file
     // -------------------------------------------------------------------------
 
     HepMC::IO_GenEvent ascii_in(
-        "../sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
+        input_path.c_str(),
         std::ios::in
     );
 
@@ -394,6 +417,7 @@ int main()
     // -------------------------------------------------------------------------
 
     int event_count = 0;
+    fiducial_events.Branch("event_index", &event_count);
     long long photons_rejected_hadron_ancestry = 0;
     long long photons_assigned = 0;
     long long photons_with_multiple_candidates = 0;
@@ -481,6 +505,20 @@ int main()
 
         ++event_count;
 
+        Set lifetime_particles;
+        if (lifetime) {
+            context = nullptr;
+            try {
+                lifetime_particles = reconstruct(*event, lifetime_data->particleData);
+            } catch (const std::exception& error) {
+                std::cerr << "Lifetime reconstruction failed at sequential event "
+                          << event_count << ": " << error.what() << '\n';
+                delete event;
+                return 1;
+            }
+            context = nullptr;
+        }
+
         // Scan ALL HepMC particles, including unstable intermediates.
         bool found_b_candidate = false;
         for (auto it = event->particles_begin();
@@ -531,7 +569,7 @@ int main()
              p != event->particles_end();
              ++p) {
 
-            if ((*p)->status() != 1)
+            if (lifetime ? !lifetime_particles.count(*p) : (*p)->status() != 1)
                 continue;
 
             const int absId = std::abs((*p)->pdg_id());
@@ -955,7 +993,7 @@ int main()
             const fastjet::PseudoJet& j1 = selected_jets[0];
             const fastjet::PseudoJet& j2 = selected_jets[1];
 
-            pass_jet_pt = (j1.pt() >= 65.0 && j2.pt() >= 35.0);
+            pass_jet_pt = (j1.pt() > 65.0 && j2.pt() > 35.0);
 
             if (pass_jet_pt)
                 ++events_pass_jet_pt;
@@ -1090,10 +1128,15 @@ int main()
     // Save histograms
     // -------------------------------------------------------------------------
 
-    TFile output(
-        "particle_level.root",
-        "RECREATE"
-    );
+    if (event_count == 0) {
+        std::cerr << "No readable events in " << input_path << '\n';
+        return 1;
+    }
+    TFile output(output_path.c_str(), "CREATE");
+    if (output.IsZombie()) {
+        std::cerr << "Cannot create new output: " << output_path << '\n';
+        return 1;
+    }
 
     h_njets.Write();
     h_jet1_pt.Write();
@@ -1276,7 +1319,7 @@ int main()
                   << " %\n";
     }
 
-    std::cout << "\nOutput: particle_level.root" << std::endl;
+    std::cout << "\nOutput: " << output_path << std::endl;
     std::cout << "========================================" << std::endl;
 
     return 0;

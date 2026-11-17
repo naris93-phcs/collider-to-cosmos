@@ -1,0 +1,95 @@
+{
+  "events_at_exact_thresholds": [],
+  "removed_at_tagging_pt": [],
+  "cutflow": [
+    {
+      "stage": "Generated",
+      "before": 10000,
+      "after": 10000,
+      "expected": 10000,
+      "delta": 0
+    },
+    {
+      "stage": "2 dressed leptons",
+      "before": 3258,
+      "after": 3258,
+      "expected": 3258,
+      "delta": 0
+    },
+    {
+      "stage": "Same sign",
+      "before": 3258,
+      "after": 3258,
+      "expected": 3258,
+      "delta": 0
+    },
+    {
+      "stage": "mll > 20",
+      "before": 3225,
+      "after": 3225,
+      "expected": 3225,
+      "delta": 0
+    },
+    {
+      "stage": "3rd lepton veto",
+      "before": 3225,
+      "after": 3225,
+      "expected": 3225,
+      "delta": 0
+    },
+    {
+      "stage": "Z veto (ee)",
+      "before": 3115,
+      "after": 3115,
+      "expected": 3115,
+      "delta": 0
+    },
+    {
+      "stage": "MET > 30",
+      "before": 2729,
+      "after": 2729,
+      "expected": 2729,
+      "delta": 0
+    },
+    {
+      "stage": "b-jet veto",
+      "before": 2648,
+      "after": 2648,
+      "expected": 2648,
+      "delta": 0
+    },
+    {
+      "stage": ">= 2 jets",
+      "before": 2539,
+      "after": 2539,
+      "expected": 2539,
+      "delta": 0
+    },
+    {
+      "stage": "Jet pT",
+      "before": 2248,
+      "after": 2248,
+      "expected": 2248,
+      "delta": 0
+    },
+    {
+      "stage": "mjj > 500",
+      "before": 772,
+      "after": 772,
+      "expected": 772,
+      "delta": 0
+    },
+    {
+      "stage": "|dy_jj| > 2",
+      "before": 339,
+      "after": 339,
+      "expected": 339,
+      "delta": 0
+    }
+  ],
+  "selected_before": 339,
+  "selected_after": 339,
+  "entering": [],
+  "leaving": [],
+  "identical_ordered_indices": true
+}

@@ -1,0 +1,43 @@
+{
+  "file": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Events/ew_wpwp_1000_seed271828/unweighted_events.lhe.gz",
+  "sha256": "6fa1be202df7bd042c58a1f352c7b336f6b323288d6d93f4a905f1bbe95ed4fa",
+  "events": 1000,
+  "init_beams": [
+    "2212",
+    "2212",
+    "6.500000e+03",
+    "6.500000e+03",
+    "0",
+    "0",
+    "247000",
+    "247000",
+    "-4",
+    "1"
+  ],
+  "init_processes": [
+    [
+      "9.830870e-03",
+      "7.025674e-05",
+      "9.830870e-03",
+      "1"
+    ]
+  ],
+  "cross_section_pb": 0.00983087,
+  "integration_error_pb": 7.025674e-05,
+  "nominal_weights": {
+    "0.0098308702": 1000
+  },
+  "flavour_counts": {
+    "(-13, -11)": 499,
+    "(-13, -13)": 225,
+    "(-11, -11)": 276
+  },
+  "W_record_patterns": {
+    "(24, 24)": 843,
+    "(-24, 24, 24)": 157
+  },
+  "two_positive_intermediate_Ws_per_event": true,
+  "no_ME_tau_decays": true,
+  "production_command_in_header_verified": true,
+  "events_with_blank_line_after_header": 0
+}

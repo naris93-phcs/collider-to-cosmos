@@ -1,0 +1,20 @@
+--- /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/cards/run_card.dat	2026-11-17 15:50:59.073092371 +0200
++++ /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/cards/run_card.dat	2026-11-17 16:23:11.694744775 +0200
+@@ -23,8 +23,8 @@
+ # Number of events and rnd seed                                      *
+ # Warning: Do not generate more than 1M events in a single run       *
+ #*********************************************************************
+- 1000 = nevents ! Number of unweighted events requested 
+- 271828 = iseed   ! rnd seed (0=assigned automatically=default))
++ 50000 = nevents ! Number of unweighted events requested 
++ 314159 = iseed   ! rnd seed (0=assigned automatically=default))
+ #*********************************************************************
+ # Collider type and energy                                           *
+ # lpp: 0=No PDF, 1=proton, -1=antiproton,                            *
+@@ -202,5 +202,5 @@
+ #*********************************************************************
+    True  = use_syst      ! Enable systematics studies
+ #
+-systematics = systematics_program ! none, systematics [python], SysCalc [depreceted, C++]
++none = systematics_program ! none, systematics [python], SysCalc [depreceted, C++]
+ ['--mur=0.5,1,2', '--muf=0.5,1,2', '--pdf=errorset'] = systematics_arguments ! see: https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Systematics#Systematicspythonmodule

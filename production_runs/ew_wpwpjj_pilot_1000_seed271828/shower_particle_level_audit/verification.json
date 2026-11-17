@@ -1,0 +1,87 @@
+{
+  "hepmc_sha256": "fd241ee07398c4cf2c68db153bd846b41ed97c40af9337f07b8c2fe038feb998",
+  "root_sha256": "fad2f5d1990d76a27407838332c2d65967ae871c07738a38b77aefb873d12ed9",
+  "preserved_sha256": {
+    "analysis/particle_level.cpp": "39d04449bfb85daacad8e17d9dfb4bf576a8a9e04f85aa584d94bcfa3e72d52f",
+    "validation/lifetime_impact/reconstruction.h": "9e3fef034e609113aba58300641bad576923fe13a36b5d651bf25259839af099",
+    "build/particle_level": "bf6a206d8abbde2f5344773047a25c1f00d20d76869ed6b5f562bde1690cf4c3",
+    "CMakeLists.txt": "94e144f7518900a3536a446187b0833c222b8e0cd1617b19cf78a22316e2b704",
+    "/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/sm_ew_wpwpjj_leptonic/Events/ew_wpwp_1000_seed271828/unweighted_events.lhe.gz": "6fa1be202df7bd042c58a1f352c7b336f6b323288d6d93f4a905f1bbe95ed4fa"
+  },
+  "root_keys": [
+    "h_njets",
+    "h_jet1_pt",
+    "h_jet2_pt",
+    "h_jet1_eta",
+    "h_jet2_eta",
+    "h_mjj",
+    "h_deta_jj",
+    "h_dy_jj",
+    "h_cutflow",
+    "h_lepton1_pt",
+    "h_lepton2_pt",
+    "h_mll",
+    "h_met",
+    "fiducial_events"
+  ],
+  "hepmc_events": 1000,
+  "weight_nominal_average_pb": 0.0098308702,
+  "weight_merging_per_event_pb": 9.830870199999999e-06,
+  "sum_weight_merging_pb": 0.0098308702,
+  "last_hepmc_cross_section_pb": 0.009830870199999975,
+  "cutflow": [
+    [
+      "Generated",
+      1000
+    ],
+    [
+      "2 dressed leptons",
+      486
+    ],
+    [
+      "Same sign",
+      486
+    ],
+    [
+      "mll > 20",
+      484
+    ],
+    [
+      "3rd lepton veto",
+      484
+    ],
+    [
+      "Z veto (ee)",
+      457
+    ],
+    [
+      "MET > 30",
+      393
+    ],
+    [
+      "b-jet veto",
+      384
+    ],
+    [
+      ">= 2 jets",
+      356
+    ],
+    [
+      "Jet pT",
+      308
+    ],
+    [
+      "mjj > 500",
+      226
+    ],
+    [
+      "|dy_jj| > 2",
+      209
+    ]
+  ],
+  "selected": 209,
+  "acceptance": 0.209,
+  "fiducial_cross_section_pb": 0.0020546518717999996,
+  "fiducial_mc_acceptance_stat_pb": 0.00012640182314139993,
+  "fiducial_propagated_integration_error_pb": 1.4683658659999998e-05
+}

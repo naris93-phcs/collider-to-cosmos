@@ -1,0 +1,170 @@
+{
+  "events": 10000,
+  "normalization": "raw unweighted counts; input weights preserved, not applied",
+  "cutflow": [
+    {
+      "stage": "Input",
+      "baseline": 10000,
+      "lifetime": 10000,
+      "entering": 0,
+      "leaving": 0
+    },
+    {
+      "stage": "2 leptons",
+      "baseline": 3258,
+      "lifetime": 3258,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "Same sign",
+      "baseline": 3258,
+      "lifetime": 3258,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "mll",
+      "baseline": 3225,
+      "lifetime": 3225,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "3rd lepton veto",
+      "baseline": 3225,
+      "lifetime": 3225,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "Z veto",
+      "baseline": 3115,
+      "lifetime": 3115,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "MET",
+      "baseline": 2729,
+      "lifetime": 2729,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "b veto",
+      "baseline": 2648,
+      "lifetime": 2648,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "2 jets",
+      "baseline": 2540,
+      "lifetime": 2539,
+      "entering": 2,
+      "leaving": 3
+    },
+    {
+      "stage": "jet pt",
+      "baseline": 2246,
+      "lifetime": 2248,
+      "entering": 3,
+      "leaving": 1
+    },
+    {
+      "stage": "mjj",
+      "baseline": 772,
+      "lifetime": 772,
+      "entering": 1,
+      "leaving": 1
+    },
+    {
+      "stage": "dy",
+      "baseline": 339,
+      "lifetime": 339,
+      "entering": 0,
+      "leaving": 0
+    }
+  ],
+  "observables": {
+    "metx": {
+      "paired_events": 10000,
+      "mean_baseline": -0.14190685331867736,
+      "mean_lifetime": -0.14028301106737293,
+      "mean_delta": 0.0016238422513044429,
+      "mean_abs_delta": 0.004007725551395911,
+      "max_abs_delta": 14.188465644032188,
+      "changed_above_1e-8": 135
+    },
+    "mety": {
+      "paired_events": 10000,
+      "mean_baseline": 0.11311449690925442,
+      "mean_lifetime": 0.11498917193850103,
+      "mean_delta": 0.00187467502924661,
+      "mean_abs_delta": 0.004267973685103283,
+      "max_abs_delta": 14.895588168922078,
+      "changed_above_1e-8": 135
+    },
+    "met": {
+      "paired_events": 10000,
+      "mean_baseline": 101.90039870915535,
+      "mean_lifetime": 101.9027226834037,
+      "mean_delta": 0.002323974248338452,
+      "mean_abs_delta": 0.004902469083585587,
+      "max_abs_delta": 20.52699749748285,
+      "changed_above_1e-8": 135
+    },
+    "njets": {
+      "paired_events": 10000,
+      "mean_baseline": 3.0485,
+      "mean_lifetime": 3.0475,
+      "mean_delta": -0.001,
+      "mean_abs_delta": 0.0178,
+      "max_abs_delta": 1.0,
+      "changed_above_1e-8": 178
+    },
+    "pt1": {
+      "paired_events": 9963,
+      "mean_baseline": 191.839490639998,
+      "mean_lifetime": 191.8840910242835,
+      "mean_delta": 0.04460038428551618,
+      "mean_abs_delta": 0.2055717518255616,
+      "max_abs_delta": 102.17162548373886,
+      "changed_above_1e-8": 3742
+    },
+    "pt2": {
+      "paired_events": 9524,
+      "mean_baseline": 120.8675248471885,
+      "mean_lifetime": 120.90527935952188,
+      "mean_delta": 0.037754512333380875,
+      "mean_abs_delta": 0.22123504241773478,
+      "max_abs_delta": 39.88547129965566,
+      "changed_above_1e-8": 3597
+    },
+    "mjj": {
+      "paired_events": 9524,
+      "mean_baseline": 429.70901419005213,
+      "mean_lifetime": 429.94278449689574,
+      "mean_delta": 0.23377030684363687,
+      "mean_abs_delta": 1.211113083972742,
+      "max_abs_delta": 720.698284144297,
+      "changed_above_1e-8": 5699
+    },
+    "dy": {
+      "paired_events": 9524,
+      "mean_baseline": 1.569084552787838,
+      "mean_lifetime": 1.5687981453457116,
+      "mean_delta": -0.00028640744212641043,
+      "mean_abs_delta": 0.004768787098630532,
+      "max_abs_delta": 3.0317099480193543,
+      "changed_above_1e-8": 5707
+    }
+  },
+  "jet_input_identity_changed_events": 9989,
+  "jet_input_totals": [
+    4619336,
+    4355283
+  ],
+  "baseline_previous_checkpoint_339_entries_8_observables": "PASS (absolute tolerance 1e-9)"
+}

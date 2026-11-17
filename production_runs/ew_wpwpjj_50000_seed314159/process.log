@@ -1,0 +1,319 @@
+************************************************************
+*                                                          *
+*                     W E L C O M E to                     *
+*              M A D G R A P H 5 _ a M C @ N L O           *
+*                                                          *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 3.8.0                 2026-09-15         *
+*                                                          *
+*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+*              http://madgraph.phys.ucl.ac.be/             *
+*                            and                           *
+*            http://amcatnlo.web.cern.ch/amcatnlo/         *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*           Type 'tutorial' to learn how MG5 works         *
+*    Type 'tutorial aMCatNLO' to learn how aMC@NLO works   *
+*    Type 'tutorial MadLoop' to learn how MadLoop works    *
+*                                                          *
+************************************************************
+load MG5 configuration from /home/naris/.config/mg5_configuration.txt 
+load MG5 configuration from MG5_aMC_v3_8_0/input/mg5_configuration.txt 
+set lhapdf to /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3/bin/lhapdf-config
+fastjet-config does not seem to correspond to a valid fastjet-config executable (v3+). We will use fjcore instead.
+ Please set the 'fastjet'variable to the full (absolute) /PATH/TO/fastjet-config (including fastjet-config).
+ MG5_aMC> set fastjet /PATH/TO/fastjet-config
+
+eMELA-config does not seem to correspond to a valid eMELA-config executable.
+ Please set the 'fastjet'variable to the full (absolute) /PATH/TO/eMELA-config (including eMELA-config).
+ MG5_aMC> set eMELA /PATH/TO/eMELA-config
+
+set lhapdf to /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3/bin/lhapdf-config
+set lhapdf to /home/naris/projects/collider_to_cosmos/MG5_aMC_v3_8_0/HEPTools/lhapdf6_py3/bin/lhapdf-config
+Using default text editor "vi". Set another one in ./input/mg5_configuration.txt
+No valid eps viewer found. Please set in ./input/mg5_configuration.txt
+No valid web browser found. Please set in ./input/mg5_configuration.txt
+Using default gzip "gzip". Set another one in ./input/mg5_configuration.txt
+import /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/cards/process.mg5
+The import format was not given, so we guess it as command
+set auto_update 0
+save options auto_update
+save configuration file to /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/MG5_aMC_v3_8_0/input/mg5_configuration.txt
+set group_subprocesses Auto
+Set group_subprocesses to Auto
+Note that you need to regenerate all processes
+set ignore_six_quark_processes False
+set low_mem_multicore_nlo_generation False
+set complex_mass_scheme False
+Complex mass already desactivated.
+set include_lepton_initiated_processes False
+set gauge unitary
+Passing to gauge unitary.
+set loop_optimized_output True
+set loop optimized output to True
+set loop_color_flows False
+set loop color flows to False
+set max_npoint_for_channel 0
+set default_unset_couplings 99
+set max_t_for_channel 99
+set zerowidth_tchannel True
+set nlo_mixed_expansion True
+import model sm
+INFO: reload from .py file 
+INFO: load particles 
+INFO: load vertices 
+INFO: Restrict model sm with file MG5_aMC_v3_8_0/models/sm/restrict_default.dat . 
+INFO: Run "set stdout_level DEBUG" before import for more information. 
+INFO: Change particles name to pass to MG5 convention 
+Defined multiparticle p = g u c d s u~ c~ d~ s~
+Defined multiparticle j = g u c d s u~ c~ d~ s~
+Defined multiparticle l+ = e+ mu+
+Defined multiparticle l- = e- mu-
+Defined multiparticle vl = ve vm vt
+Defined multiparticle vl~ = ve~ vm~ vt~
+Defined multiparticle all = g u c d s u~ c~ d~ s~ a ve vm vt e- mu- ve~ vm~ vt~ e+ mu+ t b t~ b~ z w+ h w- ta- ta+
+define p = g u c d s u~ c~ d~ s~
+Defined multiparticle p = g u c d s u~ c~ d~ s~
+define j = g u c d s u~ c~ d~ s~
+Defined multiparticle j = g u c d s u~ c~ d~ s~
+define l+ = e+ mu+
+Defined multiparticle l+ = e+ mu+
+define l- = e- mu-
+Defined multiparticle l- = e- mu-
+define vl = ve vm vt
+Defined multiparticle vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+Defined multiparticle vl~ = ve~ vm~ vt~
+import model sm
+INFO: Restrict model sm with file MG5_aMC_v3_8_0/models/sm/restrict_default.dat . 
+INFO: Run "set stdout_level DEBUG" before import for more information. 
+INFO: Change particles name to pass to MG5 convention 
+Kept definitions of multiparticles p / j / l+ / l- / vl / vl~ unchanged
+Defined multiparticle all = g u c d s u~ c~ d~ s~ a ve vm vt e- mu- ve~ vm~ vt~ e+ mu+ t b t~ b~ z w+ h w- ta- ta+
+define lp = e+ mu+
+Defined multiparticle lp = e+ mu+
+define vlp = ve vm
+Defined multiparticle vlp = ve vm
+generate p p > w+ w+ j j QCD=0 QED=4, w+ > lp vlp
+[1;34mInterpreting 'QED=4' as 'QED<=4'[0m
+INFO: Trying process: u u > w+ w+ d d QCD=0 QED<=4 @1  
+INFO: Process has 86 diagrams 
+INFO: Trying process: u u > w+ w+ d s QCD=0 QED<=4 @1  
+INFO: Trying process: u u > w+ w+ s s QCD=0 QED<=4 @1  
+INFO: Trying process: u c > w+ w+ d d QCD=0 QED<=4 @1  
+INFO: Trying process: u c > w+ w+ d s QCD=0 QED<=4 @1  
+INFO: Process has 43 diagrams 
+INFO: Trying process: u c > w+ w+ s s QCD=0 QED<=4 @1  
+INFO: Crossed process found for u d~ > w+ w+ d u~, reuse diagrams. 
+INFO: Crossed process found for u d~ > w+ w+ s c~, reuse diagrams. 
+INFO: Crossed process found for u s~ > w+ w+ d c~, reuse diagrams. 
+INFO: Process c u > w+ w+ d s added to mirror process u c > w+ w+ d s 
+INFO: Trying process: c c > w+ w+ d d QCD=0 QED<=4 @1  
+INFO: Trying process: c c > w+ w+ d s QCD=0 QED<=4 @1  
+INFO: Trying process: c c > w+ w+ s s QCD=0 QED<=4 @1  
+INFO: Process has 86 diagrams 
+INFO: Crossed process found for c d~ > w+ w+ s u~, reuse diagrams. 
+INFO: Crossed process found for c s~ > w+ w+ d u~, reuse diagrams. 
+INFO: Crossed process found for c s~ > w+ w+ s c~, reuse diagrams. 
+INFO: Process d~ u > w+ w+ d u~ added to mirror process u d~ > w+ w+ d u~ 
+INFO: Process d~ u > w+ w+ s c~ added to mirror process u d~ > w+ w+ s c~ 
+INFO: Process d~ c > w+ w+ s u~ added to mirror process c d~ > w+ w+ s u~ 
+INFO: Crossed process found for d~ d~ > w+ w+ u~ u~, reuse diagrams. 
+INFO: Crossed process found for d~ s~ > w+ w+ u~ c~, reuse diagrams. 
+INFO: Process s~ u > w+ w+ d c~ added to mirror process u s~ > w+ w+ d c~ 
+INFO: Process s~ c > w+ w+ d u~ added to mirror process c s~ > w+ w+ d u~ 
+INFO: Process s~ c > w+ w+ s c~ added to mirror process c s~ > w+ w+ s c~ 
+INFO: Process s~ d~ > w+ w+ u~ c~ added to mirror process d~ s~ > w+ w+ u~ c~ 
+INFO: Crossed process found for s~ s~ > w+ w+ c~ c~, reuse diagrams. 
+INFO: Checking for minimal orders which gives processes. 
+INFO: Please specify coupling orders to bypass this step. 
+INFO: Trying process: w+ > e+ ve WEIGHTED<=2  
+INFO: Process has 1 diagrams 
+INFO: Trying process: w+ > e+ vm WEIGHTED<=2  
+INFO: Trying process: w+ > mu+ ve WEIGHTED<=2  
+INFO: Trying process: w+ > mu+ vm WEIGHTED<=2  
+INFO: Process has 1 diagrams 
+1 processes with 776 diagrams generated in 0.233 s
+Total: 1 processes with 776 diagrams
+output /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/sm_ew_wpwpjj_leptonic
+INFO: initialize a new directory: sm_ew_wpwpjj_leptonic 
+INFO: remove old information in sm_ew_wpwpjj_leptonic 
+INFO: Organizing processes into subprocess groups 
+INFO: Organizing processes into subprocess groups 
+INFO: Generating Helas calls for process: u u > w+ w+ d d QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: u c > w+ w+ d s QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: u d~ > w+ w+ d u~ QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: u d~ > w+ w+ s c~ QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: u s~ > w+ w+ d c~ QCD=0 QED<=4 @1 
+INFO: Combined process c c > w+ w+ s s QCD=0 QED<=4 @1 with process u u > w+ w+ d d QCD=0 QED<=4 @1 
+INFO: Combined process c d~ > w+ w+ s u~ QCD=0 QED<=4 @1 with process u s~ > w+ w+ d c~ QCD=0 QED<=4 @1 
+INFO: Combined process c s~ > w+ w+ d u~ QCD=0 QED<=4 @1 with process u d~ > w+ w+ s c~ QCD=0 QED<=4 @1 
+INFO: Combined process c s~ > w+ w+ s c~ QCD=0 QED<=4 @1 with process u d~ > w+ w+ d u~ QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1 
+INFO: Combined process s~ s~ > w+ w+ c~ c~ QCD=0 QED<=4 @1 with process d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1 
+INFO: Generating Helas calls for process: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Helas calls for process: w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u u > w+ w+ d d QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine u u > w+ w+ d d QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u u > w+ w+ d d QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u c > w+ w+ d s QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine u c > w+ w+ d s QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u c > w+ w+ d s QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ d u~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ d u~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ d u~ QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ s c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ s c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u d~ > w+ w+ s c~ QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u s~ > w+ w+ d c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine u s~ > w+ w+ d c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine u s~ > w+ w+ d c~ QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > e+ ve WEIGHTED<=2 
+INFO: Combine d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1 with decays w+ > e+ ve WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combine d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1 with decays w+ > mu+ vm WEIGHTED<=2, w+ > mu+ vm WEIGHTED<=2 
+INFO: Combined process u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Combined process d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > mu+ vm WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 with process d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Processing color information for process: u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Processing color information for process: d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Reusing existing color information for process: d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Creating files in directory P1_qq_wpwpqq_wp_lvl_wp_lvl 
+[1mINFO: Some T-channel width have been set to zero [new since 2.8.0]
+ if you want to keep this width please set "zerowidth_tchannel" to False [0m
+INFO: Generating Feynman diagrams for Process: u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u u > w+ w+ d d QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u c > w+ w+ d s QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u d~ > w+ w+ d u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u d~ > w+ w+ s c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: u s~ > w+ w+ d c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: d~ d~ > w+ w+ u~ u~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > e+ ve WEIGHTED<=2 
+INFO: Generating Feynman diagrams for Process: d~ s~ > w+ w+ u~ c~ QCD=0 QED<=4 @1
+  Decay: w+ > e+ ve WEIGHTED<=2
+  Decay: w+ > mu+ vm WEIGHTED<=2 
+INFO: Finding symmetric diagrams for subprocess group qq_wpwpqq_wp_lvl_wp_lvl 
+Generated helas calls for 14 subprocesses (860 diagrams) in 1.188 s
+Wrote files for 1432 helas calls in 1.037 s
+ALOHA: aloha starts to compute helicity amplitudes
+ALOHA: aloha creates 7 routines in  13.058 s
+save configuration file to /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/sm_ew_wpwpjj_leptonic/Cards/me5_configuration.txt
+INFO: Use Fortran compiler gfortran 
+INFO: Use c++ compiler g++ 
+INFO: Generate web pages 
+Output to directory /home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/sm_ew_wpwpjj_leptonic done.
+Type "launch" to generate events from this process, or see
+/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_50000_seed314159/sm_ew_wpwpjj_leptonic/README
+Run "open index.html" to see more information about this process.
+quit

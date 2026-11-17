@@ -1,0 +1,11 @@
+{
+  "lhe_parameter_blocks_identical": true,
+  "lhe_process_blocks_match_except_output_path": true,
+  "lhe_run_blocks_match_except_nevents_iseed_systematics_program": true,
+  "lhe_beam_pdf_and_weight_codes_identical": true,
+  "delta_fb": 0.5948899999999989,
+  "relative_difference_pct": 6.051244701638807,
+  "difference_over_combined_reported_integration_errors": 8.369178951236801,
+  "production_expected_pb_per_event_at_particle_level": 2.085153e-07,
+  "production_blank_line_events": 48338
+}

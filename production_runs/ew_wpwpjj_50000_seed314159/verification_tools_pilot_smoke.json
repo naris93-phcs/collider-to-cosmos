@@ -1,0 +1,75 @@
+{
+  "root_path": "/home/naris/projects/collider_to_cosmos/production_runs/ew_wpwpjj_pilot_1000_seed271828/shower_particle_level_audit/ew_wpwp_1000_seed271828_lifetime.root",
+  "root_sha256": "fad2f5d1990d76a27407838332c2d65967ae871c07738a38b77aefb873d12ed9",
+  "root_keys": [
+    "h_njets",
+    "h_jet1_pt",
+    "h_jet2_pt",
+    "h_jet1_eta",
+    "h_jet2_eta",
+    "h_mjj",
+    "h_deta_jj",
+    "h_dy_jj",
+    "h_cutflow",
+    "h_lepton1_pt",
+    "h_lepton2_pt",
+    "h_mll",
+    "h_met",
+    "fiducial_events"
+  ],
+  "cutflow": [
+    [
+      "Generated",
+      1000
+    ],
+    [
+      "2 dressed leptons",
+      486
+    ],
+    [
+      "Same sign",
+      486
+    ],
+    [
+      "mll > 20",
+      484
+    ],
+    [
+      "3rd lepton veto",
+      484
+    ],
+    [
+      "Z veto (ee)",
+      457
+    ],
+    [
+      "MET > 30",
+      393
+    ],
+    [
+      "b-jet veto",
+      384
+    ],
+    [
+      ">= 2 jets",
+      356
+    ],
+    [
+      "Jet pT",
+      308
+    ],
+    [
+      "mjj > 500",
+      226
+    ],
+    [
+      "|dy_jj| > 2",
+      209
+    ]
+  ],
+  "selected_events": 209,
+  "acceptance": 0.209,
+  "fiducial_cross_section_pb": 0.0020546518717999996,
+  "fiducial_mc_acceptance_stat_pb": 0.00012640182314139993,
+  "fiducial_propagated_integration_error_pb": 1.4683658659999998e-05
+}

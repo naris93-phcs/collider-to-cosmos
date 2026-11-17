@@ -1,0 +1,28 @@
+Info in <TCanvas::Print>: png file mjj_comparison.png has been created
+Info in <TCanvas::Print>: pdf file mjj_comparison.pdf has been created
+{
+  "checkpoint_pre": {
+    "entries": 2246,
+    "mean_GeV": 492.1193232413179,
+    "underflow": 0.0,
+    "overflow": 0.0,
+    "N_500_1000": 535.0,
+    "N_above_1000": 237.0
+  },
+  "checkpoint_mass": {
+    "entries": 772,
+    "mean_GeV": 913.7305699481865,
+    "underflow": 0.0,
+    "overflow": 0.0,
+    "N_500_1000": 535.0,
+    "N_above_1000": 237.0
+  },
+  "checkpoint_full": {
+    "entries": 339,
+    "mean_GeV": 966.5191740412979,
+    "underflow": 0.0,
+    "overflow": 0.0,
+    "N_500_1000": 213.0,
+    "N_above_1000": 126.0
+  }
+}
