@@ -14,10 +14,10 @@ ROOT = prompt που γράφει root [0]. Εκεί τρέχω f->ls(), t->Draw
 
 cd ~/projects/collider_to_cosmos
 conda activate hep
-export EW_PLUS="$PWD/production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/analysis/ew_wpwpjj_10000_lifetime.root"
-export EW_MINUS="$PWD/production_runs/ew_wmwmjj_manual_analysis_seed161805/analysis/ew_minus_lifetime.root"
-export QCD_PLUS="$PWD/production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/analysis/qcd_wpwpjj_archived_run04_lifetime.root"
-export QCD_MINUS="$PWD/production_runs/ew_wmwmjj_10000_seed161803/analysis/qcd_minus_lifetime.root"
+export EW_PLUS="$PWD/data/sm/root/ew_plus.root"
+export EW_MINUS="$PWD/data/sm/root/ew_minus.root"
+export QCD_PLUS="$PWD/data/sm/root/qcd_plus.root"
+export QCD_MINUS="$PWD/data/sm/root/qcd_minus.root"
 root -l
 
 Τώρα είμαι ΜΕΣΑ στο ROOT. Ανοίγω το EW W+W+:
@@ -155,19 +155,19 @@ out=$(mktemp -d /tmp/collider-demo-analysis.XXXXXX)
 echo "$out"   # εδώ θα αποθηκευτούν τα νέα ROOT και logs
 
 Θέλω να τρέξω EW W+W+ (lifetime):
-./build/particle_level lifetime "$ep/shower/ew_wpwpjj_10000_pythia8317.hepmc" "$out/ew_plus_lifetime.root" > "$out/ew_plus_lifetime.log" 2>&1
+./build/particle_level lifetime "data/sm/hepmc/ew_plus.hepmc" "$out/ew_plus_lifetime.root" > "$out/ew_plus_lifetime.log" 2>&1
 
 EW W-W- (lifetime):
-./build/particle_level lifetime "$em/shower/ew_wmwmjj_10000_pythia8317.hepmc" "$out/ew_minus_lifetime.root" > "$out/ew_minus_lifetime.log" 2>&1
+./build/particle_level lifetime "data/sm/hepmc/ew_minus.hepmc" "$out/ew_minus_lifetime.root" > "$out/ew_minus_lifetime.log" 2>&1
 
 QCD W+W+ (lifetime):
-./build/particle_level lifetime "$qp/tag_1_pythia8_events.hepmc" "$out/qcd_plus_lifetime.root" > "$out/qcd_plus_lifetime.log" 2>&1
+./build/particle_level lifetime "data/sm/hepmc/qcd_plus.hepmc" "$out/qcd_plus_lifetime.root" > "$out/qcd_plus_lifetime.log" 2>&1
 
 QCD W-W- (lifetime):
-./build/particle_level lifetime "$qm/tag_1_pythia8_events_verified.hepmc" "$out/qcd_minus_lifetime.root" > "$out/qcd_minus_lifetime.log" 2>&1
+./build/particle_level lifetime "data/sm/hepmc/qcd_minus.hepmc" "$out/qcd_minus_lifetime.root" > "$out/qcd_minus_lifetime.log" 2>&1
 
 Θέλω να συγκρίνω με status1 για το ίδιο QCD W+W+:
-./build/particle_level status1 "$qp/tag_1_pythia8_events.hepmc" "$out/qcd_plus_status1.root" > "$out/qcd_plus_status1.log" 2>&1
+./build/particle_level status1 "data/sm/hepmc/qcd_plus.hepmc" "$out/qcd_plus_status1.root" > "$out/qcd_plus_status1.log" 2>&1
 
 Το > ... 2>&1 σημαίνει ότι τα μηνύματα της εκτέλεσης μπαίνουν σε log.
 Για να διαβάσω το log:
@@ -260,3 +260,10 @@ QCD W-W-      291              2.91%       0.11263 ± 0.00651
 5) Αν με ρωτήσουν «πώς χτίζεις;»: cmake --build build --target particle_level -j 4
 
 Το πιο σημαντικό: για να ΔΕΙΞΩ ήδη παραγμένα αποτελέσματα ΔΕΝ χρειάζεται build.
+
+CANONICAL SM NAVIGATION
+Τα data/sm/hepmc/ και data/sm/root/ περιέχουν μόνο relative symlinks.
+Το data/sm/hepmc/qcd_minus.hepmc δείχνει στο tag_1_pythia8_events_verified.hepmc.
+Το παλιό κενό αρχείο χωρίς _verified αποσύρθηκε και δεν είναι analysis input.
+Τα αρχικά production paths, cards, logs και datasets παραμένουν στη θέση τους.
+Νέα ROOT outputs γράφονται σε νέο προορισμό, ποτέ πάνω στα canonical references.

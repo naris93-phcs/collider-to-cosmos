@@ -80,6 +80,10 @@
         "hepmc": "production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/shower/ew_wpwpjj_10000_pythia8317.hepmc",
         "root": "production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/analysis/ew_wpwpjj_10000_lifetime.root",
         "validation": "production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/README.md"
+      },
+      "canonical_paths": {
+        "hepmc": "data/sm/hepmc/ew_plus.hepmc",
+        "root": "data/sm/root/ew_plus.root"
       }
     },
     "EW -": {
@@ -162,6 +166,10 @@
         "hepmc": "production_runs/ew_wmwmjj_manual_analysis_seed161805/shower/ew_wmwmjj_10000_pythia8317.hepmc",
         "root": "production_runs/ew_wmwmjj_manual_analysis_seed161805/analysis/ew_minus_lifetime.root",
         "validation": "production_runs/ew_wmwmjj_manual_analysis_seed161805/README.md"
+      },
+      "canonical_paths": {
+        "hepmc": "data/sm/hepmc/ew_minus.hepmc",
+        "root": "data/sm/root/ew_minus.root"
       }
     },
     "QCD +": {
@@ -244,6 +252,10 @@
         "hepmc": "sm_wpwpjj_leptonic/Events/run_04/tag_1_pythia8_events.hepmc",
         "root": "production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/analysis/qcd_wpwpjj_archived_run04_lifetime.root",
         "validation": "production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/README.md"
+      },
+      "canonical_paths": {
+        "hepmc": "data/sm/hepmc/qcd_plus.hepmc",
+        "root": "data/sm/root/qcd_plus.root"
       }
     },
     "QCD -": {
@@ -326,6 +338,10 @@
         "hepmc": "sm_wmwmjj_leptonic/Events/run_01/tag_1_pythia8_events_verified.hepmc",
         "root": "production_runs/ew_wmwmjj_10000_seed161803/analysis/qcd_minus_lifetime.root",
         "validation": "production_runs/ew_wmwmjj_10000_seed161803/analysis/qcd_minus_hepmc_verification.json"
+      },
+      "canonical_paths": {
+        "hepmc": "data/sm/hepmc/qcd_minus.hepmc",
+        "root": "data/sm/root/qcd_minus.root"
       }
     }
   },

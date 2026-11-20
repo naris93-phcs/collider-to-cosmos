@@ -18,16 +18,56 @@ From the repository root, to configure a separate build:
 ```bash
 source "$HOME/miniforge3/etc/profile.d/conda.sh"
 conda activate hep
+export PYTHIA8DATA="$PWD/MG5_aMC_v3_8_0/HEPTools/pythia8/share/Pythia8/xmldoc"
+export LD_LIBRARY_PATH="$PWD/MG5_aMC_v3_8_0/HEPTools/pythia8/lib:$PWD/MG5_aMC_v3_8_0/HEPTools/hepmc/lib:$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 replay_build=$(mktemp -d /tmp/collider-build.XXXXXX)
 cmake -S "$PWD" -B "$replay_build" -DCMAKE_PREFIX_PATH="$CONDA_PREFIX"
 cmake --build "$replay_build" --target particle_level -j 4
 ```
 
 The final comparison used the existing `build/particle_level` binary.
-Capture the commit plus dirty diff and untracked reconstruction header when
+Capture the commit, dirty diff and required reconstruction header when
 transferring it. The executable's rpath and compile-time XML path make
 relocation dependent on the HEPTools layout. The [checksum manifest](../results/SHA256SUMS)
 captures the validated inputs and software files used by this record.
+
+## Canonical SM navigation
+
+Only these four sample identities are active. Each path is a relative
+symlink to the original artifact; production cards, inputs and logs remain
+at their existing locations. `results/samples.json` keeps the original
+`artifacts` references and adds `canonical_paths` for navigation.
+
+| Sample | HepMC input | Final ROOT reference |
+|---|---|---|
+| EW + | [ew_plus.hepmc](../data/sm/hepmc/ew_plus.hepmc) | [ew_plus.root](../data/sm/root/ew_plus.root) |
+| EW - | [ew_minus.hepmc](../data/sm/hepmc/ew_minus.hepmc) | [ew_minus.root](../data/sm/root/ew_minus.root) |
+| QCD + | [qcd_plus.hepmc](../data/sm/hepmc/qcd_plus.hepmc) | [qcd_plus.root](../data/sm/root/qcd_plus.root) |
+| QCD - | [qcd_minus.hepmc](../data/sm/hepmc/qcd_minus.hepmc) | [qcd_minus.root](../data/sm/root/qcd_minus.root) |
+
+The QCD negative link resolves to `tag_1_pythia8_events_verified.hepmc`;
+the empty file without `_verified` is not an input. Original data are local
+and ignored by Git; tracking the links does not distribute those data.
+New analysis outputs must use fresh destinations outside the canonical links.
+See [historical results](HISTORICAL_RESULTS.md) for other event/ROOT files.
+
+### Daily analysis from an existing HepMC
+
+After configuring the environment/build above, use explicit canonical inputs
+and a fresh output location. This is a reproduction command, not a step
+performed during navigation setup:
+
+```bash
+replay_output=$(mktemp -d /tmp/collider-analysis.XXXXXX)
+"$replay_build/particle_level" lifetime data/sm/hepmc/ew_plus.hepmc \
+  "$replay_output/ew_plus_lifetime.root"
+```
+
+Select the corresponding `ew_minus`, `qcd_plus` or `qcd_minus` input for the
+other samples. Never use `data/sm/root/` as an output directory. Run-local
+scripts and plotting code retain their original input paths and logic;
+the aliases refer to the same files. Canonical ROOT files contain preserved
+results and can be opened read-only without replaying the analysis.
 
 ## Generator records and LHE preparation
 

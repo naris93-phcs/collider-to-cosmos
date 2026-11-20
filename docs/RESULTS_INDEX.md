@@ -16,6 +16,26 @@ Preliminary Standard Model LO same-sign WWjj baseline at 13 TeV, using resonant 
 
 Acceptance is selected/analyzed. The MC uncertainty is binomial at fixed generator cross section. The propagated numerical integration uncertainty is acceptance times the generator integration error. The charge sums add the independent sample uncertainties in quadrature per component. These uncertainties exclude PDF/scale and modeling systematics.
 
+## Canonical SM navigation
+
+Only these four sample identities are active. Each path is a relative
+symlink to the original artifact; production cards, inputs and logs remain
+at their existing locations. `results/samples.json` keeps the original
+`artifacts` references and adds `canonical_paths` for navigation.
+
+| Sample | HepMC input | Final ROOT reference |
+|---|---|---|
+| EW + | [ew_plus.hepmc](../data/sm/hepmc/ew_plus.hepmc) | [ew_plus.root](../data/sm/root/ew_plus.root) |
+| EW - | [ew_minus.hepmc](../data/sm/hepmc/ew_minus.hepmc) | [ew_minus.root](../data/sm/root/ew_minus.root) |
+| QCD + | [qcd_plus.hepmc](../data/sm/hepmc/qcd_plus.hepmc) | [qcd_plus.root](../data/sm/root/qcd_plus.root) |
+| QCD - | [qcd_minus.hepmc](../data/sm/hepmc/qcd_minus.hepmc) | [qcd_minus.root](../data/sm/root/qcd_minus.root) |
+
+The QCD negative link resolves to `tag_1_pythia8_events_verified.hepmc`;
+the empty file without `_verified` is not an input. Original data are local
+and ignored by Git; tracking the links does not distribute those data.
+New analysis outputs must use fresh destinations outside the canonical links.
+See [historical results](HISTORICAL_RESULTS.md) for other event/ROOT files.
+
 ## Sample provenance
 
 ### EW W⁺W⁺jj

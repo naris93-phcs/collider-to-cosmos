@@ -90,3 +90,13 @@ madevent.tar.gz
 *.partial.json
 *.tmp
 *.swp
+
+# Canonical navigation links only; original event data remain ignored.
+!/data/sm/hepmc/ew_plus.hepmc
+!/data/sm/root/ew_plus.root
+!/data/sm/hepmc/ew_minus.hepmc
+!/data/sm/root/ew_minus.root
+!/data/sm/hepmc/qcd_plus.hepmc
+!/data/sm/root/qcd_plus.root
+!/data/sm/hepmc/qcd_minus.hepmc
+!/data/sm/root/qcd_minus.root
