@@ -1,0 +1,9 @@
+# Track exactly the eight navigation symlinks, never original event data.
+!/samples/hepmc/ew_plus.hepmc
+!/samples/root/ew_plus.root
+!/samples/hepmc/ew_minus.hepmc
+!/samples/root/ew_minus.root
+!/samples/hepmc/qcd_plus.hepmc
+!/samples/root/qcd_plus.root
+!/samples/hepmc/qcd_minus.hepmc
+!/samples/root/qcd_minus.root

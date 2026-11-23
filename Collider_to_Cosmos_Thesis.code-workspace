@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "name": "Collider to Cosmos — Thesis",
+      "path": "thesis_workspace"
+    }
+  ],
+  "settings": {
+    "terminal.integrated.cwd": "${workspaceFolder}/..",
+    "explorer.compactFolders": false,
+    "explorer.excludeGitIgnore": false,
+    "files.exclude": {}
+  }
+}

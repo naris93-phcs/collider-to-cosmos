@@ -23,7 +23,8 @@ See [historical results](HISTORICAL_RESULTS.md) for other event/ROOT files.
 ```text
 collider_to_cosmos/
 ├── data/sm/              Eight canonical HepMC/ROOT navigation links
-├── analysis/             Maintained particle-level target and historical utilities
+├── analysis/             Active particle-level source and retained ROOT macros
+├── archive/              Selected historical studies, diagnostics and snapshots
 ├── scripts/              Index of validated, in-place workflow scripts
 ├── configs/              Index of cards and effective shower configurations
 ├── results/              Four-sample index, checksums, plots and tables
@@ -36,15 +37,16 @@ collider_to_cosmos/
 └── build/                Validated local executable and CMake outputs
 ```
 
-An optional future `archive/` may hold retired tools and exploratory material
-once their references and runtime dependencies have been checked. Current
-paths remain authoritative.
+`archive/` now contains only the individually reviewed historical files listed
+below. Original production directories and canonical data targets remain in
+place. `analysis/pythia8312/` remains untouched and is not an active build
+dependency; its future disposition is unresolved.
 
 | Location | Classification and dependencies |
 |---|---|
 | [CMakeLists.txt](../CMakeLists.txt) | C++17; builds only `particle_level`; finds ROOT and uses FastJet in `CONDA_PREFIX`. Pythia 8.317, its XML data, and HepMC2 are resolved under the top-level `MG5_aMC_v3_8_0/HEPTools`. |
 | [particle_level.cpp](../analysis/particle_level.cpp) | Maintained entry point, with `lifetime` as default and `status1` for regressions. Includes [reconstruction.h](../validation/lifetime_impact/reconstruction.h) by relative path. |
-| [lhe_reader.cpp](../analysis/lhe_reader.cpp), [ROOT macros](../analysis/macros/fiducial_shapes.C) | Historical LHE and plotting utilities. The LHE reader is not a CMake target. The release comparison reads the four selected ROOT trees via the production Python script. |
+| [archived lhe_reader.cpp](../archive/lhe_study/lhe_reader.cpp), [ROOT macros](../analysis/macros/fiducial_shapes.C) | Historical LHE and plotting utilities. The LHE reader is not a CMake target. The release comparison reads the four selected ROOT trees via the production Python script. |
 | [Pilot](../production_runs/ew_wpwpjj_pilot_1000_seed271828/README.md) | 1k EW positive-charge sample and LHAPDF diagnosis. Scientific evidence for the unresolved comparison with the 50k parent. |
 | [EW W⁺W⁺ parent](../production_runs/ew_wpwpjj_50000_seed314159/README.md) and [10k subset](../production_runs/ew_wpwpjj_50000_seed314159/supervisor_10k/README.md) | Parent LHE, formatting correction, reproducible subset, and two positive-charge ROOT results. |
 | [Incomplete EW W⁻W⁻](../production_runs/ew_wmwmjj_10000_seed161803/README.md) | Preserves the 3,031-event failed production and the **valid** archived QCD W⁻W⁻ analysis under the same directory. |
@@ -69,3 +71,31 @@ contains the two historical figures moved from the repository root. The
 root [README](../README.md) starts with the current baseline and retains the
 previous notes below it. The historical workflow and quick reference retain
 their original paths and current edits.
+
+## Active analysis and reviewed historical archive
+
+```text
+analysis/
+├── particle_level.cpp
+├── plot_cutflow.C
+├── macros/fiducial_shapes.C
+└── pythia8312/                 Unchanged historical software tree; HOLD
+archive/
+├── lhe_study/                 LHE source and seven nonempty historical plots
+├── lhe_reader_diagnostics/    Three probe sources, three LHE fixtures and diff
+└── particle_level_snapshot/  Historical executable and ROOT; pairing unverified
+```
+
+See each archive README and [historical results](HISTORICAL_RESULTS.md) for
+original paths and provenance limits. The active CMake target still compiles
+`analysis/particle_level.cpp` and includes
+`validation/lifetime_impact/reconstruction.h`. No CMake or analysis change
+was required. Archived source files were moved byte-for-byte, not rewritten.
+The archived stream probe retains an obsolete relative input path; its new
+location is not a ready-to-run reproduction environment.
+
+Use explicit input paths for `analysis/macros/fiducial_shapes.C`. The retained
+`analysis/plot_cutflow.C` still uses a working-directory-relative input; use
+the documented isolated temporary-link workflow. Both macros remain in place.
+`plots/cutflow.png` retains the exact historical image whose duplicate in
+`analysis/` was removed. No active workflow uses the removed test binaries.

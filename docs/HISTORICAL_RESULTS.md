@@ -65,8 +65,8 @@ confirming the original destinations remain absent; retain the rollback record.
 ## ROOT inventory outside the four final references
 
 The original inventory contained 19 regular ROOT files. Following the explicitly
-approved historical ROOT cleanup on 2026-11-20, 16 remain at their original
-paths; the four canonical aliases do not create new copies. The three retired
+approved historical ROOT cleanup on 2026-11-20, 16 remain; the historical analysis ROOT now resides in its reviewed archive
+location while the others remain at their original paths; the four canonical aliases do not create new copies. The three retired
 files remain listed below for traceability. Counts come from stored metadata
 and historical records, not a new event analysis.
 
@@ -75,7 +75,7 @@ and historical records, not a new event analysis.
 | `particle_level.root` | 13,186 | Empty analysis output: 0 analyzed / 0 selected; all histogram bins zero; sample unidentified | Retired 2026-11-20; no scientific data to replace; use the four canonical references |
 | `wmwm_particle_level.root` | 34,760 | QCD W−W−: 10,000 analyzed / 291 selected; stored physics payload identical to canonical QCD− | Retired 2026-11-20; replacement: [data/sm/root/qcd_minus.root](../data/sm/root/qcd_minus.root) |
 | `wpwp_lifetime_comparison.root` | 37,713 | QCD W+W+: 10,000 analyzed / 339 selected; stored physics payload identical to canonical QCD+ (not EW+) | Retired 2026-11-20; replacement: [data/sm/root/qcd_plus.root](../data/sm/root/qcd_plus.root) |
-| `analysis/particle_level.root` | 36,661 | Historical analysis output referenced in previous documentation | Hold for read-only metadata identification |
+| `archive/particle_level_snapshot/particle_level.root` (originally `analysis/particle_level.root`) | 36,661 | Historical QCD+ output: 10,000 analyzed / 339 selected; older definition, without event_index | Archived unchanged; pairing with archived executable unverified |
 | `build/particle_level.root` | 10,838 | Historical build-directory output; source/input identity unknown | Hold for read-only metadata identification |
 | `production_runs/ew_wpwpjj_pilot_1000_seed271828/shower_particle_level_audit/ew_wpwp_1000_seed271828_lifetime.root` | 29,734 | EW+ pilot: 1,000 analyzed, 209 selected; retain with pilot records | Retain scientific/regression evidence |
 | `validation/lifetime_impact/baseline.root` | 36,649 | Status-1 checkpoint; consumed by summarize.py and integration verification | Retain scientific/regression evidence |
@@ -153,6 +153,73 @@ Some historical commands mention analysis/macros/plot_cutflow.C; the actual
 legacy macro is [analysis/plot_cutflow.C](../analysis/plot_cutflow.C).
 Historical shell snippets retain their original working-directory assumptions
 and must not be executed over existing outputs.
+
+## Approved analysis directory cleanup — 2026-11-20
+
+Nine individually approved files were deleted; 17 were moved without content
+changes. Active C++, macros, reconstruction header, canonical data, production
+and validation outputs remain intact. `analysis/pythia8312/` is untouched.
+
+Deleted paths and original SHA-256 values:
+
+| Original path | Bytes | SHA-256 | Reason |
+|---|---:|---|---|
+| `analysis/lhe_reader` | 75,872 | `eeae0141939c936ad94c45517b2e0c7ea23a5106e5ece23608ce39953838a04a` | Unused compiled utility; source/nonempty study plots retained |
+| `analysis/pythia_test` | 148,808 | `6476025d71c52c8ade8242803f5507849891569b8e29166c3f5c6d91c9b71cee` | Unused compiled probe; source/fixture retained |
+| `analysis/reader_test` | 28,344 | `ee08577af722dd2ea8c4520b491f1263e58ea051f9367e85233e8771ef106dbb` | Unused compiled probe; source/fixture retained |
+| `analysis/stream_test` | 22,760 | `e1659f420d7ebe0ae5ac6966dfa7ec13ae7bdeeefb6d956c21829ebd8af7c887` | Unused compiled probe; source retained |
+| `analysis/nano stream_test.cpp` | 531 | `a030d1fd4376b71b875cb77dee835b144e323fa4c92adc79e4d0b5e24060feb9` | Duplicate stream-counting implementation; stream_test.cpp retained |
+| `analysis/w_pt.png` | 11,650 | `ae82eb03d320b5ad01cc3997d166ca60a9680461dedbab63438274e36d00e240` | Visually confirmed W histogram with zero entries |
+| `analysis/w_rapidity.png` | 10,190 | `c8d55a303ffcf4399295313bd7d2d85a93b0347a032b80b4b9563db5ce1ad414` | Visually confirmed W histogram with zero entries |
+| `analysis/rapidity_comparison.png` | 13,478 | `345891baf18118de5d9e7793000897e662500d1a651ca7c119a74347ed2bc3ba` | Empty W distribution, quark spikes and misleading TPaveStats legend entry |
+| `analysis/cutflow.png` | 16,926 | `b0216807976194fc2c3ca6984c42b509ebf9837258974cdcb67e4d99567c6a19` | Byte-identical to retained plots/cutflow.png |
+
+Moved paths and original checksums (also recorded in the verified rollback):
+
+| Original path | Archive path | Bytes | SHA-256 |
+|---|---|---:|---|
+| `analysis/lhe_reader.cpp` | `archive/lhe_study/lhe_reader.cpp` | 12,122 | `a76ffa75268d8dfb76af0aa46112857ad3107fea047fe67d5ba502ea27af72d0` |
+| `analysis/delta_r_ll.png` | `archive/lhe_study/delta_r_ll.png` | 14,427 | `d55364bc4b06a0f8e331306944499004650b566904b47e6d7906408714a710a1` |
+| `analysis/delta_y_qq.png` | `archive/lhe_study/delta_y_qq.png` | 15,290 | `da75e235a33bc2e23c3713d3ccbe42800d82db3067a91c1910b9d3921d878376` |
+| `analysis/lepton_pt.png` | `archive/lhe_study/lepton_pt.png` | 15,780 | `5e13bbb9401d1e3a42d04eb3180360f33e53c62ad50a07604f2df72e9e3386cc` |
+| `analysis/m_ll.png` | `archive/lhe_study/m_ll.png` | 14,004 | `25758833abd732085dca9e87e507de3282e7f6fec2f4cc099875efac05822803` |
+| `analysis/m_qq.png` | `archive/lhe_study/m_qq.png` | 14,490 | `1f37294348dde65220bec249f0239dce6ae2284b2a4d57d3446f39311e94282f` |
+| `analysis/missing_pt.png` | `archive/lhe_study/missing_pt.png` | 15,585 | `94cb499099f0bd26f4cef159e0bdd01a2460806e435f11d6c4c1c6b295fd6f9a` |
+| `analysis/mqq_vs_delta_y.png` | `archive/lhe_study/mqq_vs_delta_y.png` | 22,735 | `088decdf7d47b96bfaa39d34e0d5df809491c7a1f2afb05da0a1bc0c674ef573` |
+| `analysis/pythia_test.cpp` | `archive/lhe_reader_diagnostics/pythia_test.cpp` | 514 | `5b07ba6f3390864befcb5599181aa4a6a60ed4abc994fd9d643a6ec9d912fa13` |
+| `analysis/reader_test.cpp` | `archive/lhe_reader_diagnostics/reader_test.cpp` | 406 | `e594025f10a4441dc30c651482b39bee2d5001d97b629e47c4384c8ab212d4af` |
+| `analysis/stream_test.cpp` | `archive/lhe_reader_diagnostics/stream_test.cpp` | 491 | `3d004ec8f68bf3752c79e041fa519dea3ca01326fe07564f448c7aed437e8c89` |
+| `analysis/mg_clean_test.lhe` | `archive/lhe_reader_diagnostics/mg_clean_test.lhe` | 17,181,056 | `c0428fa0530342809f8229149cc44583da16e14b416a029695a2c8fedbd2d3b6` |
+| `analysis/test_one_event.lhe` | `archive/lhe_reader_diagnostics/test_one_event.lhe` | 23,557 | `ceda9791cd1ed0b429635075fee6293aa155b737f29981df44e76b399bc68407` |
+| `analysis/test_no_mgrwt.lhe` | `archive/lhe_reader_diagnostics/test_no_mgrwt.lhe` | 23,314 | `b1bfe8e5b45f4bb22a6a53c04ed2981b39e62356ed46e64dd5bfd86e3ecc1570` |
+| `analysis/lhe_diff.txt` | `archive/lhe_reader_diagnostics/lhe_diff.txt` | 56,137 | `6905ccf171614810f1ab0680724977e987aca5aa0a52adf1e0d41389040bb0b4` |
+| `analysis/particle_level` | `archive/particle_level_snapshot/particle_level` | 239,512 | `a9eed02aa58539a1f5e96ae62f402c89288cdb1bccad563a5fdbe7e61bb7a4f9` |
+| `analysis/particle_level.root` | `archive/particle_level_snapshot/particle_level.root` | 36,661 | `b5bfbd49d1587110781eac60ba2652316a50b26442151dac6d79b823e29f8ebe` |
+
+Rollback backup: `/tmp/collider-analysis-cleanup-rollback-20261120-ky0xhkhs/`, with original relative paths, `SHA256SUMS`,
+original documentation and `rollback.json` recording actions, destinations,
+sizes, modes, hashes and the pre-change repository state. This /tmp location
+is retained for rollback, not a permanent data archive. Restoration requires
+verified checksums and non-clobbering destinations; do not overwrite later
+work or remove archive copies without separately reviewing the rollback.
+
+Archive notes:
+
+- [LHE study](../archive/lhe_study/README.md): source plus seven nonempty
+  plots. Original plotting input identity and exact replay remain unverified.
+- [Reader diagnostics](../archive/lhe_reader_diagnostics/README.md): sources,
+  fixtures and format diff. stream_test.cpp still reads
+  `../sm_wpwpjj_leptonic/Events/run_01/unweighted_events.lhe`; that path is
+  invalid from its new directory. Historical source was not rewritten.
+- [Particle-level snapshot](../archive/particle_level_snapshot/README.md):
+  historical binary and older QCD+ ROOT. No claim is made that this binary
+  produced this ROOT. The files are not canonical SM references.
+
+Some archive files are Git-ignored, including the ROOT and LHE files. Moving
+them does not back them up in Git. No ignore rules or tracking were changed.
+Legacy paths in the preserved README below and existing Git patches/snapshots
+are historical records and were intentionally left unchanged. Current
+navigation is in PROJECT_MAP.md and the archive READMEs.
 
 ## Preserved previous README
 

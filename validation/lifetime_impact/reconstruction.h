@@ -56,6 +56,15 @@ Set reconstruct(const HepMC::GenEvent& event, Pythia8::ParticleData& data) {
   for (auto it=event.particles_begin(); it!=event.particles_end(); ++it) {
     auto p=*it; context=p;
     require(identities.insert(p->barcode()).second, "Duplicate barcode");
+    // The GM H5++ resonance is not included in the standard Pythia
+// ParticleData table. Intermediate copies are not stable-particle
+// candidates and do not require a lifetime lookup.
+    if (std::abs(p->pdg_id()) == 255) {
+      require(p->status() != 1,
+              "GM H5++ unexpectedly appears as a final-state particle");
+      continue;
+    }
+
     require(data.isParticle(p->pdg_id()), "Unknown PDG lifetime lookup");
     const double ct=data.tau0(p->pdg_id());
     if (p->status()==1) {

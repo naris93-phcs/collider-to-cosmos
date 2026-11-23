@@ -120,15 +120,26 @@ bool hasDirectHardWLeptonLineage(const HepMC::GenParticle* p)
 
 // Diagnostic only: PDG hadron flavour digits. This is NOT yet the
 // weakly-decaying b-hadron definition required for ATLAS ghost matching.
+// Diagnostic only: PDG hadron flavour digits.
+// Exclude the Georgi-Machacek H5++ scalar (PDG 255).
+// This is not yet the full ATLAS weakly-decaying b-hadron definition.
 bool isBottomFlavouredHadronCandidate(int pdgId)
 {
     const long long id = std::llabs(static_cast<long long>(pdgId));
+
+    // H5++ is a BSM scalar, not a bottom-flavoured hadron.
+    if (id == 255) return false;
+
     if (id < 100 || id >= 1000000000LL) return false;
+
     const int q1 = static_cast<int>((id / 1000) % 10);
     const int q2 = static_cast<int>((id / 100) % 10);
     const int q3 = static_cast<int>((id / 10) % 10);
-    // Reject bottomonium (b bbar): not a weakly decaying open-bottom hadron.
-    if (q1 == 0) return (q2 == 5) != (q3 == 5);
+
+    // Reject bottomonium (b bbar).
+    if (q1 == 0)
+        return (q2 == 5) != (q3 == 5);
+
     return q1 == 5 || q2 == 5 || q3 == 5;
 }
 
