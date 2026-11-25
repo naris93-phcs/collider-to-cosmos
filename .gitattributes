@@ -18,3 +18,6 @@ production_runs/** linguist-generated=true
 
 # Archived analysis snapshots
 archive/** linguist-detectable=false
+
+# Legacy MadGraph generated process
+sm_wmwmjj_leptonic/** linguist-generated=true
