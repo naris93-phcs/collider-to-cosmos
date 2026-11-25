@@ -8,6 +8,8 @@
 #include <map>
 #include <utility>
 #include <set>
+#include <cstdlib>
+#include <string>
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
 #include "fastjet/ClusterSequence.hh"
@@ -117,6 +119,57 @@ bool hasDirectHardWLeptonLineage(const HepMC::GenParticle* p)
     return hasDirectHardWLeptonLineageImpl(p, id, seenLeptons);
 }
 
+
+// Conventional meson/baryon PDG encoding, not a universal BSM classifier.
+bool isConventionalHadron(int pdg)
+{
+    const long long id = std::llabs(static_cast<long long>(pdg));
+    if (id == 255) return false; // GM H5++
+    if (id == 130 || id == 310) return true;
+    if (id < 100 || id >= 10000000) return false;
+    const int q1 = (id / 1000) % 10;
+    const int q2 = (id / 100) % 10;
+    const int q3 = (id / 10) % 10;
+    const int spin = id % 10;
+    const auto quark = [](int q) { return q >= 1 && q <= 6; };
+    return quark(q2) && quark(q3) &&
+        ((q1 == 0 && spin % 2 == 1) ||
+         (quark(q1) && spin > 0 && spin % 2 == 0));
+}
+
+// Signal-sample prompt approximation. Reject tau/hadron decay ancestry
+// and non-hard photon conversions. Stop at the hard-process/beam boundary.
+// This is not an official ATLAS truth classifier or a matrix-element tau veto.
+bool hasNonPromptLeptonAncestor(
+    const HepMC::GenParticle* p,
+    std::set<const HepMC::GenParticle*>& seen)
+{
+    if (!p || !seen.insert(p).second) return false;
+    const auto* v = p->production_vertex();
+    if (!v) return false;
+    for (auto it = v->particles_in_const_begin();
+         it != v->particles_in_const_end(); ++it) {
+        const auto* parent = *it;
+        if (!parent) continue;
+        const int id = std::abs(parent->pdg_id());
+        const int status = std::abs(parent->status());
+        if (status == 4 || !parent->production_vertex()) continue;
+        if (id == 15 || isConventionalHadron(id)) return true;
+        if (status >= 21 && status <= 29) continue;
+        if (id == 22) return true;
+        if (hasNonPromptLeptonAncestor(parent, seen)) return true;
+    }
+    return false;
+}
+
+bool isPromptLeptonCandidate(const HepMC::GenParticle* p)
+{
+    if (!p || !p->production_vertex()) return false;
+    const int id = std::abs(p->pdg_id());
+    if (id != 11 && id != 13) return false;
+    std::set<const HepMC::GenParticle*> seen;
+    return !hasNonPromptLeptonAncestor(p, seen);
+}
 
 // Diagnostic only: PDG hadron flavour digits. This is NOT yet the
 // weakly-decaying b-hadron definition required for ATLAS ghost matching.
@@ -285,8 +338,10 @@ int main(int argc, char** argv)
 {
     static_assert(PYTHIA_VERSION_INTEGER == 8317, "Use bundled Pythia 8.317");
     const std::string mode = argc > 1 ? argv[1] : "lifetime";
-    if (argc > 4 || (mode != "status1" && mode != "lifetime")) {
-        std::cerr << "Usage: particle_level [lifetime|status1 [input.hepmc [output.root]]]\n";
+    const std::string lepton_mode = argc > 4 ? argv[4] : "directW";
+    if (argc > 5 || (mode != "status1" && mode != "lifetime") ||
+        (lepton_mode != "directW" && lepton_mode != "prompt")) {
+        std::cerr << "Usage: particle_level [lifetime|status1 [input.hepmc [output.root [directW|prompt]]]]\n";
         return 1;
     }
     const bool lifetime = mode == "lifetime";
@@ -449,6 +504,10 @@ int main(int argc, char** argv)
     long long new_directW_lineage_leptons = 0;
     long long rejected_broad_ancestry_leptons = 0;
     int events_with_prompt_definition_difference = 0;
+    long long general_prompt_count = 0;
+    long long prompt_only_count = 0, direct_only_count = 0;
+    int events_with_general_difference = 0;
+    std::map<int, long long> prompt_only_parent_ids;
     int events_with_0_prompt_leptons = 0;
     int events_with_1_prompt_lepton = 0;
     int events_with_2_prompt_leptons = 0;
@@ -564,6 +623,7 @@ int main(int argc, char** argv)
 
         std::vector<HepMC::GenParticle*> prompt_leptons;
         bool event_prompt_definition_difference = false;
+        bool event_general_difference = false;
         std::vector<HepMC::GenParticle*> final_state_photons;
 
         double met_px = 0.0;
@@ -586,16 +646,27 @@ int main(int argc, char** argv)
             const int absId = std::abs((*p)->pdg_id());
             const HepMC::FourVector& mom = (*p)->momentum();
 
-            // Stable e/mu descending from a hard-process W.
-            // This is our current signal-sample prompt-lepton approximation.
+            // Compare both lepton definitions; select only the active mode.
             if (absId == 11 || absId == 13) {
                 const bool broad = hasHardWAncestor(*p);
                 const bool direct = hasDirectHardWLeptonLineage(*p);
                 if (broad) ++old_hardW_ancestry_leptons;
-                if (direct) {
-                    ++new_directW_lineage_leptons;
-                    prompt_leptons.push_back(*p);
+                const bool general = isPromptLeptonCandidate(*p);
+                if (direct) ++new_directW_lineage_leptons;
+                if (general) ++general_prompt_count;
+                if (general != direct) event_general_difference = true;
+                if (general && !direct) {
+                    ++prompt_only_count;
+                    const auto* v = (*p)->production_vertex();
+                    if (v) {
+                        for (auto it = v->particles_in_const_begin();
+                             it != v->particles_in_const_end(); ++it)
+                            if (*it) ++prompt_only_parent_ids[(*it)->pdg_id()];
+                    }
                 }
+                if (direct && !general) ++direct_only_count;
+                if (lepton_mode == "prompt" ? general : direct)
+                    prompt_leptons.push_back(*p);
                 if (broad != direct) {
                     event_prompt_definition_difference = true;
                     if (broad && !direct) ++rejected_broad_ancestry_leptons;
@@ -641,6 +712,7 @@ int main(int argc, char** argv)
 
 
         // ---------------------------------------------------------------------
+        if (event_general_difference) ++events_with_general_difference;
         if (event_prompt_definition_difference)
             ++events_with_prompt_definition_difference;
 
@@ -748,7 +820,7 @@ int main(int argc, char** argv)
         // Third prompt-lepton veto diagnostic: additional prompt e/mu with
         // pT > 3 GeV and |eta| < 2.5. The two signal leptons are already
         // identified above, but the low-pT veto must use the unfiltered list.
-        // Current approximation: hard-W ancestry; no low-pT overlap removal.
+        // Uses the active lepton mode; no low-pT overlap removal.
         int n_prompt_leptons_above_3 = 0;
         for (const auto* lep : prompt_leptons) {
             const auto& mom = lep->momentum();
@@ -1180,7 +1252,16 @@ int main(int argc, char** argv)
     std::cout << "  New direct-W lepton-lineage leptons: " << new_directW_lineage_leptons << "\n";
     std::cout << "  Old-only candidates rejected: " << rejected_broad_ancestry_leptons << "\n";
     std::cout << "  Events with definition difference: " << events_with_prompt_definition_difference << "\n";
-    std::cout << "  Note: this run uses the new definition; compare the cutflow with baseline 339.\n";
+    std::cout << "  Active lepton mode: " << lepton_mode << "\\n";
+    std::cout << "  General prompt candidates: " << general_prompt_count << "\\n";
+    std::cout << "  Prompt-only candidates: " << prompt_only_count << "\\n";
+    std::cout << "  DirectW-only candidates: " << direct_only_count << "\\n";
+    std::cout << "  Events with prompt/directW candidate difference: "
+              << events_with_general_difference << "\\n";
+    std::cout << "  Prompt-only immediate parent PDG IDs (entries):\\n";
+    for (const auto& kv : prompt_only_parent_ids)
+        std::cout << "    " << kv.first << " : " << kv.second << "\\n";
+    std::cout << "  General prompt mode is a signal-sample approximation.\\n";
 
     std::cout << "\nMET MOMENTUM-CLOSURE DIAGNOSTIC (no selection changes):\n";
     if (event_count > 0) {
