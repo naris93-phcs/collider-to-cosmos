@@ -21,3 +21,7 @@ archive/** linguist-detectable=false
 
 # Legacy MadGraph generated process
 sm_wmwmjj_leptonic/** linguist-generated=true
+
+# Exclude generated simulation trees from language detection
+production_runs/** linguist-detectable=false
+sm_wmwmjj_leptonic/** linguist-detectable=false
