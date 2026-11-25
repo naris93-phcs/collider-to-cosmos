@@ -1,0 +1,10 @@
+
+# External scientific software
+**/MG5_aMC*/** linguist-vendored=true
+**/HEPTools/** linguist-vendored=true
+
+# Automatically generated MadGraph process code
+production_runs/** linguist-generated=true
+
+# Archived analysis snapshots
+archive/** linguist-detectable=false
