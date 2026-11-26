@@ -27,7 +27,7 @@ $$
 The BSM study focuses on the doubly charged custodial-fiveplet scalar $H_5^{\pm\pm}$, which has tree-level gauge-boson couplings but no direct tree-level Yukawa couplings to fermions.
 
 $$
-pp \rightarrow H_5^{++}jj \rightarrow W^{+(*)}W^{+(*)}jj \rightarrow \ell^+\nu\,\ell^+\nu\,jj
+pp \rightarrow H_5^{++}jj \rightarrow W^{+(\ast)}W^{+(\ast)}jj \rightarrow \ell^+\nu\,\ell^+\nu\,jj
 $$
 
 The current GM sample includes resonant electroweak production topologies with a VBS fiducial selection; it is not an exclusive VBF calculation or a complete SM+GM prediction.
